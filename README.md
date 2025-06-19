@@ -80,8 +80,4 @@ Ein moderner Mod-Manager für Farming Simulator 25, der es Ihnen ermöglicht, ve
 
 ## Lizenz
 
-Diese Anwendung steht unter der MIT-Lizenz. Farming Simulator ist eine eingetragene Marke von GIANTS Software.
-
-## Lizenz
-
-ISC
+[Lizens](/LICENSE.txt)
