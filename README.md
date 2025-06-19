@@ -1,83 +1,119 @@
-# FS25 Mod Manager
+# 🚜 FS25 Mod Manager
 
-Ein moderner Mod-Manager für Farming Simulator 25, der es Ihnen ermöglicht, verschiedene Mod-Profile zu erstellen, zu verwalten und mit Dedicated Servern zu synchronisieren. Die Anwendung bietet eine benutzerfreundliche Oberfläche für die einfache Organisation Ihrer Farming Simulator Mods.
+Ein **moderner Mod-Manager für Farming Simulator 25**, der es Ihnen ermöglicht, Mod-Profile zu erstellen, zu verwalten und mit Dedicated Servern zu synchronisieren. Die Anwendung bietet eine benutzerfreundliche Oberfläche zur einfachen Organisation Ihrer Mods.
 
 ![FS25 Mod Manager Screenshot](https://github.com/username/Fs25_ModManager/raw/main/screenshots/main.png)
 
-## Installation
+---
 
-**Wichtig:** Als Endbenutzer müssen Sie die Anwendung nicht selbst bauen. Laden Sie einfach die neueste Version der fertigen Anwendung aus dem [Releases-Bereich](https://github.com/username/Fs25_ModManager/releases) herunter und installieren Sie sie.
+[![Letzter Release](https://img.shields.io/github/v/release/username/Fs25_ModManager?label=Download&style=for-the-badge)](https://github.com/username/Fs25_ModManager/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/username/Fs25_ModManager/total?style=for-the-badge)](https://github.com/username/Fs25_ModManager/releases)
+[![License](https://img.shields.io/github/license/username/Fs25_ModManager?style=for-the-badge)](LICENSE.txt)
+[![Plattform](https://img.shields.io/badge/Platform-Windows-blue?style=for-the-badge)](#systemanforderungen)
 
-1. Laden Sie die neueste `FS25_ModManager-Setup.exe` aus den Releases herunter
-2. Führen Sie die Setup-Datei aus und folgen Sie den Anweisungen
-3. Nach der Installation können Sie den FS25 Mod Manager über die Desktop-Verknüpfung starten
+---
 
-## Funktionen im Detail
+## 📥 Installation
 
-### Profilverwaltung
-- Erstellen Sie beliebig viele Mod-Profile für verschiedene Spielsituationen
-- Jedes Profil kann seine eigenen Mods und Einstellungen haben
-- Ideal für verschiedene Spielstände oder für Single- und Multiplayer-Spiele
+> **Hinweis:** Endbenutzer müssen den Mod Manager **nicht selbst kompilieren**.
 
-### Mod-Bereitstellung
-"Mods bereitstellen" bedeutet, dass die Mods aus dem ausgewählten Profil in Ihren Farming Simulator Mods-Ordner kopiert werden. Dies ermöglicht es Ihnen, schnell zwischen verschiedenen Mod-Sets zu wechseln, ohne Dateien manuell kopieren zu müssen.
+1. 👉 [Laden Sie die neueste Version herunter](https://github.com/username/Fs25_ModManager/releases/latest)
+2. Führen Sie `FS25_ModManager-Setup.exe` aus
+3. Folgen Sie dem Installationsassistenten
+4. Starten Sie die App über die Desktop-Verknüpfung
 
-### Server-Synchronisation
-- Verbinden Sie sich mit einem Dedicated Server, um dessen Mod-Liste abzurufen
-- Automatischer Download fehlender Mods von der Server-Quelle
-- Bleiben Sie immer auf dem neuesten Stand mit den Server-Mods
+---
 
-### Benutzerfreundliche Oberfläche
-- Modernes, dunkles Design
-- Einfache Navigation durch Tabs
-- Übersichtliche Darstellung aller Mod-Profile
+## 🧰 Funktionen
 
-## Anleitung zur Verwendung
+### 🔁 Profilverwaltung
+- Unbegrenzte Anzahl an Mod-Profilen
+- Unterschiedliche Mods & Einstellungen je Profil
+- Ideal für Spielstände, Single-/Multiplayer etc.
 
-### Erste Schritte
-1. Starten Sie den FS25 Mod Manager
-2. Gehen Sie zu den Einstellungen und konfigurieren Sie:
-   - Den Standard-Mod-Ordner (z.B. `Dokumente\My Games\FarmingSimulator2025\mods`)
-   - Den Pfad zur Farming Simulator 25 Exe-Datei (durch direkte Auswahl der `.exe`)
-   - Weitere Optionen wie Sprache und Theme
+### 🚀 Mod-Bereitstellung
+- Kopiert die Mods eines Profils in den aktiven `mods`-Ordner des Spiels
+- Schneller Wechsel zwischen Profilen ohne Dateihandling
 
-### Profile verwalten
-1. Wechseln Sie zum Tab "Profile"
-2. Klicken Sie auf "Neues Profil erstellen"
-3. Geben Sie einen Namen für das Profil ein
-4. Optional: Aktivieren Sie die Option "Aktuelle Mods importieren", um vorhandene Mods zu übernehmen
+### 🌐 Server-Synchronisation
+- Verbindung zu Dedicated Servern zur Mod-Abfrage
+- Automatischer Download fehlender Mods
+- Immer synchron mit dem Server bleiben
 
-### Mods für ein Profil bereitstellen
-1. Wählen Sie auf der Startseite ein Profil aus dem Dropdown-Menü
-2. Klicken Sie auf "Mods bereitstellen" - dies kopiert die Mods des ausgewählten Profils in Ihren Spiel-Mods-Ordner
-3. Klicken Sie auf "Spiel starten", um Farming Simulator 25 mit den bereitgestellten Mods zu starten
+### 🎨 Benutzeroberfläche
+- Modernes, dunkles Theme
+- Tab-System für einfache Navigation
+- Übersichtliches Design
 
-### Server-Synchronisation
-1. Öffnen Sie die Profileinstellungen durch Klicken auf "Bearbeiten" bei einem Profil
-2. Geben Sie die Server-URL ein (Format: `http://server.domain.com/mods`)
-3. Klicken Sie auf "Mit Server synchronisieren"
-4. Der Manager lädt fehlende Mods herunter und aktualisiert bestehende Mods
+---
 
-### Debug-Logging
-1. Gehen Sie in die Einstellungen
-2. Aktivieren Sie "Debug-Logging"
-3. Die Log-Datei finden Sie unter `Dokumente\FS_ModManager\log.txt`
+## 🧪 Erste Schritte
 
-## Systemanforderungen
+### ⚙️ Grundeinstellungen
+1. App starten
+2. Einstellungen öffnen:
+   - Standard-Mod-Ordner setzen (z. B. `Dokumente\My Games\FarmingSimulator2025\mods`)
+   - Pfad zur `FarmingSimulator2025.exe` auswählen
+   - Theme, Sprache etc. festlegen
 
-- Windows 10/11
-- Farming Simulator 25
-- 150 MB freier Festplattenspeicher
-- Internetverbindung für die Server-Synchronisation
+### 📁 Profile erstellen
+1. Tab "Profile" öffnen
+2. Auf **"Neues Profil erstellen"** klicken
+3. Namen vergeben
+4. Optional: Aktuelle Mods automatisch übernehmen
 
+### 📦 Mods bereitstellen
+1. Auf der Startseite ein Profil auswählen
+2. Button **"Mods bereitstellen"** anklicken
+3. Danach direkt **"Spiel starten"** klicken
 
+### 🔄 Server-Synchronisierung
+1. Profil bearbeiten
+2. Server-URL eingeben (z. B. `http://server.domain.com/mods`)
+3. Auf **"Mit Server synchronisieren"** klicken
 
-## Fehlerbehebung
+---
 
-- **Mods werden nicht kopiert**: Stellen Sie sicher, dass die Pfade in den Einstellungen korrekt sind
-- **Server-Synchronisation fehlgeschlagen**: Überprüfen Sie die Server-URL und Ihre Internetverbindung
-- **Anwendung startet nicht**: Prüfen Sie die Log-Datei unter `Dokumente\FS_ModManager\log.txt`
+## 🛠️ Debug & Logging
 
-## Lizenz
+1. In den Einstellungen **"Debug-Logging aktivieren"**
+2. Log-Datei befindet sich unter:  
+   `Dokumente\FS_ModManager\log.txt`
 
-[Lizens](/LICENSE.txt)
+---
+
+## 💻 Systemanforderungen
+
+| Komponente           | Mindestanforderung            |
+|----------------------|-------------------------------|
+| Betriebssystem       | Windows 10 / 11               |
+| Spiel                | Farming Simulator 25          |
+| Festplattenspeicher  | 150 MB                        |
+| Internet             | Für Server-Funktionen benötigt|
+
+---
+
+## ❓ Fehlerbehebung
+
+| Problem                                | Lösungsvorschlag                                                      |
+|----------------------------------------|------------------------------------------------------------------------|
+| Mods werden nicht kopiert              | Pfade in den Einstellungen prüfen                                     |
+| Server-Synchronisation funktioniert nicht | Server-URL & Internetverbindung prüfen                                |
+| App startet nicht                      | Siehe `log.txt` unter `Dokumente\FS_ModManager\`                      |
+
+---
+
+## 📄 Lizenz
+
+Dieses Projekt steht unter der [MIT-Lizenz](LICENSE.txt).  
+Die Nutzung der Anwendung ist **frei**, Änderungen & Weitergabe aber **nur privat erlaubt**, sofern nicht anders in der Lizenz definiert.
+
+---
+
+## 💬 Mitwirken oder Feedback?
+
+Pull Requests, Bug Reports und Verbesserungsvorschläge sind willkommen!  
+👉 Besuche die [Issues-Sektion](https://github.com/username/Fs25_ModManager/issues)
+
+---
+
