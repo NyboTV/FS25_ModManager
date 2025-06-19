@@ -2,13 +2,13 @@
 
 Ein **moderner Mod-Manager für Farming Simulator 25**, der es Ihnen ermöglicht, Mod-Profile zu erstellen, zu verwalten und mit Dedicated Servern zu synchronisieren. Die Anwendung bietet eine benutzerfreundliche Oberfläche zur einfachen Organisation Ihrer Mods.
 
-![FS25 Mod Manager Screenshot](https://github.com/username/Fs25_ModManager/raw/main/screenshots/main.png)
+![FS25 Mod Manager Screenshot](https://github.com/NyboTV/Fs25_ModManager/raw/main/screenshots/main.png)
 
 ---
 
-[![Letzter Release](https://img.shields.io/github/v/release/username/Fs25_ModManager?label=Download&style=for-the-badge)](https://github.com/username/Fs25_ModManager/releases/latest)
-[![Downloads](https://img.shields.io/github/downloads/username/Fs25_ModManager/total?style=for-the-badge)](https://github.com/username/Fs25_ModManager/releases)
-[![License](https://img.shields.io/github/license/username/Fs25_ModManager?style=for-the-badge)](LICENSE.txt)
+[![Letzter Release](https://img.shields.io/github/v/release/NyboTV/Fs25_ModManager?label=Download&style=for-the-badge)](https://github.com/NyboTV/Fs25_ModManager/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/NyboTV/Fs25_ModManager/total?style=for-the-badge)](https://github.com/NyboTV/Fs25_ModManager/releases)
+[![License](https://img.shields.io/github/license/NyboTV/Fs25_ModManager?style=for-the-badge)](LICENSE.txt)
 [![Plattform](https://img.shields.io/badge/Platform-Windows-blue?style=for-the-badge)](#systemanforderungen)
 
 ---
@@ -17,7 +17,7 @@ Ein **moderner Mod-Manager für Farming Simulator 25**, der es Ihnen ermöglicht
 
 > **Hinweis:** Endbenutzer müssen den Mod Manager **nicht selbst kompilieren**.
 
-1. 👉 [Laden Sie die neueste Version herunter](https://github.com/username/Fs25_ModManager/releases/latest)
+1. 👉 [Laden Sie die neueste Version herunter](https://github.com/NyboTV/Fs25_ModManager/releases/latest)
 2. Führen Sie `FS25_ModManager-Setup.exe` aus
 3. Folgen Sie dem Installationsassistenten
 4. Starten Sie die App über die Desktop-Verknüpfung
@@ -113,7 +113,7 @@ Die Nutzung der Anwendung ist **frei**, Änderungen & Weitergabe aber **nur priv
 ## 💬 Mitwirken oder Feedback?
 
 Pull Requests, Bug Reports und Verbesserungsvorschläge sind willkommen!  
-👉 Besuche die [Issues-Sektion](https://github.com/username/Fs25_ModManager/issues)
+👉 Besuche die [Issues-Sektion](https://github.com/NyboTV/Fs25_ModManager/issues)
 
 ---
 
