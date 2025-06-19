@@ -1,0 +1,64 @@
+{
+  "name": "fs25_modmanager",
+  "version": "1.0.0",
+  "description": "Ein Mod-Manager für Farming Simulator",
+  "main": "dist/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "webpack --config webpack.config.js",
+    "dev": "webpack --config webpack.config.js && electron .",
+    "dev:powershell": "powershell -Command \"npm run build; npm start\"",
+    "package": "electron-builder build --win --x64",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "keywords": [
+    "farming simulator",
+    "mod manager",
+    "fs25"
+  ],
+  "author": "",
+  "license": "ISC",
+  "build": {
+    "appId": "com.fs25modmanager.app",
+    "productName": "FS25 Mod Manager",
+    "directories": {
+      "output": "build"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "files": [
+      "dist/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.3",
+    "css-loader": "^7.1.2",
+    "electron": "^36.4.0",
+    "electron-builder": "^26.0.12",
+    "html-webpack-plugin": "^5.6.3",
+    "sass": "^1.89.2",
+    "sass-loader": "^16.0.5",
+    "style-loader": "^4.0.0",
+    "ts-loader": "^9.5.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3",
+    "webpack": "^5.99.9",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2"
+  },
+  "dependencies": {
+    "@types/adm-zip": "^0.5.7",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@types/react-router-dom": "^5.3.3",
+    "adm-zip": "^0.5.16",
+    "axios": "^1.10.0",
+    "electron-store": "^10.1.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router-dom": "^7.6.2"
+  }
+}

@@ -1,0 +1,12 @@
+© 2025 Nybo
+
+Dieses Programm wird als Freeware zur Verfügung gestellt.
+
+Nutzungsbedingungen:
+– Die Nutzung des Programms ist kostenlos und für jeden erlaubt.
+– Der Quellcode darf eingesehen, aber nicht verändert oder weiterverbreitet werden.
+– Die Nutzung des Programms ist nur für private und nicht-kommerzielle Zwecke gestattet, es sei denn, eine ausdrückliche schriftliche Erlaubnis des Autors liegt vor.
+– Eine Integration des Programms oder Quellcodes in andere Softwareprojekte ist nicht gestattet.
+
+Haftungsausschluss:
+Der Autor übernimmt keinerlei Haftung für Schäden, die durch die Verwendung dieses Programms entstehen.
