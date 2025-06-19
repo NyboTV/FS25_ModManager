@@ -8,7 +8,7 @@ Ein **moderner Mod-Manager für Farming Simulator 25**, der es Ihnen ermöglicht
 
 [![Letzter Release](https://img.shields.io/github/v/release/NyboTV/Fs25_ModManager?label=Download&style=for-the-badge)](https://github.com/NyboTV/Fs25_ModManager/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/NyboTV/Fs25_ModManager/total?style=for-the-badge)](https://github.com/NyboTV/Fs25_ModManager/releases)
-[![License](https://img.shields.io/github/license/NyboTV/Fs25_ModManager?style=for-the-badge)](LICENSE.txt)
+[![License: Freeware](https://img.shields.io/badge/license-freeware-blue?style=for-the-badge)](LICENSE.txt)
 [![Plattform](https://img.shields.io/badge/Platform-Windows-blue?style=for-the-badge)](#systemanforderungen)
 
 ---
