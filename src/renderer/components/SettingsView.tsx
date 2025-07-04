@@ -138,6 +138,42 @@ const SettingsView: React.FC<SettingsViewProps> = ({ settings, setSettings }) =>
             Aktiviert erweiterte Protokollierung für Fehleranalyse. Log-Datei wird in "Dokumente/FS_ModManager/log.txt" gespeichert.
           </small>
         </div>
+
+        <div className="settings-section">
+          <h3>🎮 Gamebot Integration</h3>
+          
+          <div className="form-group">
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                name="gamebotEnabled"
+                checked={localSettings.gamebotEnabled || false}
+                onChange={handleChange}
+              />
+              Gamebot Integration aktivieren
+            </label>
+            <small>
+              Aktiviert die Integration mit farming.gamebot.me für erweiterte Server- und Mod-Verwaltung.
+            </small>
+          </div>
+
+          {localSettings.gamebotEnabled && (
+            <div className="form-group">
+              <label htmlFor="gamebot-api-key">Gamebot API-Schlüssel</label>
+              <input
+                type="password"
+                id="gamebot-api-key"
+                name="gamebotApiKey"
+                value={localSettings.gamebotApiKey || ''}
+                onChange={handleChange}
+                placeholder="Ihr farming.gamebot.me API-Schlüssel"
+              />
+              <small>
+                Ihr API-Schlüssel von farming.gamebot.me. Diesen finden Sie in Ihrem Gamebot-Dashboard.
+              </small>
+            </div>
+          )}
+        </div>
         
         <div className="form-actions">
           <button className="btn btn-primary" onClick={handleSaveSettings}>

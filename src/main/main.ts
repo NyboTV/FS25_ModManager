@@ -1380,3 +1380,186 @@ ipcMain.handle('start-game', async (_, profileId) => {
   }
 });
 
+// Gamebot Integration Handlers
+import { gamebotService } from './gamebotService';
+
+// Test gamebot API connection
+ipcMain.handle('gamebot-test-connection', async (_, apiKey: string) => {
+  logger.debug('Handler: gamebot-test-connection aufgerufen');
+  try {
+    if (apiKey) {
+      gamebotService.setApiKey(apiKey);
+    }
+    
+    const result = await gamebotService.testConnection();
+    logger.debug(`Gamebot connection test result: ${result.success}`);
+    return result;
+  } catch (error: any) {
+    logger.error('Fehler beim Testen der Gamebot-Verbindung:', error);
+    return {
+      success: false,
+      message: error.message || String(error)
+    };
+  }
+});
+
+// Get gamebot servers
+ipcMain.handle('gamebot-get-servers', async () => {
+  logger.debug('Handler: gamebot-get-servers aufgerufen');
+  try {
+    const servers = await gamebotService.getServers();
+    logger.debug(`${servers.length} Gamebot servers abgerufen`);
+    return { success: true, servers };
+  } catch (error: any) {
+    logger.error('Fehler beim Abrufen der Gamebot-Server:', error);
+    return {
+      success: false,
+      error: error.message || String(error)
+    };
+  }
+});
+
+// Get specific gamebot server
+ipcMain.handle('gamebot-get-server', async (_, serverId: string) => {
+  logger.debug(`Handler: gamebot-get-server aufgerufen für Server ${serverId}`);
+  try {
+    const server = await gamebotService.getServer(serverId);
+    if (server) {
+      logger.debug(`Gamebot server ${serverId} details abgerufen`);
+      return { success: true, server };
+    } else {
+      return { success: false, error: 'Server not found' };
+    }
+  } catch (error: any) {
+    logger.error(`Fehler beim Abrufen des Gamebot-Servers ${serverId}:`, error);
+    return {
+      success: false,
+      error: error.message || String(error)
+    };
+  }
+});
+
+// Get server mods from gamebot
+ipcMain.handle('gamebot-get-server-mods', async (_, serverId: string) => {
+  logger.debug(`Handler: gamebot-get-server-mods aufgerufen für Server ${serverId}`);
+  try {
+    const mods = await gamebotService.getServerMods(serverId);
+    logger.debug(`${mods.length} Mods für Gamebot server ${serverId} abgerufen`);
+    return { success: true, mods };
+  } catch (error: any) {
+    logger.error(`Fehler beim Abrufen der Mods für Gamebot-Server ${serverId}:`, error);
+    return {
+      success: false,
+      error: error.message || String(error)
+    };
+  }
+});
+
+// Get player stats from gamebot
+ipcMain.handle('gamebot-get-player-stats', async (_, username: string) => {
+  logger.debug(`Handler: gamebot-get-player-stats aufgerufen für Spieler ${username}`);
+  try {
+    const stats = await gamebotService.getPlayerStats(username);
+    if (stats) {
+      logger.debug(`Spielerstatistiken für ${username} abgerufen`);
+      return { success: true, stats };
+    } else {
+      return { success: false, error: 'Player not found' };
+    }
+  } catch (error: any) {
+    logger.error(`Fehler beim Abrufen der Spielerstatistiken für ${username}:`, error);
+    return {
+      success: false,
+      error: error.message || String(error)
+    };
+  }
+});
+
+// Sync mods from gamebot server
+ipcMain.handle('gamebot-sync-mods', async (_, profileId: string, serverId: string) => {
+  logger.debug(`Handler: gamebot-sync-mods aufgerufen für Profil ${profileId} und Server ${serverId}`);
+  try {
+    // Get server mods from gamebot
+    const mods = await gamebotService.getServerMods(serverId);
+    if (mods.length === 0) {
+      return { success: false, error: 'No mods found for server' };
+    }
+
+    // Load profile
+    const profilePath = path.join(appDataPath, 'profiles', `${profileId}.json`);
+    if (!fs.existsSync(profilePath)) {
+      return { success: false, error: 'Profile not found' };
+    }
+
+    const profileData = JSON.parse(fs.readFileSync(profilePath, 'utf8'));
+    const profileModsPath = path.join(appDataPath, 'profiles', profileId, 'mods');
+    
+    if (!fs.existsSync(profileModsPath)) {
+      fs.mkdirSync(profileModsPath, { recursive: true });
+    }
+
+    // Download and sync mods
+    const downloadedMods: any[] = [];
+    const errors: string[] = [];
+
+    for (const mod of mods) {
+      const modFilename = `${mod.name.replace(/[^a-zA-Z0-9]/g, '_')}_v${mod.version}.zip`;
+      const modPath = path.join(profileModsPath, modFilename);
+
+      try {
+        const downloadResult = await gamebotService.downloadMod(mod, modPath);
+        
+        if (downloadResult.success) {
+          const stats = fs.statSync(modPath);
+          downloadedMods.push({
+            id: mod.id,
+            name: mod.name,
+            version: mod.version,
+            filePath: modPath,
+            fileSize: stats.size,
+            lastModified: stats.mtime.toISOString(),
+            isActive: mod.required,
+            isFromServer: true
+          });
+          logger.info(`Gamebot mod ${mod.name} erfolgreich heruntergeladen`);
+        } else {
+          errors.push(`${mod.name}: ${downloadResult.error}`);
+          logger.error(`Fehler beim Download von Gamebot mod ${mod.name}: ${downloadResult.error}`);
+        }
+      } catch (error: any) {
+        errors.push(`${mod.name}: ${error.message}`);
+        logger.error(`Unerwarteter Fehler beim Download von ${mod.name}:`, error);
+      }
+    }
+
+    // Update profile with new mods
+    const existingMods = profileData.mods || [];
+    profileData.mods = [
+      ...existingMods.filter((m: any) => !m.isFromServer), // Keep local mods
+      ...downloadedMods // Add gamebot mods
+    ];
+    profileData.lastSyncDate = new Date().toISOString();
+
+    fs.writeFileSync(profilePath, JSON.stringify(profileData, null, 2));
+
+    logger.info(`Gamebot sync completed: ${downloadedMods.length} mods synced, ${errors.length} errors`);
+
+    return {
+      success: true,
+      message: `${downloadedMods.length} Mods synchronisiert`,
+      stats: {
+        downloaded: downloadedMods.length,
+        errors: errors.length,
+        total: mods.length
+      },
+      errors: errors.length > 0 ? errors : undefined
+    };
+  } catch (error: any) {
+    logger.error(`Fehler bei der Gamebot-Mod-Synchronisation:`, error);
+    return {
+      success: false,
+      error: error.message || String(error)
+    };
+  }
+});
+

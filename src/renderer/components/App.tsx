@@ -4,6 +4,7 @@ import StartPage from './StartPage';
 import ProfilesView from './ProfilesView';
 import SettingsView from './SettingsView';
 import ProfileSettingsView from './ProfileSettingsView';
+import GamebotView from './GamebotView';
 import { Settings } from '../../common/types';
 
 const { ipcRenderer } = window.require('electron');
@@ -36,6 +37,7 @@ const App: React.FC = () => {  const navigate = useNavigate();
     if (path.startsWith('/settings')) return 'settings';
     if (path.startsWith('/profiles')) return 'profiles';
     if (path.startsWith('/profile-settings')) return 'profile-settings';
+    if (path.startsWith('/gamebot')) return 'gamebot';
     return 'start';
   };
   const handleMinimize = () => {
@@ -75,6 +77,12 @@ const App: React.FC = () => {  const navigate = useNavigate();
           Profile
         </div>
         <div 
+          className={`tab ${getCurrentTab() === 'gamebot' ? 'active' : ''}`}
+          onClick={() => navigate('/gamebot')}
+        >
+          Gamebot
+        </div>
+        <div 
           className={`tab ${getCurrentTab() === 'settings' ? 'active' : ''}`}
           onClick={() => navigate('/settings')}
         >
@@ -90,6 +98,7 @@ const App: React.FC = () => {  const navigate = useNavigate();
         <Routes>
           <Route path="/" element={<StartPage settings={settings} />} />
           <Route path="/profiles" element={<ProfilesView settings={settings} />} />
+          <Route path="/gamebot" element={<GamebotView settings={settings} />} />
           <Route path="/settings" element={<SettingsView settings={settings} setSettings={setSettings} />} />
           <Route path="/profile-settings/:id" element={<ProfileSettingsView settings={settings} />} />
         </Routes>
