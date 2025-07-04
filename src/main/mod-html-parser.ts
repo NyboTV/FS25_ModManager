@@ -16,9 +16,6 @@ export function parseModsFromHtmlCheerio(html: string): any[] {
     // Author
     const authorDiv = $(elem).find('div[title]').filter((_, d) => $(d).find('b').text().trim() === 'Author');
     modData.author = authorDiv.find('.col-lg-12,.col-xs-9').text().trim();
-    // Filename
-    const fileDiv = $(elem).find('div[title]').filter((_, d) => $(d).find('b').text().trim() === 'Filename');
-    modData.fileName = fileDiv.find('a').text().trim();
     // Size
     const sizeDiv = $(elem).find('div[title]').filter((_, d) => $(d).find('b').text().trim() === 'Size');
     modData.fileSize = sizeDiv.find('.col-lg-12,.col-xs-9').text().trim();
@@ -29,21 +26,38 @@ export function parseModsFromHtmlCheerio(html: string): any[] {
     // Active
     const activeDiv = $(elem).find('div[title]').filter((_, d) => $(d).find('b').text().trim() === 'Active');
     modData.isActive = activeDiv.find('.col-lg-12,.col-xs-9').text().trim().toLowerCase() === 'yes';
+    
     // Download-Link
     const downloadA = $(elem).find('a[title^="Download "]');
     modData.downloadUrl = downloadA.attr('href') ? (downloadA.attr('href')!.startsWith('http') ? downloadA.attr('href') : `http://193.111.249.39:8080/${downloadA.attr('href')}`) : '';
+    
+    // WICHTIG: Extrahiere den echten Dateinamen aus der Download-URL!
+    if (modData.downloadUrl) {
+      try {
+        const url = new URL(modData.downloadUrl);
+        const pathname = url.pathname;
+        // Extrahiere den Dateinamen aus dem URL-Pfad (z.B. "/mods/FS25_AutoDrive.zip" -> "FS25_AutoDrive.zip")
+        modData.fileName = pathname.split('/').pop() || '';
+        console.log(`Extrahierter Dateiname aus URL: ${modData.fileName} von ${modData.downloadUrl}`);
+      } catch (error) {
+        // Fallback: Verwende den abgekürzten Dateinamen aus der HTML-Tabelle
+        const fileDiv = $(elem).find('div[title]').filter((_, d) => $(d).find('b').text().trim() === 'Filename');
+        modData.fileName = fileDiv.find('a').text().trim();
+        console.warn(`Konnte Dateiname nicht aus URL extrahieren, verwende Fallback: ${modData.fileName}`);
+      }
+    } else {
+      // Fallback: Verwende den abgekürzten Dateinamen aus der HTML-Tabelle
+      const fileDiv = $(elem).find('div[title]').filter((_, d) => $(d).find('b').text().trim() === 'Filename');
+      modData.fileName = fileDiv.find('a').text().trim();
+    }
+    
     // Detail-URL (Name-Link)
     const detailA = nameDiv.find('a');
     modData.detailUrl = detailA.attr('href') ? (detailA.attr('href')!.startsWith('http') ? detailA.attr('href') : `http://193.111.249.39:8080/${detailA.attr('href')}`) : '';
-    // Roh-HTML für Debugging (nur temporär, nicht ins Profil speichern)
-    modData._rawHtml = $.html(elem);
+    
     // Nur speichern, wenn Filename und Download vorhanden
     if (modData.fileName && modData.downloadUrl) {
-      // _rawHtml NICHT ins Profil übernehmen, sondern nur für Debugging zurückgeben
-      const { _rawHtml, ...profileMod } = modData;
-      mods.push(profileMod);
-      // _rawHtml kann separat geloggt werden, z.B. logger.debug(...)
-      // NICHT an das Mod-Objekt anhängen!
+      mods.push(modData);
     }
   });
   return mods;

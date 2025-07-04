@@ -20,17 +20,19 @@
   "license": "ISC",
   "build": {
     "appId": "com.fs25modmanager.app",
-    "productName": "FS25 Mod Manager",
+    "productName": "Farming Simulator Mod Manager",
     "directories": {
       "output": "build"
     },
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "src/image/logo.png"
     },
     "files": [
       "dist/**/*",
       "node_modules/**/*",
-      "package.json"
+      "package.json",
+      "src/image/**/*"
     ]
   },
   "devDependencies": {
@@ -38,6 +40,7 @@
     "@types/node": "^24.0.3",
     "@types/uuid": "^10.0.0",
     "@types/xml2js": "^0.4.14",
+    "copy-webpack-plugin": "^13.0.0",
     "css-loader": "^7.1.2",
     "electron": "^36.4.0",
     "electron-builder": "^26.0.12",

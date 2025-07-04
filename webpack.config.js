@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = [
   // Electron main process
@@ -22,7 +23,14 @@ module.exports = [
     },
     resolve: {
       extensions: ['.ts', '.js']
-    }
+    },
+    plugins: [
+      new CopyWebpackPlugin({
+        patterns: [
+          { from: 'src/image', to: 'image' }
+        ]
+      })
+    ]
   },
   // Electron renderer process
   {

@@ -43,6 +43,7 @@ export class WindowManager {
       show: false, // Anfänglich nicht anzeigen
       frame: false, // Verwende einen rahmenlosen Stil für eigene Steuerelemente
       titleBarStyle: 'hidden', // Verstecke die Standard-Titelleiste
+      icon: path.join(__dirname, '../image/logo.png'), // Icon für die Anwendung
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false
