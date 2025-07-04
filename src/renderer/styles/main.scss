@@ -51,6 +51,10 @@ $border-radius-lg: 12px;
 $box-shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.05);
 $box-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
 $box-shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.15);
+$shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5);
+$shadow-md: 0 4px 8px rgba(0, 0, 0, 0.5);
+$shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.6);
+$shadow-xl: 0 16px 32px rgba(0, 0, 0, 0.7);
 
 // Übergänge
 $transition-fast: all 0.2s ease;
@@ -72,26 +76,27 @@ body {
 
 // Container
 .container {
-  width: 100%;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background-image: linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(255,255,255,0.7)),
-                    url('https://farming-simulator.com/assets/img/background.jpg');
-  background-size: cover;
-  background-attachment: fixed;
+  width: 100%;  min-height: 100vh;  display: flex;  flex-direction: column;
+  background-color: $background-color;  background-attachment: fixed;
+  padding-top: 180px; // Erhöht: Navbar (60px) + Höhe (40px) + Padding + großer Sicherheitsabstand
 }
 
+// Header
 // Header
 .header {
   background-color: $fs-dark-green;
   color: white;
-  padding: $spacing-md $spacing-xl;
+  padding: $spacing-sm $spacing-xl; // Reduziert von $spacing-md zu $spacing-sm
   display: flex;
   justify-content: space-between;
   align-items: center;
   box-shadow: $box-shadow-md;
   -webkit-app-region: drag; // Macht den Header zum Drag-Bereich
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  height: 48px; // Reduziert von 64px zu 48px
+  min-height: 48px; // Reduziert von 64px zu 48px
   
   h1 {
     margin: 0;
@@ -123,12 +128,20 @@ body {
 // Tab Navigation
 .tabs {
   display: flex;
-  background-color: white;
+  background-color: $card-background;
   border-bottom: 1px solid $border-color;
-  padding: 0 $spacing-xl;
+  padding: $spacing-sm $spacing-xl; // Dünner: reduziert von $spacing-md zu $spacing-sm
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  position: fixed; // Fixed statt sticky
+  top: 60px; // Tiefer: erhöht von 48px zu 80px
+  left: 0;
+  right: 0;
+  z-index: 999;
+  -webkit-app-region: no-drag;
+  padding-bottom: 10; // Kein Abstand zum Header
+  min-height: 40px; // Dünner: reduziert von 64px zu 40px
     .tab {
-    padding: $spacing-md $spacing-lg;
+    padding: $spacing-md $spacing-lg; // Dünner: reduziert von $spacing-lg zu $spacing-md
     cursor: pointer;
     font-weight: 500;
     color: $text-color;
@@ -163,9 +176,11 @@ body {
 .content {
   flex-grow: 1;
   padding: $spacing-xl;
+  margin-top: $spacing-xl; // Zusätzlicher Abstand nach oben
   overflow-y: auto;
   max-width: 1200px;
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
   width: 100%;
 }
 
@@ -333,6 +348,11 @@ body {
     height: 56px;
     font-size: $font-size-md;
     padding: $spacing-md $spacing-xl;
+  }
+  
+  &-sm {
+    padding: $spacing-xs $spacing-sm;
+    font-size: $font-size-sm;
   }
 }
 
@@ -638,11 +658,11 @@ table {
     
     .form-group {
       margin-bottom: $spacing-lg;
-      
-      select {
+        select {
         font-size: $font-size-lg;
         padding: $spacing-lg;
-        background-color: white;
+        background-color: $input-background;
+        color: $text-color;
         border-width: 2px;
         font-weight: 500;
         height: 60px;
@@ -1105,75 +1125,920 @@ table th {
   }
 }
 
-// Fortschrittsbalken für Downloads
-.download-progress {
-  margin: 15px 0;
-  padding: 10px;
-  background-color: lighten($primary-color, 60%);
-  border-radius: 4px;
+// Schatten
+$shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5);
+$shadow-md: 0 4px 8px rgba(0, 0, 0, 0.5);
+$shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.6);
+$shadow-xl: 0 16px 32px rgba(0, 0, 0, 0.7);
+
+// Popup-Stile
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000; // Höher als Header (1000) und Navigation (999)
+  backdrop-filter: blur(2px);
+}
+
+.popup-content {
+  background-color: $card-background;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-xl;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: popup-fade-in 0.2s ease-out;
+  position: relative;
+  z-index: 2001; // Höher als Overlay
+}
+
+@keyframes popup-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.popup-header {
+  padding: $spacing-lg;
+  border-bottom: 1px solid $border-color;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: $primary-color;
+
+  h2 {
+    margin: 0;
+    color: white;
+    font-size: $font-size-lg;
+    font-weight: 600;
+  }
+
+  .popup-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: $font-size-xl;
+    cursor: pointer;
+    padding: $spacing-xs;
+    line-height: 1;
+    border-radius: $border-radius-sm;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+}
+
+.popup-body {
+  padding: $spacing-lg;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.popup-footer {
+  padding: $spacing-lg;
+  border-top: 1px solid $border-color;
+  display: flex;
+  justify-content: flex-end;
+  gap: $spacing-md;
+
+  .button {
+    padding: $spacing-sm $spacing-lg;
+    border: none;
+    border-radius: $border-radius-md;
+    cursor: pointer;
+    font-size: $font-size-md;
+    font-weight: 500;
+    transition: all 0.2s;
+
+    &.primary {
+      background-color: $primary-color;
+      color: white;
+
+      &:hover {
+        background-color: $primary-dark;
+      }
+    }
+
+    &.secondary {
+      background-color: $input-background;
+      color: $text-color;
+
+      &:hover {
+        background-color: lighten($input-background, 10%);
+      }
+    }
+  }
+}
+
+// Profil-Edit-Popup spezifische Stile
+.profile-edit-popup {
+  width: 500px;
+
+  .form-group {
+    margin-bottom: $spacing-lg;
+
+    label {
+      display: block;
+      margin-bottom: $spacing-xs;
+      color: $text-color;
+      font-weight: 500;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: $spacing-sm;
+      background-color: $input-background;
+      border: 1px solid $border-color;
+      border-radius: $border-radius-sm;
+      color: $text-color;
+      font-size: $font-size-md;
+      box-sizing: border-box;
+
+      &:focus {
+        outline: none;
+        border-color: $primary-color;
+        box-shadow: 0 0 0 2px rgba(22, 123, 41, 0.2);
+      }
+
+      &.error {
+        border-color: $error-color;
+      }
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .input-group {
+      display: flex;
+      gap: $spacing-sm;
+
+      input {
+        flex: 1;
+      }
+
+      .browse-button {
+        padding: $spacing-sm $spacing-md;
+        background-color: $secondary-color;
+        color: white;
+        border: none;
+        border-radius: $border-radius-sm;
+        cursor: pointer;
+        font-size: $font-size-sm;
+        white-space: nowrap;
+
+        &:hover {
+          background-color: $secondary-dark;
+        }
+      }
+    }
+
+    .error-message {
+      color: $error-color;
+      font-size: $font-size-sm;
+      margin-top: $spacing-xs;
+      display: block;
+    }
+  }
+}
+
+// Sync-Progress-Popup spezifische Stile
+.sync-progress-popup {
+  width: 450px;
+
+  .sync-status {
+    margin-bottom: $spacing-lg;
+
+    .status-info {
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-sm;
+
+      .status-text {
+        font-size: $font-size-lg;
+        font-weight: 600;
+      }
+
+      .current-mod {
+        color: $muted-text-color;
+      }
+    }
+  }
+
+  .progress-section {
+    margin-bottom: $spacing-lg;
+
+    .progress-label {
+      margin-bottom: $spacing-xs;
+      color: $text-color;
+      font-size: $font-size-sm;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 20px;
+      background-color: $input-background;
+      border-radius: $border-radius-md;
+      overflow: hidden;
+      margin-bottom: $spacing-xs;
+
+      .progress-fill {
+        height: 100%;
+        background-color: $primary-color;
+        transition: width 0.3s ease;
+        border-radius: $border-radius-md;
+      }
+    }
+
+    .progress-percentage {
+      text-align: right;
+      font-size: $font-size-sm;
+      color: $muted-text-color;
+    }
+  }
+
+  .sync-details {
+    background-color: $input-background;
+    padding: $spacing-md;
+    border-radius: $border-radius-md;
+    margin-bottom: $spacing-lg;
+
+    .detail-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: $spacing-xs;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .detail-label {
+        color: $muted-text-color;
+      }
+
+      .detail-value {
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+// Mod-Info-Popup spezifische Stile
+.mod-info-popup {
+  width: 600px;
+  max-height: 80vh;
+
+  .mod-info-content {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-lg;
+
+    .mod-icon {
+      text-align: center;
+
+      img {
+        max-width: 128px;
+        max-height: 128px;
+        border-radius: $border-radius-md;
+        box-shadow: $shadow-md;
+      }
+    }
+
+    .mod-details {
+      .detail-group {
+        margin-bottom: $spacing-lg;
+
+        h3 {
+          margin: 0 0 $spacing-md 0;
+          color: $primary-color;
+          font-size: $font-size-lg;
+          border-bottom: 1px solid $border-color;
+          padding-bottom: $spacing-xs;
+        }
+
+        .detail-item {
+          display: flex;
+          margin-bottom: $spacing-sm;
+
+          .detail-label {
+            min-width: 140px;
+            color: $muted-text-color;
+            font-weight: 500;
+          }
+
+          .detail-value {
+            flex: 1;
+            color: $text-color;
+
+            &.file-name {
+              font-family: monospace;
+              font-size: $font-size-sm;
+              word-break: break-all;
+            }
+
+            &.status {
+              font-weight: 600;
+
+              &.active {
+                color: $success-color;
+              }
+
+              &.inactive {
+                color: $muted-text-color;
+              }
+            }
+          }
+        }
+
+        .mod-description {
+          background-color: $input-background;
+          padding: $spacing-md;
+          border-radius: $border-radius-md;
+          line-height: 1.5;
+          white-space: pre-wrap;
+          max-height: 200px;
+          overflow-y: auto;
+        }
+      }
+    }
+  }
+}
+
+// Update-Dialog spezifische Stile
+.update-dialog {
+  width: 450px;
+
+  .version-info {
+    margin: $spacing-lg 0;
+    padding: $spacing-md;
+    background-color: $input-background;
+    border-radius: $border-radius-md;
+
+    div {
+      margin-bottom: $spacing-xs;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .release-notes {
+    margin-top: $spacing-lg;
+
+    h4 {
+      margin: 0 0 $spacing-sm 0;
+      color: $primary-color;
+    }
+
+    .notes-content {
+      background-color: $input-background;
+      padding: $spacing-md;
+      border-radius: $border-radius-md;
+      max-height: 200px;
+      overflow-y: auto;
+      font-size: $font-size-sm;
+      line-height: 1.4;
+      white-space: pre-wrap;
+    }
+  }
+}
+
+// Dark Select Styling
+select, .dark-select {
+  background-color: $input-background !important;
+  color: $text-color !important;
+  border: 1px solid $border-color !important;
+  border-radius: $border-radius-sm;
+  padding: $spacing-sm;
+  font-size: $font-size-md;
   
-  p {
-    margin: 0 0 5px 0;
-    font-weight: bold;
+  option {
+    background-color: $input-background !important;
+    color: $text-color !important;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $primary-color !important;
+    box-shadow: 0 0 0 2px rgba(22, 123, 41, 0.2) !important;
+  }
+}
+
+// Update Section Styling
+.update-section {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  
+  .form-group {
+    margin-bottom: 0;
   }
   
-  .progress-bar-container {
-    width: 100%;
-    height: 10px;
-    background-color: #e0e0e0;
-    border-radius: 5px;
-    overflow: hidden;
-    margin-bottom: 5px;
-    
-    .progress-bar {
-      height: 100%;
-      background-color: $primary-color;
-      transition: width 0.2s ease-in-out;
-    }
+  button {
+    align-self: flex-start;
   }
   
   small {
-    display: block;
-    text-align: right;
-    color: #666;
+    color: $muted-text-color;
+    font-style: italic;
   }
 }
 
-// Mod-Tabelle und Aktionen
-.mod-table {
-  tbody tr {
-    transition: background-color 0.2s;
-    
-    &:hover {
-      background-color: lighten($primary-color, 65%);
-    }
-  }
-  
-  .action-buttons {
-    display: flex;
-    gap: 5px;
-  }
-  
-  .btn-icon {
-    padding: 3px 8px;
-    background: none;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    cursor: pointer;
-    
-    &:hover {
-      background-color: #f0f0f0;
-    }
-    
-    &.delete:hover {
-      background-color: #ffeeee;
-      border-color: #ffcccc;
-    }
-  }
-}
-
-.mod-actions {
-  margin-bottom: 15px;
+// Profile Stats Spacing Fix
+.profile-stats {
   display: flex;
-  justify-content: flex-end;
+  gap: $spacing-md;
+  flex-wrap: wrap;
+  
+  span {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: $spacing-xs $spacing-sm;
+    border-radius: $border-radius-sm;
+    font-size: $font-size-sm;
+    white-space: nowrap;
+  }
+}
+
+// Game Settings Collapsibles
+.game-settings-section {
+  margin-top: $spacing-lg;
+}
+
+.game-collapsible {
+  border: 1px solid $border-color;
+  border-radius: $border-radius-md;
+  margin-bottom: $spacing-sm;
+  background-color: $card-background;
+
+  &[open] {
+    border-color: $primary-color;
+  }
+}
+
+.game-header {
+  background-color: $input-background;
+  padding: $spacing-md;
+  cursor: pointer;
+  border-radius: $border-radius-md;
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &:hover {
+    background-color: lighten($input-background, 10%);
+  }
+
+  strong {
+    color: $text-color;
+  }
+
+  .active-badge {
+    background-color: $success-color;
+    color: white;
+    padding: $spacing-xs $spacing-sm;
+    border-radius: $border-radius-sm;
+    font-size: $font-size-xs;
+    font-weight: bold;
+  }
+}
+
+.game-content {
+  padding: $spacing-md;
+  border-top: 1px solid $border-color;
+
+  .form-group:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Mod Info Popup Better Spacing
+.mod-info-popup {
+  .mod-details {
+    .detail-group {
+      margin-bottom: $spacing-xl;
+      
+      h3 {
+        margin-bottom: $spacing-md;
+        color: $primary-color;
+        border-bottom: 2px solid $primary-color;
+        padding-bottom: $spacing-xs;
+      }
+    }
+    
+    .detail-item {
+      margin-bottom: $spacing-md;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: $spacing-md;
+      
+      .detail-label {
+        font-weight: 600;
+        color: $muted-text-color;
+        min-width: 120px;
+        flex-shrink: 0;
+      }
+      
+      .detail-value {
+        color: $text-color;
+        word-break: break-all;
+        text-align: right;
+        flex: 1;
+        
+        &.status {
+          &.active {
+            color: $success-color;
+            font-weight: 600;
+          }
+          &.inactive {
+            color: $error-color;
+            font-weight: 600;
+          }
+        }
+        
+        &.file-name {
+          font-family: monospace;
+          font-size: $font-size-sm;
+          max-width: 300px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+  }
+  
+  .mod-description {
+    background-color: $input-background;
+    padding: $spacing-md;
+    border-radius: $border-radius-md;
+    border-left: 4px solid $primary-color;
+    line-height: 1.6;
+    color: $text-color;
+  }
+}
+
+// ===== NEW START PAGE DESIGN =====
+.start-page-new {
+  min-height: calc(100vh - 140px);
+  display: flex;
+  flex-direction: column;
+  padding: $spacing-xl;
+  gap: $spacing-xl;
+
+  .loading-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 50vh;
+    
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid $border-color;
+      border-top: 4px solid $primary-color;
+      border-radius: 50%;
+      animation: spin-new 1s linear infinite;
+      margin-bottom: $spacing-md;
+    }
+  }
+
+  .no-profiles-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60vh;
+
+    .welcome-card {
+      text-align: center;
+      padding: 48px; // $spacing-xxl equivalent
+      background-color: $card-background;
+      border-radius: $border-radius-lg;
+      border: 1px solid $border-color;
+      box-shadow: $box-shadow-lg;
+      max-width: 600px;
+
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: $spacing-lg;
+        color: $primary-color;
+      }
+
+      p {
+        font-size: $font-size-lg;
+        margin-bottom: $spacing-md;
+        color: $text-color;
+      }
+
+      .btn-large {
+        font-size: $font-size-lg;
+        padding: $spacing-lg 48px; // xxl equivalent
+        margin-top: $spacing-lg;
+      }
+    }
+  }
+
+  .main-content-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-lg;
+
+    .profile-selection-card {
+      background-color: $card-background;
+      border-radius: $border-radius-lg;
+      border: 1px solid $border-color;
+      box-shadow: $box-shadow-sm;
+      padding: $spacing-lg;
+      text-align: center;
+
+      h2 {
+        margin-bottom: $spacing-md;
+        color: $primary-color;
+        font-size: 1.8rem;
+      }
+
+      .profile-selector .profile-select {
+        width: 100%;
+        max-width: 500px;
+        padding: $spacing-md $spacing-lg;
+        font-size: $font-size-lg;
+        background-color: $input-background;
+        border: 2px solid $border-color;
+        border-radius: $border-radius-md;
+        color: $text-color;
+        cursor: pointer;
+
+        &:focus {
+          outline: none;
+          border-color: $primary-color;
+          box-shadow: 0 0 0 3px rgba(22, 123, 41, 0.2);
+        }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+      }
+    }
+
+    .profile-details-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: $spacing-lg;
+
+      .info-card {
+        background-color: $card-background;
+        border-radius: $border-radius-lg;
+        border: 1px solid $border-color;
+        box-shadow: $box-shadow-sm;
+        padding: $spacing-lg;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: $box-shadow-md;
+        }
+
+        h3 {
+          margin-bottom: $spacing-md;
+          color: $primary-color;
+          font-size: 1.3rem;
+          border-bottom: 2px solid $primary-color;
+          padding-bottom: $spacing-xs;
+        }
+
+        .info-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: $spacing-sm;
+          padding: $spacing-xs 0;
+
+          .label {
+            font-weight: 600;
+            color: $muted-text-color;
+            min-width: 100px;
+          }
+
+          .value {
+            color: $text-color;
+            text-align: right;
+            word-break: break-word;
+            flex: 1;
+            margin-left: $spacing-sm;
+          }
+        }
+
+        .mod-stats {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: $spacing-md;
+
+          .stat-item {
+            text-align: center;
+            padding: $spacing-md;
+            background-color: $input-background;
+            border-radius: $border-radius-md;
+            border: 2px solid transparent;
+
+            &.active {
+              border-color: $success-color;
+              background-color: rgba($success-color, 0.1);
+            }
+
+            &.inactive {
+              border-color: $error-color;
+              background-color: rgba($error-color, 0.1);
+            }
+
+            .stat-number {
+              display: block;
+              font-size: 2rem;
+              font-weight: bold;
+              color: $primary-color;
+            }
+
+            .stat-label {
+              display: block;
+              font-size: $font-size-sm;
+              color: $muted-text-color;
+              margin-top: $spacing-xs;
+            }
+          }
+        }
+
+        &.quick-actions .action-buttons {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: $spacing-md;
+
+          .action-btn {
+            padding: $spacing-md;
+            background-color: $secondary-color;
+            color: white;
+            border: none;
+            border-radius: $border-radius-md;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+
+            &:hover {
+              background-color: darken($secondary-color, 10%);
+              transform: translateY(-1px);
+            }
+
+            &:active {
+              transform: translateY(0);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .launch-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-xl 0;
+    gap: $spacing-lg;
+
+    .status-message {
+      display: flex;
+      align-items: center;
+      gap: $spacing-sm;
+      padding: $spacing-md $spacing-lg;
+      border-radius: $border-radius-md;
+      font-weight: 600;
+      max-width: 500px;
+      text-align: center;
+
+      .status-icon {
+        font-size: 1.2rem;
+      }
+
+      &.success {
+        background-color: rgba($success-color, 0.1);
+        border: 1px solid $success-color;
+        color: $success-color;
+      }
+
+      &.error {
+        background-color: rgba($error-color, 0.1);
+        border: 1px solid $error-color;
+        color: $error-color;
+      }
+    }
+
+    .launch-button {
+      font-size: 1.5rem;
+      font-weight: bold;
+      padding: $spacing-lg 48px; // xxl equivalent
+      background: linear-gradient(135deg, $primary-color, $secondary-color);
+      color: white;
+      border: none;
+      border-radius: $border-radius-lg;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: $box-shadow-lg;
+      display: flex;
+      align-items: center;
+      gap: $spacing-md;
+      min-width: 250px;
+      justify-content: center;
+
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(22, 123, 41, 0.3);
+      }
+
+      &:active {
+        transform: translateY(-1px);
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: $box-shadow-sm;
+      }
+
+      .loading-spinner.small {
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top: 2px solid white;
+        border-radius: 50%;
+        animation: spin-new 1s linear infinite;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: $spacing-md;
+
+    .profile-details-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .main-content-area .info-card .action-buttons {
+      grid-template-columns: 1fr;
+    }
+
+    .launch-button {
+      font-size: 1.2rem;
+      padding: $spacing-md $spacing-lg;
+      min-width: 200px;
+    }
+  }
+}
+
+// Mods Header mit Actions
+.mods-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: $spacing-lg; // Abstand nach oben hinzugefügt
+  margin-bottom: $spacing-md;
+  
+  h4 {
+    margin: 0;
+    color: $primary-color;
+  }
+  
+  .mods-actions {
+    display: flex;
+    gap: $spacing-sm;
+    
+    .btn-sm {
+      padding: $spacing-xs $spacing-sm;
+      font-size: $font-size-sm;
+      white-space: nowrap;
+    }
+  }
+}
+
+@keyframes spin-new {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

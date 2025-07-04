@@ -7,9 +7,10 @@ const { ipcRenderer } = window.require('electron');
 
 interface ProfileSettingsViewProps {
   settings: Settings;
+  modListReloadKey?: number;
 }
 
-const ProfileSettingsView: React.FC<ProfileSettingsViewProps> = ({ settings }) => {
+const ProfileSettingsView: React.FC<ProfileSettingsViewProps> = ({ settings, modListReloadKey }) => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   
@@ -22,17 +23,9 @@ const ProfileSettingsView: React.FC<ProfileSettingsViewProps> = ({ settings }) =
   const [deployMessage, setDeployMessage] = useState('');
   const [deployError, setDeployError] = useState('');
 
-  // Status für Download-Fortschritt
-  const [downloadProgress, setDownloadProgress] = useState<{
-    modName: string;
-    percent: number;
-    downloadedBytes: number;
-    totalBytes: number;
-  } | null>(null);
-
   useEffect(() => {
     loadProfile();
-  }, [id]);
+  }, [id, modListReloadKey]);
 
   const loadProfile = async () => {
     try {
@@ -52,15 +45,14 @@ const ProfileSettingsView: React.FC<ProfileSettingsViewProps> = ({ settings }) =
       setIsLoading(false);
     }
   };
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, type?: 'checkbox') => {
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (!profile) return;
     
     const { name, value } = e.target;
-    const checked = type === 'checkbox' ? (e.target as HTMLInputElement).checked : false;
-    
     setProfile({
       ...profile,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: value
     });
   };
 
@@ -85,14 +77,18 @@ const ProfileSettingsView: React.FC<ProfileSettingsViewProps> = ({ settings }) =
         modFolderPath: folderPath
       });
     }
-  };
-  const handleSyncWithServer = async () => {
+  };  const handleSyncWithServer = async () => {
+    console.log('🚀 handleSyncWithServer called');
+    console.log('🚀 Profile:', profile);
+    
     if (!profile || !profile.serverSyncUrl) {
+      console.log('❌ No profile or serverSyncUrl');
       setSyncError('Bitte geben Sie eine Server-Sync-URL ein');
       return;
     }
     
     try {
+      console.log('🚀 Starting sync process...');
       setIsSyncing(true);
       setSyncMessage('Verbindung zum Server wird hergestellt...');
       setSyncError('');
@@ -105,14 +101,19 @@ const ProfileSettingsView: React.FC<ProfileSettingsViewProps> = ({ settings }) =
       // Versuchen Sie, die URL zu analysieren
       try {
         const url = new URL(profile.serverSyncUrl);
+        console.log('✅ URL is valid:', url.toString());
       } catch (e) {
         throw new Error('Ungültige URL-Format.');
       }
       
       setSyncMessage('Lade Mod-Liste vom Server...');
       
+      console.log('🚀 Calling IPC sync-mods with:', profile.id, profile.serverSyncUrl);
+      
       // IPC-Aufruf zum Main-Prozess für die tatsächliche Server-Synchronisation
       const result = await ipcRenderer.invoke('sync-mods', profile.id, profile.serverSyncUrl);
+      
+      console.log('📦 IPC Result:', result);
         if (result.success) {
         const stats = result.stats || { new: 0, updated: 0, unchanged: 0, total: 0 };
         setSyncMessage(
@@ -121,17 +122,14 @@ const ProfileSettingsView: React.FC<ProfileSettingsViewProps> = ({ settings }) =
         
         // Aktualisiertes Profil neu laden, um die neuen Mods anzuzeigen
         await loadProfile();
-        
-        // Status-Nachricht länger anzeigen, damit der Benutzer die Statistik lesen kann
-        setTimeout(() => {
-          setSyncMessage('');
-          setIsSyncing(false);
-        }, 5000);
+          // Download-Leiste dauerhaft anzeigen - Status bleibt sichtbar
+        setSyncMessage('Synchronisation abgeschlossen');
+        setIsSyncing(false);
+        // Entferne nicht mehr die Nachricht - sie bleibt dauerhaft sichtbar
       } else {
         throw new Error(result.error || 'Unbekannter Fehler bei der Server-Synchronisation');
-      }
-        } catch (error) {
-      console.error('Fehler bei der Server-Synchronisation:', error);
+      }        } catch (error) {
+      console.error('❌ Error during sync:', error);
       setSyncError(`Fehler: ${error instanceof Error ? error.message : String(error)}`);
       setIsSyncing(false);
     }
@@ -204,83 +202,6 @@ const ProfileSettingsView: React.FC<ProfileSettingsViewProps> = ({ settings }) =
     }
   };
 
-  // Höre auf Download-Fortschritt
-  useEffect(() => {
-    const handleDownloadProgress = (_event: any, progress: any) => {
-      setDownloadProgress(progress);
-    };
-
-    ipcRenderer.on('download-progress', handleDownloadProgress);
-
-    return () => {
-      ipcRenderer.removeListener('download-progress', handleDownloadProgress);
-    };
-  }, []);
-
-  // Mod-Dateien hinzufügen
-  const handleAddMods = async () => {
-    try {
-      // Dialog zum Öffnen von Dateien anzeigen
-      const result = await ipcRenderer.invoke('open-file-dialog', {
-        properties: ['openFile', 'multiSelections'],
-        filters: [{ name: 'ZIP-Dateien', extensions: ['zip'] }],
-        title: 'Mods auswählen'
-      });
-      
-      if (result && result.filePaths && result.filePaths.length > 0) {
-        // Mods zum Profil hinzufügen
-        const addResult = await ipcRenderer.invoke('add-mod-files', profile?.id, result.filePaths);
-        
-        if (addResult.success) {
-          // Profil neu laden
-          await loadProfile();
-          alert(`${addResult.message}`);
-        } else {
-          alert(`Fehler: ${addResult.error}`);
-        }
-      }
-    } catch (error) {
-      console.error('Fehler beim Hinzufügen von Mods:', error);
-      alert(`Fehler beim Hinzufügen von Mods: ${error instanceof Error ? error.message : String(error)}`);
-    }
-  };
-  
-  // Mod löschen
-  const handleDeleteMod = async (modId: string) => {
-    if (!confirm('Sind Sie sicher, dass Sie diesen Mod löschen möchten?')) {
-      return;
-    }
-    
-    try {
-      const result = await ipcRenderer.invoke('delete-mod', profile?.id, modId);
-      
-      if (result.success) {
-        await loadProfile();
-      } else {
-        alert(`Fehler: ${result.error}`);
-      }
-    } catch (error) {
-      console.error('Fehler beim Löschen des Mods:', error);
-      alert(`Fehler beim Löschen des Mods: ${error instanceof Error ? error.message : String(error)}`);
-    }
-  };
-  
-  // Mod aktivieren/deaktivieren
-  const handleToggleModActive = async (modId: string) => {
-    try {
-      const result = await ipcRenderer.invoke('toggle-mod-active', profile?.id, modId);
-      
-      if (result.success) {
-        await loadProfile();
-      } else {
-        alert(`Fehler: ${result.error}`);
-      }
-    } catch (error) {
-      console.error('Fehler beim Ändern des Mod-Status:', error);
-      alert(`Fehler: ${error instanceof Error ? error.message : String(error)}`);
-    }
-  };
-
   if (isLoading) {
     return <div className="loading">Lade Profil...</div>;
   }
@@ -305,16 +226,15 @@ const ProfileSettingsView: React.FC<ProfileSettingsViewProps> = ({ settings }) =
             placeholder="z.B. Mein Hauptprofil"
           />
         </div>
-        
-        <div className="form-group">
-          <label htmlFor="version">Spielversion</label>
+          <div className="form-group">
+          <label htmlFor="version">Modpack-Version</label>
           <input
             type="text"
             id="version"
             name="version"
             value={profile.version}
             onChange={handleChange}
-            placeholder="z.B. FS25"
+            placeholder="z.B. v1.0.0 oder 2024-06-19"
           />
         </div>
         
@@ -362,22 +282,40 @@ const ProfileSettingsView: React.FC<ProfileSettingsViewProps> = ({ settings }) =
             <p>Letzte Synchronisierung: {new Date(profile.lastSyncDate).toLocaleString()}</p>
           </div>
         )}
-        
-        <div className="sync-actions">
+          <div className="sync-actions">
+          {/* DEBUG INFO */}
+          <div style={{background: 'yellow', padding: '5px', margin: '5px 0'}}>
+            DEBUG: isSyncing = {String(isSyncing)} | Button should be: {isSyncing ? 'DISABLED' : 'ENABLED'}
+          </div>
+          
           <button 
             className="btn btn-secondary" 
-            onClick={handleSyncWithServer}
-            disabled={isSyncing}
+            onClick={() => {
+              console.log('🔵 Button clicked!');
+              console.log('🔍 isSyncing:', isSyncing);
+              console.log('🔍 Button disabled:', isSyncing);
+              try {
+                handleSyncWithServer();
+              } catch (error) {
+                console.error('❌ Error calling handleSyncWithServer:', error);
+              }
+            }}
+            disabled={false}
+            style={{ 
+              backgroundColor: isSyncing ? '#ccc' : '#007bff',
+              cursor: isSyncing ? 'not-allowed' : 'pointer',
+              border: '2px solid red' // Debug border
+            }}
+            onMouseEnter={() => console.log('🔵 Button hover IN')}
+            onMouseLeave={() => console.log('🔵 Button hover OUT')}
           >
             {isSyncing ? 'Synchronisierung läuft...' : 'Mit Server synchronisieren'}
           </button>
         </div>
-        
-        {syncMessage && (
-          <div className="alert alert-success">
-            {syncMessage}
-          </div>
-        )}
+          {/* Download-Leiste wird dauerhaft angezeigt */}
+        <div className="alert alert-info">
+          {syncMessage || 'Bereit für Synchronisation'}
+        </div>
         
         {syncError && (
           <div className="alert alert-error">
@@ -385,20 +323,11 @@ const ProfileSettingsView: React.FC<ProfileSettingsViewProps> = ({ settings }) =
           </div>
         )}
       </div>
-        <div className="card">
+      
+      <div className="card">
         <h2>Mods im Profil</h2>
-        
-        <div className="mod-actions">
-          <button 
-            className="btn btn-secondary" 
-            onClick={handleAddMods}
-          >
-            Mods hinzufügen
-          </button>
-        </div>
-        
         {profile.mods.length > 0 ? (
-          <table className="mod-table">
+          <table>
             <thead>
               <tr>
                 <th>Status</th>
@@ -406,12 +335,11 @@ const ProfileSettingsView: React.FC<ProfileSettingsViewProps> = ({ settings }) =
                 <th>Version</th>
                 <th>Größe</th>
                 <th>Quelle</th>
-                <th>Aktionen</th>
               </tr>
             </thead>
             <tbody>
               {profile.mods.map((mod) => (
-                <tr key={mod.id} title={mod.description || ''}>
+                <tr key={mod.fileName}>
                   <td>
                     <span className={`status ${mod.isActive ? 'active' : 'inactive'}`}>
                       {mod.isActive ? 'Aktiv' : 'Inaktiv'}
@@ -419,27 +347,11 @@ const ProfileSettingsView: React.FC<ProfileSettingsViewProps> = ({ settings }) =
                   </td>
                   <td>{mod.name}</td>
                   <td>{mod.version || 'Unbekannt'}</td>
-                  <td>{(mod.fileSize / (1024 * 1024)).toFixed(2)} MB</td>
+                  <td>{mod.fileSize || '-'}</td>
                   <td>
-                    <span className={`badge ${mod.isFromServer ? 'badge-primary' : 'badge-secondary'}`}>
-                      {mod.isFromServer ? 'Server' : 'Lokal'}
+                    <span className={`badge ${mod.downloadUrl ? 'badge-primary' : 'badge-secondary'}`}>
+                      {mod.downloadUrl ? 'Server' : 'Lokal'}
                     </span>
-                  </td>
-                  <td className="action-buttons">
-                    <button 
-                      className="btn-icon" 
-                      onClick={() => handleToggleModActive(mod.id)}
-                      title={mod.isActive ? 'Deaktivieren' : 'Aktivieren'}
-                    >
-                      {mod.isActive ? '🔴' : '🟢'}
-                    </button>
-                    <button 
-                      className="btn-icon delete" 
-                      onClick={() => handleDeleteMod(mod.id)}
-                      title="Löschen"
-                    >
-                      🗑️
-                    </button>
                   </td>
                 </tr>
               ))}

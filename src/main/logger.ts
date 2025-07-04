@@ -6,8 +6,7 @@ class Logger {
   private logFilePath: string;
   private isDebugEnabled: boolean;
 
-  constructor() {
-    const appDataPath = path.join(os.homedir(), 'Documents', 'FS_ModManager');
+  constructor(appDataPath: string) {
     this.logFilePath = path.join(appDataPath, 'log.txt');
     this.isDebugEnabled = false;
     
@@ -21,6 +20,7 @@ class Logger {
   }
 
   public enableDebug(enable: boolean): void {
+    if (this.isDebugEnabled === enable) return; // Nur loggen, wenn sich der Status ändert
     this.isDebugEnabled = enable;
     this.info(`Debug-Logging wurde ${enable ? 'aktiviert' : 'deaktiviert'}`);
   }
@@ -87,5 +87,5 @@ class Logger {
   }
 }
 
-// Singleton-Instanz
-export const logger = new Logger();
+// Logger-Instanz mit appDataPath erzeugen
+export { Logger };

@@ -34,7 +34,10 @@
     ]
   },
   "devDependencies": {
+    "@types/adm-zip": "^0.5.7",
     "@types/node": "^24.0.3",
+    "@types/uuid": "^10.0.0",
+    "@types/xml2js": "^0.4.14",
     "css-loader": "^7.1.2",
     "electron": "^36.4.0",
     "electron-builder": "^26.0.12",
@@ -50,15 +53,18 @@
     "webpack-dev-server": "^5.2.2"
   },
   "dependencies": {
-    "@types/adm-zip": "^0.5.7",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@types/react-router-dom": "^5.3.3",
+    "@types/yauzl": "^2.10.3",
     "adm-zip": "^0.5.16",
     "axios": "^1.10.0",
+    "cheerio": "^1.1.0",
     "electron-store": "^10.1.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-router-dom": "^7.6.2"
+    "react-router-dom": "^7.6.2",
+    "xml2js": "^0.6.2",
+    "yauzl": "^3.2.0"
   }
 }
