@@ -10,7 +10,7 @@ Ein moderner, robuster Mod-Manager für Farming Simulator 25, entwickelt mit Typ
 1. Laden Sie die neueste `Farming Simulator Mod Manager Setup.exe` aus dem [Releases-Bereich](https://github.com/username/Fs25_ModManager/releases) herunter
 2. Führen Sie die Setup-Datei aus und folgen Sie den Anweisungen
 3. Die Anwendung erstellt automatisch eine Desktop-Verknüpfung
-4. Starten Sie den FS25 Mod Manager und konfigurieren Sie Ihre Einstellungen
+4. Starten Sie den Farming Simulator ModManager und konfigurieren Sie Ihre Einstellungen
 
 ## ✨ Hauptfunktionen
 
