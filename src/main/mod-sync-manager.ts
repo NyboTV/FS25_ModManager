@@ -160,7 +160,28 @@ export class ModSyncManager {
         }
         completedMods++;
       }
-      // KEIN Entfernen von nicht-serverMods! Nur Server-Mods werden ergänzt/aktualisiert.
+      // Echter Sync: Entferne lokale Mods, die nicht auf dem Server existieren
+      const serverFileNames = serverMods.map(m => m.fileName);
+      const orphanedMods = profile.mods.filter((m: any) => !serverFileNames.includes(m.fileName));
+      
+      for (const orphanedMod of orphanedMods) {
+        try {
+          const filePath = path.join(modsDirectory, orphanedMod.fileName);
+          if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+            logger.info(`Lokaler Mod gelöscht (nicht auf Server): ${orphanedMod.fileName}`);
+          }
+        } catch (err) {
+          logger.warn(`Fehler beim Löschen des verwaisten Mods ${orphanedMod.fileName}: ${err}`);
+        }
+      }
+      
+      // Filtere die profilspezifische Liste auf nur noch die Mods, die auch auf dem Server sind
+      profile.mods = profile.mods.filter((m: any) => serverFileNames.includes(m.fileName));
+      
+      // Speichere Profil final
+      const finalProfilePath = path.join(this.appDataPath, 'profiles', profile.id, 'profile.json');
+      fs.writeFileSync(finalProfilePath, JSON.stringify(profile, null, 2));
       if (progressCallback) {
         progressCallback({
           profileId: profile.id,
