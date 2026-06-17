@@ -2,12 +2,12 @@
 
 Ein moderner, robuster Mod-Manager für Farming Simulator 25, entwickelt mit TypeScript, Electron und React. Die Anwendung ermöglicht Ihnen, verschiedene Mod-Profile zu erstellen, zu verwalten und nahtlos mit Dedicated Servern zu synchronisieren. Mit einer benutzerfreundlichen Oberfläche und fortschrittlichen Funktionen für die einfache Organisation Ihrer Farming Simulator Mods.
 
-![FS25 Mod Manager Screenshot](https://github.com/username/Fs25_ModManager/raw/main/screenshots/main.png)
+![FS25 Mod Manager Screenshot](https://github.com/NyboTV/FS25_ModManager/raw/main/screenshots/main.png)
 
 ## 🚀 Installation
 
 **Für Endbenutzer:**
-1. Laden Sie die neueste `Farming Simulator Mod Manager Setup.exe` aus dem [Releases-Bereich](https://github.com/username/Fs25_ModManager/releases) herunter
+1. Laden Sie die neueste `Farming Simulator Mod Manager Setup.exe` aus dem [Releases-Bereich](https://github.com/NyboTV/FS25_ModManager/releases) herunter
 2. Führen Sie die Setup-Datei aus und folgen Sie den Anweisungen
 3. Die Anwendung erstellt automatisch eine Desktop-Verknüpfung
 4. Starten Sie den Farming Simulator ModManager und konfigurieren Sie Ihre Einstellungen
@@ -130,7 +130,7 @@ src/
 ### Development Setup
 ```powershell
 # Repository klonen
-git clone https://github.com/username/Fs25_ModManager.git
+git clone https://github.com/NyboTV/FS25_ModManager.git
 cd Fs25_ModManager
 
 # Dependencies installieren
@@ -237,7 +237,7 @@ Beiträge sind willkommen! Bitte erstellen Sie einen Pull Request oder öffnen S
 ## ⭐ Support
 
 Falls Sie Probleme haben oder Verbesserungsvorschläge haben, können Sie:
-- Ein [GitHub Issue](https://github.com/username/Fs25_ModManager/issues) erstellen
+- Ein [GitHub Issue](https://github.com/NyboTV/FS25_ModManager/issues) erstellen
 - Die Debug-Logs aus `Dokumente\FS_ModManager\logs\` bereitstellen
 - Screenshots oder detaillierte Beschreibungen des Problems hinzufügen
 
