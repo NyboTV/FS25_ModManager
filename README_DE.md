@@ -4,7 +4,7 @@
 [![GitHub Downloads](https://img.shields.io/github/downloads/NyboTV/FS25_ModManager/total?style=for-the-badge&color=blue)](https://github.com/NyboTV/FS25_ModManager/releases)
 [![GitHub License](https://img.shields.io/github/license/NyboTV/FS25_ModManager?style=for-the-badge)](https://github.com/NyboTV/FS25_ModManager/blob/main/LICENSE)
 
-Ein moderner, robuster Mod-Manager für Farming Simulator 25, entwickelt mit TypeScript, Electron und React. Die Anwendung ermöglicht Ihnen, verschiedene Mod-Profile zu erstellen, zu verwalten und nahtlos mit Dedicated Servern zu synchronisieren. Mit einer benutzerfreundlichen Oberfläche und fortschrittlichen Funktionen für die einfache Organisation Ihrer Farming Simulator Mods.
+Ein moderner, robuster Mod-Manager für Farming Simulator (FS19, FS22, FS25), entwickelt mit TypeScript, Electron und React. Die Anwendung ermöglicht Ihnen, verschiedene Mod-Profile zu erstellen, zu verwalten und nahtlos mit Dedicated Servern zu synchronisieren. Mit einer benutzerfreundlichen Oberfläche und fortschrittlichen Funktionen für die einfache Organisation Ihrer Farming Simulator Mods.
 
 ![FS25 Mod Manager Screenshot](https://raw.githubusercontent.com/NyboTV/FS25_ModManager/refs/heads/master/dist/image/screenshot.png)
 
@@ -55,7 +55,7 @@ Ein moderner, robuster Mod-Manager für Farming Simulator 25, entwickelt mit Typ
 1. **Anwendung starten**: Starten Sie den FS25 Mod Manager über die Desktop-Verknüpfung
 2. **Grundeinstellungen konfigurieren**:
    - Gehen Sie zu den Einstellungen (⚙️ Tab)
-   - **Standard-Mod-Ordner**: Wählen Sie Ihren FS25 Mods-Ordner (z.B. `Dokumente\My Games\FarmingSimulator2025\mods`)
+   - **Standard-Mod-Ordner**: Wählen Sie Ihren Mods-Ordner (z.B. `Dokumente\My Games\FarmingSimulator2025\mods`)
    - **Spiel-Executable**: Wählen Sie die `FarmingSimulator2025.exe` Datei direkt aus
    - **Sprache**: Wählen Sie zwischen Deutsch und Englisch
    - **Debug-Logging**: Optional für erweiterte Fehlerverfolgung aktivieren
@@ -77,7 +77,7 @@ Ein moderner, robuster Mod-Manager für Farming Simulator 25, entwickelt mit Typ
 2. **Mods bereitstellen**: Klicken Sie auf "Mods bereitstellen"
    - Die Anwendung kopiert automatisch alle Mods des Profils in Ihren Spiel-Mods-Ordner
    - Bestehende Mods werden sicher gesichert
-3. **Spiel starten**: Klicken Sie auf "Spiel starten" für den direkten Launch von FS25
+3. **Spiel starten**: Klicken Sie auf "Spiel starten" für den direkten Launch von Farming Simulator
 
 ### 🌐 Server-Synchronisation (Erweitert)
 1. **Server konfigurieren**:
@@ -172,7 +172,7 @@ Die Anwendung wurde speziell für Windows-Umgebungen optimiert:
 ## ⚙️ Systemanforderungen
 
 - **Betriebssystem**: Windows 10/11 (64-bit)
-- **Spiel**: Farming Simulator 25
+- **Spiel**: Farming Simulator 19, 22 oder 25
 - **Speicherplatz**: 200 MB freier Festplattenspeicher
 - **Netzwerk**: Internetverbindung für Server-Synchronisation und Mod-Downloads
 - **Zusätzlich**: .NET Framework (wird automatisch installiert)
@@ -183,7 +183,7 @@ Die Anwendung wurde speziell für Windows-Umgebungen optimiert:
 
 **🗂️ Mods werden nicht kopiert**
 - Überprüfen Sie die Pfade in den Einstellungen
-- Stellen Sie sicher, dass der FS25 Mods-Ordner existiert und beschreibbar ist
+- Stellen Sie sicher, dass der Mods-Ordner existiert und beschreibbar ist
 - Aktivieren Sie Debug-Logging für detaillierte Informationen
 
 **🌐 Server-Synchronisation fehlgeschlagen**
@@ -203,7 +203,7 @@ Die Anwendung wurde speziell für Windows-Umgebungen optimiert:
 - Falls Probleme auftreten, nutzen Sie kürzere Profilnamen
 
 **🔒 Gesperrte Dateien**
-- Schließen Sie Farming Simulator 25 vor der Mod-Bereitstellung
+- Schließen Sie das Spiel vor der Mod-Bereitstellung
 - Beenden Sie andere Anwendungen, die auf den Mods-Ordner zugreifen könnten
 - Die Anwendung behandelt die meisten Konflikte automatisch
 
