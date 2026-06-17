@@ -9,6 +9,7 @@
     "dev": "webpack --config webpack.config.js && electron .",
     "dev:powershell": "powershell -Command \"npm run build; npm start\"",
     "package": "electron-builder build --win --x64",
+    "release": "node scripts/build.js",
     "postinstall": "electron-builder install-app-deps"
   },
   "keywords": [
