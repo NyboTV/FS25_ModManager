@@ -1,5 +1,9 @@
 # FS25 Mod Manager
 
+[![GitHub Release](https://img.shields.io/github/v/release/NyboTV/FS25_ModManager?style=for-the-badge&color=success)](https://github.com/NyboTV/FS25_ModManager/releases/latest)
+[![GitHub Downloads](https://img.shields.io/github/downloads/NyboTV/FS25_ModManager/total?style=for-the-badge&color=blue)](https://github.com/NyboTV/FS25_ModManager/releases)
+[![GitHub License](https://img.shields.io/github/license/NyboTV/FS25_ModManager?style=for-the-badge)](https://github.com/NyboTV/FS25_ModManager/blob/main/LICENSE)
+
 Ein moderner, robuster Mod-Manager für Farming Simulator 25, entwickelt mit TypeScript, Electron und React. Die Anwendung ermöglicht Ihnen, verschiedene Mod-Profile zu erstellen, zu verwalten und nahtlos mit Dedicated Servern zu synchronisieren. Mit einer benutzerfreundlichen Oberfläche und fortschrittlichen Funktionen für die einfache Organisation Ihrer Farming Simulator Mods.
 
 ![FS25 Mod Manager Screenshot](https://github.com/NyboTV/FS25_ModManager/raw/main/screenshots/main.png)
