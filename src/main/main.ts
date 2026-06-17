@@ -12,6 +12,7 @@ import { FileOperationsManager } from './file-operations-manager';
 import { GameLaunchManager } from './game-launch-manager';
 import { ModDescManager } from './mod-desc-manager';
 import { UpdateManager } from './update-manager';
+import { LogAnalyzer } from './log-analyzer';
 
 // Konfiguration des Speicherorts für Anwendungsdaten mit app.getPath
 const appDataPath = path.join(app.getPath('documents'), 'FS_ModManager');
@@ -40,6 +41,7 @@ let fileOperationsManager: FileOperationsManager;
 let gameLaunchManager: GameLaunchManager;
 let modDescManager: ModDescManager;
 let updateManager: UpdateManager;
+let logAnalyzer: LogAnalyzer;
 
 // Logger-Instanz mit appDataPath erzeugen
 export const logger = new Logger(appDataPath);
@@ -71,6 +73,7 @@ app.on('ready', () => {
   gameLaunchManager = new GameLaunchManager();
   modDescManager = new ModDescManager();
   updateManager = new UpdateManager(currentVersion);
+  logAnalyzer = new LogAnalyzer();
   
   // Erstelle das Hauptfenster
   const mainWindow = windowManager.createWindow();
@@ -89,17 +92,13 @@ app.on('ready', () => {
     store.set('isMaximized', mainWindow.isMaximized());
   });
   
+  // UpdateManager initialisieren
+  updateManager.setWindow(mainWindow);
+  
   // Prüfe auf Updates beim Start wenn aktiviert
   if (settings.autoCheckUpdates) {
-    updateManager.checkForUpdates()
-      .then(updateInfo => {
-        if (updateInfo.hasUpdate) {
-          mainWindow.webContents.send('update-available', updateInfo);
-        }
-      })
-      .catch(error => logger.error('Fehler beim Prüfen auf Updates:', error));
+    updateManager.checkForUpdates();
   }
-
   // IPC Handler für neue Features
   ipcMain.handle('check-for-updates', async () => {
     return await updateManager.checkForUpdates();

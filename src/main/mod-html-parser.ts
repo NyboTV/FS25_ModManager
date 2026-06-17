@@ -1,64 +1,109 @@
-// Hilfsmodul für HTML-Parsing mit cheerio
 import * as cheerio from 'cheerio';
 
-export function parseModsFromHtmlCheerio(html: string): any[] {
+export function parseModsFromHtmlCheerio(html: string, serverUrlStr: string): any[] {
   const mods: any[] = [];
   const $ = cheerio.load(html);
-  // Jeder Mod ist ein <div class="container-row grid-row">
-  $('.container-row.grid-row').each((i, elem) => {
+  
+  let baseUrl = '';
+  try {
+    const url = new URL(serverUrlStr);
+    baseUrl = `${url.protocol}//${url.host}/`;
+  } catch(e) {
+    baseUrl = 'http://193.111.249.42:8081/';
+  }
+
+  // Jeder Mod ist in einem div mit beiden Klassen: container-row UND grid-row
+  $('.container-row.grid-row').each((i, rowElem) => {
     const modData: any = {};
-    // Name
-    const nameDiv = $(elem).find('div[title]').filter((_, d) => $(d).find('b').text().trim() === 'Name');
-    modData.name = nameDiv.find('a').text().trim();
-    // Version
-    const versionDiv = $(elem).find('div[title]').filter((_, d) => $(d).find('b').text().trim() === 'Version');
-    modData.version = versionDiv.find('.col-lg-12,.col-xs-9').text().trim();
-    // Author
-    const authorDiv = $(elem).find('div[title]').filter((_, d) => $(d).find('b').text().trim() === 'Author');
-    modData.author = authorDiv.find('.col-lg-12,.col-xs-9').text().trim();
-    // Size
-    const sizeDiv = $(elem).find('div[title]').filter((_, d) => $(d).find('b').text().trim() === 'Size');
-    modData.fileSize = sizeDiv.find('.col-lg-12,.col-xs-9').text().trim();
-    // ModHub (fix: explizit <span> extrahieren, nicht nur Text)
-    const modHubDiv = $(elem).find('div[title]').filter((_, d) => $(d).find('b').text().trim() === 'ModHub');
-    const modHubSpan = modHubDiv.find('span');
-    modData.modHub = modHubSpan.length ? modHubSpan.text().trim() : modHubDiv.find('.col-lg-12,.col-xs-9').text().trim();
-    // Active
-    const activeDiv = $(elem).find('div[title]').filter((_, d) => $(d).find('b').text().trim() === 'Active');
-    modData.isActive = activeDiv.find('.col-lg-12,.col-xs-9').text().trim().toLowerCase() === 'yes';
     
-    // Download-Link
-    const downloadA = $(elem).find('a[title^="Download "]');
-    modData.downloadUrl = downloadA.attr('href') ? (downloadA.attr('href')!.startsWith('http') ? downloadA.attr('href') : `http://193.111.249.39:8080/${downloadA.attr('href')}`) : '';
+    // 1. Finde den Dateinamen
+    // In FS25 ist der Dateiname in einem inneren div mit title="*.zip" und enthält den Begriff "Filename"
+    const filenameDiv = $(rowElem).find('.container-row').filter((_, elem) => {
+      const title = $(elem).attr('title');
+      return !!(title && title.toLowerCase().endsWith('.zip'));
+    }).first();
     
-    // WICHTIG: Extrahiere den echten Dateinamen aus der Download-URL!
-    if (modData.downloadUrl) {
-      try {
-        const url = new URL(modData.downloadUrl);
-        const pathname = url.pathname;
-        // Extrahiere den Dateinamen aus dem URL-Pfad (z.B. "/mods/FS25_AutoDrive.zip" -> "FS25_AutoDrive.zip")
-        modData.fileName = pathname.split('/').pop() || '';
-        console.log(`Extrahierter Dateiname aus URL: ${modData.fileName} von ${modData.downloadUrl}`);
-      } catch (error) {
-        // Fallback: Verwende den abgekürzten Dateinamen aus der HTML-Tabelle
-        const fileDiv = $(elem).find('div[title]').filter((_, d) => $(d).find('b').text().trim() === 'Filename');
-        modData.fileName = fileDiv.find('a').text().trim();
-        console.warn(`Konnte Dateiname nicht aus URL extrahieren, verwende Fallback: ${modData.fileName}`);
-      }
+    if (filenameDiv.length > 0) {
+      modData.fileName = filenameDiv.attr('title');
     } else {
-      // Fallback: Verwende den abgekürzten Dateinamen aus der HTML-Tabelle
-      const fileDiv = $(elem).find('div[title]').filter((_, d) => $(d).find('b').text().trim() === 'Filename');
-      modData.fileName = fileDiv.find('a').text().trim();
+      // Fallback: Suche einfach nach a[href$=".zip"] Text
+      const zipLink = $(rowElem).find('a').filter((_, a) => {
+        const text = $(a).text().trim();
+        return text.toLowerCase().endsWith('.zip');
+      }).first();
+      if (zipLink.length > 0) {
+        modData.fileName = zipLink.text().trim();
+      }
     }
     
-    // Detail-URL (Name-Link)
-    const detailA = nameDiv.find('a');
-    modData.detailUrl = detailA.attr('href') ? (detailA.attr('href')!.startsWith('http') ? detailA.attr('href') : `http://193.111.249.39:8080/${detailA.attr('href')}`) : '';
+    if (!modData.fileName) return; // Kein Mod gefunden in dieser Zeile
     
-    // Nur speichern, wenn Filename und Download vorhanden
+    // 2. Finde den Download Link
+    // Der Download-Link liegt meistens in einem a-Tag, dessen href mit "mods/" beginnt oder auf ".zip" endet
+    const downloadA = $(rowElem).find('a[href*="mods/"], a[href$=".zip"]').filter((_, a) => {
+      const href = $(a).attr('href');
+      // Wenn der Text des Links der Dateiname ist, ist es NICHT der Download-Link, sondern der Filename-Link,
+      // ABER manchmal ist der href "mods/..."
+      return !!href && href.includes(modData.fileName);
+    }).first();
+    
+    let downloadHref = downloadA.attr('href');
+    
+    // Generischer Fallback für Download-Link
+    if (!downloadHref) {
+      const fallbackA = $(rowElem).find('a[href^="mods/"]').first();
+      downloadHref = fallbackA.attr('href');
+    }
+    
+    if (downloadHref) {
+      if (downloadHref.startsWith('http')) {
+        modData.downloadUrl = downloadHref;
+      } else {
+        if (downloadHref.startsWith('/')) {
+            downloadHref = downloadHref.substring(1);
+        }
+        modData.downloadUrl = `${baseUrl}${downloadHref}`;
+      }
+    } else {
+      // Wenn wir partout keinen Download-Link finden, können wir die Struktur raten
+      modData.downloadUrl = `${baseUrl}mods/${modData.fileName}`;
+    }
+    
+    // 3. Name, Version, Autor, Größe
+    modData.name = modData.fileName.replace('.zip', '');
+    
+    // Name
+    const nameLabel = $(rowElem).find('b').filter((_, b) => $(b).text().trim() === 'Name');
+    if (nameLabel.length > 0) {
+      const nameVal = nameLabel.parent().next().text().trim();
+      if (nameVal) modData.name = nameVal;
+    }
+    
+    // Version
+    const versionLabel = $(rowElem).find('b').filter((_, b) => $(b).text().trim() === 'Version');
+    if (versionLabel.length > 0) {
+      modData.version = versionLabel.parent().next().text().trim();
+    }
+    
+    // Autor
+    const authorLabel = $(rowElem).find('b').filter((_, b) => $(b).text().trim() === 'Author');
+    if (authorLabel.length > 0) {
+      modData.author = authorLabel.parent().next().text().trim();
+    }
+    
+    // Size
+    const sizeLabel = $(rowElem).find('b').filter((_, b) => $(b).text().trim() === 'Size');
+    if (sizeLabel.length > 0) {
+      modData.fileSize = sizeLabel.parent().next().text().trim();
+    }
+    
+    // Active (Immer true als fallback)
+    modData.isActive = true;
+    
     if (modData.fileName && modData.downloadUrl) {
       mods.push(modData);
     }
   });
+  
   return mods;
 }

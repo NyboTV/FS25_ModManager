@@ -48,8 +48,7 @@ export class WindowManager {
         nodeIntegration: true,
         contextIsolation: false
       },
-      backgroundColor: '#f4f5f0', // Hintergrundfarbe passend zum Design
-      icon: path.join(__dirname, '../assets/icons/fs_icon.ico') // Füge ein Symbol hinzu, wenn vorhanden
+      backgroundColor: '#f4f5f0' // Hintergrundfarbe passend zum Design
     });
 
     // Lade die HTML-Datei immer direkt, da wir keinen Entwicklungsserver haben

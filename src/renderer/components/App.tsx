@@ -7,6 +7,7 @@ import ProfileSettingsView from './ProfileSettingsView';
 import ProfileEditPopup from './ProfileEditPopup';
 import SyncProgressPopup from './SyncProgressPopup';
 import ModInfoPopup from './ModInfoPopup';
+import LogAnalyzerView from './LogAnalyzerView';
 import { Settings, UpdateInfo, SyncProgress, ModInfo } from '../../common/types';
 import { useTranslation } from '../i18n';
 
@@ -53,7 +54,10 @@ const App: React.FC = () => {
   const [selectedMod, setSelectedMod] = useState<ModInfo | null>(null);
   const [updateInfo, setUpdateInfo] = useState<UpdateInfo | null>(null);
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
+  const [updateStatus, setUpdateStatus] = useState<'available' | 'downloading' | 'ready'>('available');
+  const [updateProgress, setUpdateProgress] = useState({ percent: 0, speed: 0 });
   const [modListReloadKey, setModListReloadKey] = useState(0);
+  const [autoLaunchOnSyncComplete, setAutoLaunchOnSyncComplete] = useState(false);
 
   // Übersetzungsfunktion
   const t = useTranslation(settings.language);
@@ -82,9 +86,22 @@ const App: React.FC = () => {
       }
     };
 
-  const handleSyncComplete = () => {
+  const handleSyncComplete = async () => {
     setSyncProgress(prev => ({ ...prev, status: 'completed' }));
     setModListReloadKey(key => key + 1); // Trigger Reload
+    
+    // Auto Launch
+    if (autoLaunchOnSyncComplete) {
+      setSyncProgress(prev => ({ ...prev, status: 'launching', currentMod: 'Starte Spiel...' }));
+      try {
+        const profiles = await ipcRenderer.invoke('load-profiles');
+        // Hacky way to get profileId since it might be in state
+        // Da state updates asynchron sind, holen wir die aktuelle Progress direkt von der Main oder wir nutzen einen Ref.
+        // Einfacher: Wir holen uns das Profil aus den global geladenen Profilen
+      } catch (error) {
+        console.error('Fehler beim Auto-Launch:', error);
+      }
+    }
   };
   const handleSyncError = (event: any, error: string) => {
     setSyncProgress(prev => ({ ...prev, status: 'error' }));
@@ -95,14 +112,84 @@ const App: React.FC = () => {
     ipcRenderer.on('sync-progress', handleSyncProgress);
     ipcRenderer.on('sync-complete', handleSyncComplete);
     ipcRenderer.on('sync-error', handleSyncError);
+    
+    const handleUpdateProgress = (e: any, progress: any) => {
+      setUpdateStatus('downloading');
+      setUpdateProgress(progress);
+    };
+    
+    const handleUpdateDownloaded = () => {
+      setUpdateStatus('ready');
+    };
+    
+    ipcRenderer.on('update-download-progress', handleUpdateProgress);
+    ipcRenderer.on('update-downloaded', handleUpdateDownloaded);
 
     return () => {
       ipcRenderer.removeListener('update-available', handleUpdateAvailable);
       ipcRenderer.removeListener('sync-progress', handleSyncProgress);
       ipcRenderer.removeListener('sync-complete', handleSyncComplete);
       ipcRenderer.removeListener('sync-error', handleSyncError);
+      ipcRenderer.removeListener('update-download-progress', handleUpdateProgress);
+      ipcRenderer.removeListener('update-downloaded', handleUpdateDownloaded);
     };
-  }, [showSyncProgress]);
+  }, [showSyncProgress, autoLaunchOnSyncComplete, settings]); // settings und autoLaunch als Dependency hinzufügen
+
+  // Ref für AutoLaunch & SyncProgress, um in der useEffect Closure immer den aktuellen Wert zu haben
+  const syncProgressRef = React.useRef(syncProgress);
+  const autoLaunchRef = React.useRef(autoLaunchOnSyncComplete);
+  const settingsRef = React.useRef(settings);
+  
+  useEffect(() => {
+    syncProgressRef.current = syncProgress;
+    autoLaunchRef.current = autoLaunchOnSyncComplete;
+    settingsRef.current = settings;
+  }, [syncProgress, autoLaunchOnSyncComplete, settings]);
+
+  useEffect(() => {
+    const onSyncCompleteAsync = async () => {
+      if (autoLaunchRef.current && syncProgressRef.current.profileId) {
+        try {
+          const profiles = await ipcRenderer.invoke('load-profiles');
+          const profile = profiles.find((p: any) => p.id === syncProgressRef.current.profileId);
+          if (profile) {
+            const gameVersion = (profile.gameVersion as keyof typeof settingsRef.current.games) || 'fs25';
+            const gameSettings = settingsRef.current.games?.[gameVersion];
+            if (gameSettings?.defaultModFolder && gameSettings?.gamePath) {
+              await ipcRenderer.invoke('deploy-profile-mods', profile.id, gameSettings.defaultModFolder);
+              await ipcRenderer.invoke('launch-game', gameSettings.gamePath);
+            }
+          }
+        } catch (err) {
+          console.error("Auto-launch failed:", err);
+        }
+      }
+    };
+    
+    // Override den handleSyncComplete vom anderen useEffect
+    const handleSyncCompleteOverride = () => {
+      setSyncProgress(prev => ({ ...prev, status: 'completed' }));
+      setModListReloadKey(key => key + 1);
+      onSyncCompleteAsync();
+    };
+
+    ipcRenderer.removeAllListeners('sync-complete');
+    ipcRenderer.on('sync-complete', handleSyncCompleteOverride);
+    
+    return () => {
+      ipcRenderer.removeListener('sync-complete', handleSyncCompleteOverride);
+    }
+  }, []); // Dieser Effekt kümmert sich nur um sync-complete Override
+
+  const handleSkipCurrentMod = () => {
+    ipcRenderer.invoke('skip-current-mod');
+  };
+
+  const handleProvideLocalMod = () => {
+    if (syncProgress.currentMod && syncProgress.profileId) {
+      ipcRenderer.invoke('provide-local-mod', syncProgress.currentMod, syncProgress.profileId);
+    }
+  };
 
   const handleCancelSync = async () => {
     try {
@@ -124,6 +211,7 @@ const App: React.FC = () => {
     const path = location.pathname;
     if (path.startsWith('/settings')) return 'settings';
     if (path.startsWith('/profiles')) return 'profiles';
+    if (path.startsWith('/logs')) return 'logs';
     if (path.startsWith('/profile-settings')) return 'profile-settings';
     return 'start';
   };
@@ -175,10 +263,12 @@ const App: React.FC = () => {
   };
 
   const handleDownloadUpdate = () => {
-    if (updateInfo?.downloadUrl) {
-      ipcRenderer.invoke('open-external', updateInfo.downloadUrl);
-    }
-    setShowUpdateDialog(false);
+    setUpdateStatus('downloading');
+    ipcRenderer.invoke('download-update');
+  };
+  
+  const handleInstallUpdate = () => {
+    ipcRenderer.invoke('install-update');
   };
 
   return (    <div className="container">
@@ -211,6 +301,12 @@ const App: React.FC = () => {
         >
           {t('nav.settings')}
         </div>
+        <div 
+          className={`tab ${getCurrentTab() === 'logs' ? 'active' : ''}`}
+          onClick={() => navigate('/logs')}
+        >
+          Log Analyzer
+        </div>
         {location.pathname.includes('/profile-settings/') && (
           <div className="tab active">
             {t('nav.profileSettings')}
@@ -230,6 +326,7 @@ const App: React.FC = () => {
           } />
           <Route path="/settings" element={<SettingsView settings={settings} setSettings={setSettings} />} />
           <Route path="/profile-settings/:id" element={<ProfileSettingsView settings={settings} modListReloadKey={modListReloadKey} />} />
+          <Route path="/logs" element={<LogAnalyzerView settings={settings} />} />
         </Routes>
       </div>
 
@@ -257,6 +354,10 @@ const App: React.FC = () => {
         isOpen={showSyncProgress}
         progress={syncProgress}
         onCancel={handleCancelSync}
+        onSkipCurrentMod={handleSkipCurrentMod}
+        onProvideLocalMod={handleProvideLocalMod}
+        autoLaunch={autoLaunchOnSyncComplete}
+        onAutoLaunchChange={setAutoLaunchOnSyncComplete}
         language={settings.language}
       />
 
@@ -275,25 +376,61 @@ const App: React.FC = () => {
               <button className="popup-close" onClick={() => setShowUpdateDialog(false)}>×</button>
             </div>
             <div className="popup-body">
-              <p>Eine neue Version ist verfügbar!</p>
-              <div className="version-info">
-                <div>{t('update.current')}: <strong>{updateInfo.currentVersion}</strong></div>
-                <div>{t('update.latest')}: <strong>{updateInfo.latestVersion}</strong></div>
-              </div>
-              {updateInfo.releaseNotes && (
-                <div className="release-notes">
-                  <h4>{t('update.releaseNotes')}:</h4>
-                  <div className="notes-content">{updateInfo.releaseNotes}</div>
+              {updateStatus === 'available' && (
+                <>
+                  <p>Eine neue Version ist verfügbar!</p>
+                  <div className="version-info">
+                    <div>{t('update.current')}: <strong>{updateInfo.currentVersion}</strong></div>
+                    <div>{t('update.latest')}: <strong>{updateInfo.latestVersion}</strong></div>
+                  </div>
+                  {updateInfo.releaseNotes && (
+                    <div className="release-notes">
+                      <h4>{t('update.releaseNotes')}:</h4>
+                      <div className="notes-content">{updateInfo.releaseNotes}</div>
+                    </div>
+                  )}
+                </>
+              )}
+              {updateStatus === 'downloading' && (
+                <div className="update-progress">
+                  <p>Update wird heruntergeladen...</p>
+                  <div className="progress-bar">
+                    <div className="progress-fill" style={{ width: `${updateProgress.percent}%` }} />
+                  </div>
+                  <div className="progress-stats">
+                    <span>{Math.round(updateProgress.percent)}%</span>
+                    <span>{(updateProgress.speed / (1024 * 1024)).toFixed(2)} MB/s</span>
+                  </div>
+                </div>
+              )}
+              {updateStatus === 'ready' && (
+                <div className="update-ready">
+                  <p>Das Update wurde erfolgreich heruntergeladen und ist bereit zur Installation!</p>
+                  <p>Die Anwendung wird neu gestartet.</p>
                 </div>
               )}
             </div>
             <div className="popup-footer">
-              <button className="button secondary" onClick={() => setShowUpdateDialog(false)}>
-                {t('update.later')}
-              </button>
-              <button className="button primary" onClick={handleDownloadUpdate}>
-                {t('update.download')}
-              </button>
+              {updateStatus === 'available' && (
+                <>
+                  <button className="button secondary" onClick={() => setShowUpdateDialog(false)}>
+                    {t('update.later')}
+                  </button>
+                  <button className="button primary" onClick={handleDownloadUpdate}>
+                    {t('update.download')}
+                  </button>
+                </>
+              )}
+              {updateStatus === 'downloading' && (
+                <button className="button secondary" disabled>
+                  Herunterladen...
+                </button>
+              )}
+              {updateStatus === 'ready' && (
+                <button className="button primary" onClick={handleInstallUpdate}>
+                  Jetzt Neustarten & Installieren
+                </button>
+              )}
             </div>
           </div>
         </div>

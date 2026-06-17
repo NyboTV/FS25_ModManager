@@ -69,11 +69,15 @@ export interface ServerModInfo {
 }
 
 export interface SyncProgress {
+  profileId?: string;
   currentMod: string;
   totalMods: number;
   completedMods: number;
   currentFileProgress: number;
-  status: 'downloading' | 'extracting' | 'verifying' | 'completed' | 'error' | 'cancelled';
+  speedMbPerSec?: number;
+  etaSeconds?: number;
+  status: 'downloading' | 'extracting' | 'verifying' | 'completed' | 'error' | 'cancelled' | 'saving' | 'launching';
+  failedMods?: string[];
 }
 
 export interface PopupData {

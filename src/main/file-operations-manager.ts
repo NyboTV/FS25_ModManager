@@ -114,6 +114,45 @@ export class FileOperationsManager {
         if (!fs.existsSync(targetPath)) {
           logger.debug(`Zielordner existiert nicht, erstelle: ${targetPath}`);
           fs.mkdirSync(targetPath, { recursive: true });
+        } else {
+          // Backup erstellen, bevor wir löschen (Auto-Rollback)
+          try {
+            const backupDir = path.join(this.appDataPath, 'backups');
+            if (!fs.existsSync(backupDir)) {
+              fs.mkdirSync(backupDir, { recursive: true });
+            }
+            const dateStr = new Date().toISOString().replace(/[:.]/g, '-');
+            const backupFileName = `backup_${profileId}_${dateStr}.zip`;
+            const backupFilePath = path.join(backupDir, backupFileName);
+            
+            logger.info(`Erstelle Backup des aktuellen Mod-Ordners: ${backupFilePath}`);
+            
+            // Einfaches zippen des Zielordners mit adm-zip (wenn verfügbar) oder node-archiver
+            // Da wir hier im fs Kontext sind, und wir nicht sicher sind, ob adm-zip da ist, 
+            // kopieren wir es zur Not als Ordner-Backup anstatt Zip, wenn keine Lib da ist.
+            const AdmZip = require('adm-zip');
+            const zip = new AdmZip();
+            zip.addLocalFolder(targetPath);
+            zip.writeZip(backupFilePath);
+            logger.info(`Backup erfolgreich erstellt.`);
+            
+            // Alte Backups aufräumen (nur die neuesten 5 behalten)
+            const allBackups = fs.readdirSync(backupDir)
+              .filter(f => f.startsWith(`backup_${profileId}_`) && f.endsWith('.zip'))
+              .map(f => ({ name: f, time: fs.statSync(path.join(backupDir, f)).mtime.getTime() }))
+              .sort((a, b) => b.time - a.time);
+              
+            if (allBackups.length > 5) {
+              const toDelete = allBackups.slice(5);
+              for (const oldBackup of toDelete) {
+                fs.unlinkSync(path.join(backupDir, oldBackup.name));
+                logger.debug(`Altes Backup gelöscht: ${oldBackup.name}`);
+              }
+            }
+          } catch (backupError) {
+            logger.error(`Fehler beim Erstellen des Backups: ${backupError}`);
+            // Wir brechen das Deployment nicht ab, wenn das Backup fehlschlägt.
+          }
         }
           
         // Lösche den Inhalt des Zielordners, um saubere Synchronisierung zu gewährleisten
@@ -233,7 +272,7 @@ export class FileOperationsManager {
       if (!['.zip', '.ms2'].includes(fileExtension)) {
         throw new Error('Ungültiges Mod-Dateiformat. Nur .zip und .ms2 Dateien werden unterstützt.');
       }
-      // Lade Profil
+      // Lade Profil direkt über Dateisystem oder eine saubere Instanz
       const ProfileManager = require('./profile-manager').ProfileManager;
       const profileManager = new ProfileManager(this.appDataPath, false);
       const profile = await profileManager.getProfile(profileId);

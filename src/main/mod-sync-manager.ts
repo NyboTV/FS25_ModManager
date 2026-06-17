@@ -9,6 +9,9 @@ import { parseModsFromHtmlCheerio } from './mod-html-parser';
 export class ModSyncManager {
   private appDataPath: string;
   private activeSyncAbortController: AbortController | null = null;
+  private skipCurrentDownload: boolean = false;
+  private skipReason: 'skip' | 'local' | null = null;
+  private currentDownloadRequest: http.ClientRequest | null = null;
 
   constructor(appDataPath: string) {
     this.appDataPath = appDataPath;
@@ -31,12 +34,16 @@ export class ModSyncManager {
       }
       const failedMods: string[] = [];
       for (const serverMod of serverMods) {
+        this.skipCurrentDownload = false;
+        this.skipReason = null;
+        
         if (this.activeSyncAbortController?.signal.aborted) {
           logger.info('Synchronisation wurde abgebrochen (vor Download)');
           throw new Error('Synchronisation abgebrochen');
         }
         if (progressCallback) {
           progressCallback({
+            profileId: profile.id,
             currentMod: serverMod.fileName || serverMod.id,
             totalMods,
             completedMods,
@@ -75,25 +82,33 @@ export class ModSyncManager {
               throw new Error('Synchronisation abgebrochen');
             }
             try {
-              await this.downloadMod(serverMod, modsDirectory, (progress) => {
+              await this.downloadMod(serverMod, modsDirectory, (progress, speedMbPerSec, etaSeconds) => {
                 if (this.activeSyncAbortController?.signal.aborted) {
                   logger.info('Synchronisation wurde abgebrochen (während Download-Progress)');
                   throw new Error('Synchronisation abgebrochen');
                 }
                 if (progressCallback) {
                   progressCallback({
+                    profileId: profile.id,
                     currentMod: serverMod.fileName || serverMod.id,
                     totalMods,
                     completedMods,
                     currentFileProgress: progress,
+                    speedMbPerSec,
+                    etaSeconds,
                     status: 'downloading'
                   });
                 }
               });
               success = true;
               break;
-            } catch (error) {
+            } catch (error: any) {
               lastError = error;
+              if (error.message === 'SKIPPED') {
+                logger.info(`Download für ${serverMod.fileName} wurde übersprungen.`);
+                success = true; // Wir behandeln es als Erfolg im Sinne der Schleife, damit es nicht als harter Fehler zählt
+                break;
+              }
               logger.warn(`Download-Versuch ${attempt} für ${serverMod.fileName} fehlgeschlagen: ${error}`);
               await new Promise(res => setTimeout(res, 1000)); // 1 Sekunde warten
             }
@@ -109,6 +124,7 @@ export class ModSyncManager {
           }
           if (progressCallback) {
             progressCallback({
+              profileId: profile.id,
               currentMod: serverMod.fileName || serverMod.id,
               totalMods,
               completedMods,
@@ -116,23 +132,29 @@ export class ModSyncManager {
               status: 'saving'
             });
           }
-          // Füge Mod zum Profil hinzu oder aktualisiere ihn (nur per fileName!)
-          if (existingMod) {
-            Object.assign(existingMod, serverMod);
-            existingMod.isActive = true;
+          // Wenn es ein reiner Skip (ohne lokale Datei) war, füge ihn NICHT zu active mods hinzu
+          // sondern behandle ihn als 'failed' (so wird er beim nächsten Mal wieder versucht)
+          if (this.skipReason === 'skip') {
+            failedMods.push(serverMod.fileName);
           } else {
-            serverMod.isActive = true;
-            profile.mods.push(serverMod);
-          }
-          // Speichere Profil nach jedem Mod sofort
-          const profilePath = path.join(this.appDataPath, 'profiles', profile.id, 'profile.json');
-          fs.writeFileSync(profilePath, JSON.stringify(profile, null, 2));
-          logger.debug(`Successfully downloaded and saved: ${JSON.stringify(serverMod, null, 2)}`);
-          // Logge die HTML-Rohdaten des Mod-Blocks für Debug-Zwecke
-          if (serverMod._rawHtml) {
-            logger.debug(`Mod HTML Block:\n${serverMod._rawHtml}`);
-            // _rawHtml NICHT ins Profil übernehmen
-            delete serverMod._rawHtml;
+            // Füge Mod zum Profil hinzu oder aktualisiere ihn (nur per fileName!)
+            if (existingMod) {
+              Object.assign(existingMod, serverMod);
+              existingMod.isActive = true;
+            } else {
+              serverMod.isActive = true;
+              profile.mods.push(serverMod);
+            }
+            // Speichere Profil nach jedem Mod sofort
+            const profilePath = path.join(this.appDataPath, 'profiles', profile.id, 'profile.json');
+            fs.writeFileSync(profilePath, JSON.stringify(profile, null, 2));
+            logger.debug(`Successfully downloaded and saved: ${JSON.stringify(serverMod, null, 2)}`);
+            // Logge die HTML-Rohdaten des Mod-Blocks für Debug-Zwecke
+            if (serverMod._rawHtml) {
+              logger.debug(`Mod HTML Block:\n${serverMod._rawHtml}`);
+              // _rawHtml NICHT ins Profil übernehmen
+              delete serverMod._rawHtml;
+            }
           }
           await new Promise(resolve => setTimeout(resolve, 500));
         }
@@ -141,6 +163,7 @@ export class ModSyncManager {
       // KEIN Entfernen von nicht-serverMods! Nur Server-Mods werden ergänzt/aktualisiert.
       if (progressCallback) {
         progressCallback({
+          profileId: profile.id,
           currentMod: '',
           totalMods,
           completedMods,
@@ -187,7 +210,7 @@ export class ModSyncManager {
             }
             
             // Parse HTML für Mod-Informationen (statt JSON)
-            const mods = this.parseModsFromHtml(data);
+            const mods = this.parseModsFromHtml(data, serverUrl);
             logger.debug(`Parsed ${mods.length} mods from HTML`);
             
             resolve(mods);
@@ -216,7 +239,7 @@ export class ModSyncManager {
   private async downloadMod(
     serverMod: any, 
     targetPath: string, 
-    progressCallback?: (progress: number) => void
+    progressCallback?: (progress: number, speed?: number, eta?: number) => void
   ): Promise<void> {
     return new Promise((resolve, reject) => {
       if (this.activeSyncAbortController?.signal.aborted) {
@@ -230,6 +253,7 @@ export class ModSyncManager {
       const file = fs.createWriteStream(filePath);
       const url = new URL(serverMod.downloadUrl);
       const request = (url.protocol === 'https:' ? https : http).get(serverMod.downloadUrl, (response) => {
+        this.currentDownloadRequest = request;
         if (response.statusCode !== 200) {
           file.close();
           reject(new Error(`HTTP ${response.statusCode}: ${response.statusMessage}`));
@@ -237,11 +261,13 @@ export class ModSyncManager {
         }
         expectedSize = parseInt(response.headers['content-length'] || '0', 10);
         let downloadedSize = 0;
+        const startTime = Date.now();
+        let lastReportTime = startTime;
+        
         response.on('data', (chunk) => {
           if (this.activeSyncAbortController?.signal.aborted) {
             file.close();
             request.destroy();
-            // Nur löschen, wenn Datei unvollständig ist (kleiner als erwartet)
             setTimeout(() => {
               try {
                 if (fs.existsSync(filePath)) {
@@ -255,10 +281,45 @@ export class ModSyncManager {
             reject(new Error('Synchronisation abgebrochen'));
             return;
           }
+          
+          if (this.skipCurrentDownload) {
+            file.close();
+            request.destroy();
+            setTimeout(() => {
+              try {
+                if (fs.existsSync(filePath) && this.skipReason === 'skip') {
+                  const stats = fs.statSync(filePath);
+                  if (!fileAlreadyExisted) {
+                    fs.unlinkSync(filePath);
+                  }
+                }
+              } catch {}
+            }, 100);
+            reject(new Error('SKIPPED'));
+            return;
+          }
+          
           downloadedSize += chunk.length;
-          if (progressCallback && expectedSize > 0) {
+          
+          const now = Date.now();
+          // Nur alle 250ms ein Update senden, um IPC nicht zu fluten
+          if (progressCallback && expectedSize > 0 && (now - lastReportTime > 250 || downloadedSize === expectedSize)) {
+            const elapsedSecs = (now - startTime) / 1000;
             const progress = (downloadedSize / expectedSize) * 100;
-            progressCallback(progress);
+            
+            let speedMbPerSec = 0;
+            let etaSeconds = 0;
+            
+            if (elapsedSecs > 0) {
+              const speedBytesPerSec = downloadedSize / elapsedSecs;
+              speedMbPerSec = parseFloat((speedBytesPerSec / (1024 * 1024)).toFixed(2));
+              
+              const remainingBytes = expectedSize - downloadedSize;
+              etaSeconds = Math.round(remainingBytes / speedBytesPerSec);
+            }
+            
+            progressCallback(progress, speedMbPerSec, etaSeconds);
+            lastReportTime = now;
           }
         });
         response.on('end', () => {
@@ -282,6 +343,7 @@ export class ModSyncManager {
         response.pipe(file);
         file.on('finish', () => {
           file.close();
+          this.currentDownloadRequest = null;
           resolve();
         });
         file.on('error', (error) => {
@@ -426,6 +488,54 @@ export class ModSyncManager {
       this.abortSync();
       return { success: true };
     });
+
+    // Aktuellen Mod überspringen
+    ipcMain.handle('skip-current-mod', () => {
+      logger.debug('Handler: skip-current-mod aufgerufen');
+      this.skipCurrentDownload = true;
+      this.skipReason = 'skip';
+      if (this.currentDownloadRequest) {
+        this.currentDownloadRequest.destroy(new Error('SKIPPED'));
+      }
+      return { success: true };
+    });
+
+    // Lokale Mod-Datei auswählen und überspringen
+    ipcMain.handle('provide-local-mod', async (_, targetFileName, profileId) => {
+      logger.debug('Handler: provide-local-mod aufgerufen');
+      const { dialog } = window.require ? window.require('electron') : require('electron');
+      const result = await dialog.showOpenDialog({
+        title: 'Lokale Mod-Datei auswählen',
+        filters: [{ name: 'Zip-Archive', extensions: ['zip'] }],
+        properties: ['openFile']
+      });
+
+      if (!result.canceled && result.filePaths.length > 0) {
+        const sourcePath = result.filePaths[0];
+        try {
+          const profilePath = path.join(this.appDataPath, 'profiles', profileId, 'profile.json');
+          if (fs.existsSync(profilePath)) {
+             const profileData = JSON.parse(fs.readFileSync(profilePath, 'utf8'));
+             const destPath = path.join(profileData.modFolderPath, targetFileName);
+             
+             // Kopiere Datei synchron, um Race-Conditions zu vermeiden
+             fs.copyFileSync(sourcePath, destPath);
+             logger.info(`Lokale Mod-Datei erfolgreich kopiert nach ${destPath}`);
+             
+             this.skipCurrentDownload = true;
+             this.skipReason = 'local';
+             if (this.currentDownloadRequest) {
+               this.currentDownloadRequest.destroy(new Error('SKIPPED'));
+             }
+             return { success: true };
+          }
+        } catch (error) {
+          logger.error(`Fehler beim Kopieren der lokalen Mod-Datei: ${error}`);
+          return { success: false, error: String(error) };
+        }
+      }
+      return { success: false, error: 'Keine Datei ausgewählt' };
+    });
   }
 
   /**
@@ -440,8 +550,8 @@ export class ModSyncManager {
   /**
    * Parst Download-Links und alle Mod-Details robust aus HTML
    */
-  private parseModsFromHtml(html: string): any[] {
+  private parseModsFromHtml(html: string, serverUrl: string): any[] {
     // Neue Implementierung mit cheerio
-    return parseModsFromHtmlCheerio(html);
+    return parseModsFromHtmlCheerio(html, serverUrl);
   }
 }

@@ -200,9 +200,10 @@ export class ProfileManager {
    * Erstellt ein neues Profil
    */
   async createProfile(profileData: any): Promise<any> {
-    const modsPath = path.join(this.appDataPath, 'profiles', profileData.id || `profile_${Date.now()}`, 'mods');
+    const profileId = profileData.id || `profile_${Date.now()}`;
+    const modsPath = path.join(this.appDataPath, 'profiles', profileId, 'mods');
     const profile = {
-      id: profileData.id || `profile_${Date.now()}`,
+      id: profileId,
       name: profileData.name,
       version: '1.0.0',
       description: profileData.description,

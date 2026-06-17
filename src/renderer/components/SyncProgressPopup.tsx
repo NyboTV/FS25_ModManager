@@ -6,6 +6,10 @@ interface SyncProgressPopupProps {
   isOpen: boolean;
   progress: SyncProgress;
   onCancel?: () => void;
+  onSkipCurrentMod?: () => void;
+  onProvideLocalMod?: () => void;
+  autoLaunch?: boolean;
+  onAutoLaunchChange?: (val: boolean) => void;
   language?: 'en' | 'de';
 }
 
@@ -13,6 +17,10 @@ const SyncProgressPopup: React.FC<SyncProgressPopupProps> = ({
   isOpen,
   progress,
   onCancel,
+  onSkipCurrentMod,
+  onProvideLocalMod,
+  autoLaunch = false,
+  onAutoLaunchChange,
   language = 'de'
 }) => {
   const t = useTranslation(language);
@@ -129,7 +137,37 @@ const SyncProgressPopup: React.FC<SyncProgressPopupProps> = ({
               <span className="detail-label">Verbleibend:</span>
               <span className="detail-value">{progress.totalMods - progress.completedMods}</span>
             </div>
+            {progress.speedMbPerSec !== undefined && progress.speedMbPerSec > 0 && (
+              <div className="detail-item">
+                <span className="detail-label">Geschwindigkeit:</span>
+                <span className="detail-value">{progress.speedMbPerSec.toFixed(2)} MB/s</span>
+              </div>
+            )}
+            {progress.etaSeconds !== undefined && progress.etaSeconds > 0 && (
+              <div className="detail-item">
+                <span className="detail-label">Restzeit (Datei):</span>
+                <span className="detail-value">
+                  {progress.etaSeconds < 60 
+                    ? `${progress.etaSeconds}s` 
+                    : `${Math.floor(progress.etaSeconds / 60)}m ${progress.etaSeconds % 60}s`}
+                </span>
+              </div>
+            )}
           </div>
+          
+          {onAutoLaunchChange && progress.status !== 'completed' && progress.status !== 'error' && (
+            <div style={{ marginTop: '15px' }}>
+              <label className="checkbox-label" htmlFor="autoLaunchSync" style={{ color: '#fff' }}>
+                <input 
+                  type="checkbox" 
+                  id="autoLaunchSync" 
+                  checked={autoLaunch} 
+                  onChange={(e) => onAutoLaunchChange(e.target.checked)} 
+                />
+                Nach Abschluss Spiel starten
+              </label>
+            </div>
+          )}
         </div>        <div className="popup-footer">
           {progress.status === 'completed' ? (
             <button className="button primary" onClick={onCancel}>
@@ -144,11 +182,27 @@ const SyncProgressPopup: React.FC<SyncProgressPopupProps> = ({
               {t('sync.close')}
             </button>
           ) : (
-            onCancel && (
-              <button className="button secondary" onClick={onCancel}>
-                {t('sync.cancel')}
-              </button>
-            )
+            <>
+              {progress.status === 'downloading' && (
+                <div style={{ display: 'flex', gap: '8px', marginRight: 'auto' }}>
+                  {onSkipCurrentMod && (
+                    <button className="button secondary" onClick={onSkipCurrentMod} title="Aktuellen Download überspringen">
+                      ⏭ Überspringen
+                    </button>
+                  )}
+                  {onProvideLocalMod && (
+                    <button className="button secondary" onClick={onProvideLocalMod} title="ZIP-Datei manuell wählen">
+                      📁 Lokale Datei wählen
+                    </button>
+                  )}
+                </div>
+              )}
+              {onCancel && (
+                <button className="button secondary" onClick={onCancel}>
+                  {t('sync.cancel')}
+                </button>
+              )}
+            </>
           )}
         </div>
       </div>
