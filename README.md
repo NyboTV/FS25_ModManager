@@ -19,7 +19,7 @@ This project provides documentation in multiple languages. Please choose your pr
 
 ## 🚀 Quick Start
 
-1. Download the latest `Farming Simulator Mod Manager Setup.exe` from the [Releases section](https://github.com/username/Fs25_ModManager/releases)
+1. Download the latest `Farming Simulator Mod Manager Setup.exe` from the [Releases section](https://github.com/NyboTV/FS25_ModManager/releases)
 2. Run the setup file and follow the instructions
 3. Launch the application and select your Farming Simulator 25 mod directory in the settings.
 
