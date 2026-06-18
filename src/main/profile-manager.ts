@@ -107,27 +107,64 @@ export class ProfileManager {
         if (!profile.id) {
           profile.id = 'profile_' + Date.now();
         }
+
+        // Extrahiere Quell-Ordner für Mods falls vorhanden
+        const copyFromFolder = profile._copyFromModFolder;
+        delete profile._copyFromModFolder;
+
         // Erstelle Verzeichnisstruktur für das Profil
         const profilesPath = path.join(this.appDataPath, 'profiles');
         const profileModsPath = path.join(profilesPath, profile.id, 'mods');
+        const targetModFolderPath = profile.modFolderPath || profileModsPath;
+
         if (!fs.existsSync(profilesPath)) {
           fs.mkdirSync(profilesPath, { recursive: true });
         }
-        if (!fs.existsSync(profileModsPath)) {
-          fs.mkdirSync(profileModsPath, { recursive: true });
+        if (!fs.existsSync(targetModFolderPath)) {
+          fs.mkdirSync(targetModFolderPath, { recursive: true });
         }
+
+        const modsArray = [];
+        // Kopiere Mods falls ausgewählt
+        if (copyFromFolder && fs.existsSync(copyFromFolder)) {
+           logger.info(`Kopiere Mods von ${copyFromFolder} nach ${targetModFolderPath}`);
+           const files = fs.readdirSync(copyFromFolder);
+           for (const file of files) {
+             if (file.endsWith('.zip') || file.endsWith('.ms2')) {
+               const src = path.join(copyFromFolder, file);
+               const dest = path.join(targetModFolderPath, file);
+               try {
+                 fs.copyFileSync(src, dest);
+                 modsArray.push({
+                   name: file.replace(/\.(zip|ms2)$/i, ''),
+                   version: '',
+                   author: '',
+                   fileName: file,
+                   fileSize: fs.statSync(src).size.toString(),
+                   modHub: '',
+                   isActive: true,
+                   downloadUrl: '',
+                   detailUrl: ''
+                 });
+               } catch(e) {
+                 logger.error(`Fehler beim Kopieren von ${file}`, e);
+               }
+             }
+           }
+        }
+
         // Initialisiere Profildaten mit Standardwerten
         const newProfile = {
           id: profile.id,
           name: profile.name || 'Neues Profil',
-          modFolderPath: profileModsPath,
           serverSyncUrl: profile.serverSyncUrl || '',
           version: profile.version || '1.0.0',
-          mods: [],
           isActive: true,
           createdAt: new Date().toISOString(),
           lastSyncDate: null,
-          ...profile // Überschreibe mit übergebenen Daten
+          ...profile, // Überschreibe mit übergebenen Daten (enthält ggf. andere modFolderPath, was wir gleich überschreiben)
+          modFolderPath: targetModFolderPath,
+          mods: [...(profile.mods || []), ...modsArray]
         };
         // Speichere die Profildaten in profile.json im Profilordner
         const profilePath = path.join(profilesPath, profile.id, 'profile.json');
@@ -151,14 +188,14 @@ export class ProfileManager {
           throw new Error(`Profil mit ID ${profile.id} nicht gefunden`);
         }
         // Stelle sicher, dass mods-Ordner existiert
-        const profileModsPath = path.join(profilesPath, profile.id, 'mods');
-        if (!fs.existsSync(profileModsPath)) {
-          fs.mkdirSync(profileModsPath, { recursive: true });
+        const targetModFolderPath = profile.modFolderPath || path.join(profilesPath, profile.id, 'mods');
+        if (!fs.existsSync(targetModFolderPath)) {
+          fs.mkdirSync(targetModFolderPath, { recursive: true });
         }
         // Aktualisiere Profildaten
         const updatedProfile = {
           ...profile,
-          modFolderPath: profileModsPath, // Immer auf mods-Ordner zeigen
+          modFolderPath: targetModFolderPath, // Behalte den korrekten Pfad bei
           updatedAt: new Date().toISOString()
         };
         // Speichere die aktualisierten Profildaten
