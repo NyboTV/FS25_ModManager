@@ -1,6 +1,6 @@
 {
   "name": "fs25_modmanager",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Ein Mod-Manager für Farming Simulator",
   "main": "dist/main.js",
   "scripts": {
@@ -19,7 +19,14 @@
   ],
   "author": "",
   "license": "ISC",
+  "repository": "NyboTV/FS25_ModManager",
   "build": {
+    "publish": [
+      {
+        "provider": "github",
+        "releaseType": "draft"
+      }
+    ],
     "appId": "com.fs25modmanager.app",
     "productName": "Farming Simulator Mod Manager",
     "directories": {
