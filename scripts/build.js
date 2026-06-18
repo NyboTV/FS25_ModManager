@@ -78,7 +78,10 @@ async function startBuild() {
     log.header('FS25 ModManager - Interaktives Build Script');
 
     try {
+        const pkgJson = JSON.parse(fs.readFileSync(PKG_JSON_PATH, 'utf8'));
+        const oldVersion = pkgJson.version;
         const newVersion = await incrementVersion();
+        const versionChanged = oldVersion !== newVersion;
         
         log.header(`Starte Build für v${newVersion}...`);
 
@@ -90,7 +93,27 @@ async function startBuild() {
         // Delete old build folder to avoid locking issues if possible (ignore errors)
         try { fs.rmSync(path.join(ROOT_DIR, 'build'), { recursive: true, force: true }); } catch (e) {}
         
-        runCommand('npm run package');
+        if (versionChanged) {
+            if (!process.env.GH_TOKEN && !process.env.GITHUB_TOKEN) {
+                console.log(`\n${colors.fg.yellow}Für den automatischen Upload auf GitHub wird ein Personal Access Token (GH_TOKEN) benötigt.${colors.reset}`);
+                console.log(`${colors.dim}(Wenn du keins hast, drücke einfach Enter, um nur lokal zu bauen)${colors.reset}`);
+                const token = await ask("GitHub Token: ");
+                if (token.trim()) {
+                    process.env.GH_TOKEN = token.trim();
+                }
+            }
+
+            if (process.env.GH_TOKEN || process.env.GITHUB_TOKEN) {
+                log.step('Baue Installer und lade als Draft Release auf GitHub hoch...');
+                runCommand('npx electron-builder build --win --x64 --publish always');
+                log.success('Draft Release (inkl. Installer & latest.yml) erfolgreich auf GitHub erstellt!');
+            } else {
+                log.step('Baue lokal (ohne Upload, da kein Token angegeben)...');
+                runCommand('npm run package');
+            }
+        } else {
+            runCommand('npm run package');
+        }
         
         log.header('Build erfolgreich abgeschlossen! 🎉');
         console.log(`Dein Installer befindet sich im Ordner: ${colors.bright}build/Farming Simulator Mod Manager Setup ${newVersion}.exe${colors.reset}\n`);
