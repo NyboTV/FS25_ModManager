@@ -30,7 +30,7 @@
     "appId": "com.fs25modmanager.app",
     "productName": "Farming Simulator Mod Manager",
     "directories": {
-      "output": "build"
+      "output": ".build"
     },
     "win": {
       "target": "nsis",
