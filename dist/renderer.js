@@ -42424,6 +42424,7 @@ const ProfileEditPopup = ({ profile, isOpen, onClose, onSave, isCreating, langua
         // modFolderPath wird automatisch generiert
     });
     const [errors, setErrors] = (0, react_1.useState)({});
+    const [copyCurrentMods, setCopyCurrentMods] = (0, react_1.useState)(false);
     // Übersetzungsfunktion
     const t = (0, i18n_1.useTranslation)(language);
     (0, react_1.useEffect)(() => {
@@ -42447,6 +42448,7 @@ const ProfileEditPopup = ({ profile, isOpen, onClose, onSave, isCreating, langua
                     gameVersion: 'fs25',
                     version: '1.0.0'
                 });
+                setCopyCurrentMods(false);
             }
             setErrors({});
         }
@@ -42514,6 +42516,9 @@ const ProfileEditPopup = ({ profile, isOpen, onClose, onSave, isCreating, langua
             gameVersion: formData.gameVersion,
             mods: profile?.mods || []
         };
+        if (isCreating && copyCurrentMods && settings?.games?.[formData.gameVersion]?.defaultModFolder) {
+            profileData._copyFromModFolder = settings.games[formData.gameVersion].defaultModFolder;
+        }
         onSave(profileData);
     };
     if (!isOpen) {
@@ -42545,6 +42550,11 @@ const ProfileEditPopup = ({ profile, isOpen, onClose, onSave, isCreating, langua
                 react_1.default.createElement("div", { className: "form-group" },
                     react_1.default.createElement("label", { htmlFor: "profileDescription" }, t('profileEdit.description')),
                     react_1.default.createElement("textarea", { id: "profileDescription", value: formData.description || '', onChange: (e) => handleInputChange('description', e.target.value), placeholder: t('profileEdit.descriptionPlaceholder'), rows: 3 })),
+                isCreating && (react_1.default.createElement("div", { className: "form-group" },
+                    react_1.default.createElement("label", { className: "checkbox-label", style: { display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', marginTop: '8px' } },
+                        react_1.default.createElement("input", { type: "checkbox", checked: copyCurrentMods, onChange: (e) => setCopyCurrentMods(e.target.checked) }),
+                        "Aktuelle Mods hinzuf\u00FCgen"),
+                    react_1.default.createElement("div", { style: { fontSize: '0.85em', color: '#aaa', marginTop: '4px' } }, "Kopiert die aktuell installierten Mods aus dem Spiel in dieses neue Profil."))),
                 react_1.default.createElement("div", { className: "form-group" },
                     react_1.default.createElement("label", { htmlFor: "serverSyncUrl" }, t('profileEdit.serverUrl')),
                     react_1.default.createElement("input", { id: "serverSyncUrl", type: "text", value: formData.serverSyncUrl || '', onChange: (e) => handleInputChange('serverSyncUrl', e.target.value), className: errors.serverSyncUrl ? 'error' : '', placeholder: t('profileEdit.serverUrlPlaceholder') }),
