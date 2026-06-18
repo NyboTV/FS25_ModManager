@@ -90,6 +90,13 @@ async function startBuild() {
         log.success('TypeScript kompiliert!');
 
         log.step('Verpacke App als Installer (Electron-Builder)...');
+        // Kill running electron instances to avoid file lock issues on Windows
+        try {
+            if (process.platform === 'win32') {
+                execSync('taskkill /f /im electron.exe /t', { stdio: 'ignore' });
+            }
+        } catch (e) {}
+        
         // Delete old build folder to avoid locking issues if possible (ignore errors)
         try { fs.rmSync(path.join(ROOT_DIR, 'build'), { recursive: true, force: true }); } catch (e) {}
         
