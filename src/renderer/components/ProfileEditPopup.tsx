@@ -30,6 +30,7 @@ const ProfileEditPopup: React.FC<ProfileEditPopupProps> = ({
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [copyCurrentMods, setCopyCurrentMods] = useState(false);
   
   // Übersetzungsfunktion
   const t = useTranslation(language);
@@ -52,6 +53,7 @@ const ProfileEditPopup: React.FC<ProfileEditPopupProps> = ({
           serverSyncUrl: '',
           gameVersion: 'fs25',
           version: '1.0.0'        });
+        setCopyCurrentMods(false);
       }
       setErrors({});
     }
@@ -111,7 +113,7 @@ const ProfileEditPopup: React.FC<ProfileEditPopupProps> = ({
   const handleSave = () => {
     if (!validateForm()) {
       return;
-    }    const profileData: Profile = {
+    }    const profileData: any = {
       id: profile?.id || `profile_${Date.now()}`,
       name: formData.name!,
       version: formData.version || '1.0.0',
@@ -121,6 +123,10 @@ const ProfileEditPopup: React.FC<ProfileEditPopupProps> = ({
       gameVersion: formData.gameVersion as 'fs19' | 'fs22' | 'fs25',
       mods: profile?.mods || []
     };
+
+    if (isCreating && copyCurrentMods && settings?.games?.[formData.gameVersion as 'fs19' | 'fs22' | 'fs25']?.defaultModFolder) {
+      profileData._copyFromModFolder = settings.games[formData.gameVersion as 'fs19' | 'fs22' | 'fs25'].defaultModFolder;
+    }
 
     onSave(profileData);
   };
@@ -180,6 +186,22 @@ const ProfileEditPopup: React.FC<ProfileEditPopupProps> = ({
               placeholder={t('profileEdit.descriptionPlaceholder')}
               rows={3}            />
           </div>
+
+          {isCreating && (
+            <div className="form-group">
+              <label className="checkbox-label" style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', marginTop: '8px' }}>
+                <input
+                  type="checkbox"
+                  checked={copyCurrentMods}
+                  onChange={(e) => setCopyCurrentMods(e.target.checked)}
+                />
+                Aktuelle Mods hinzufügen
+              </label>
+              <div style={{ fontSize: '0.85em', color: '#aaa', marginTop: '4px' }}>
+                Kopiert die aktuell installierten Mods aus dem Spiel in dieses neue Profil.
+              </div>
+            </div>
+          )}
 
           <div className="form-group">
             <label htmlFor="serverSyncUrl">{t('profileEdit.serverUrl')}</label>
