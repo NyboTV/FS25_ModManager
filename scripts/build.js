@@ -98,7 +98,7 @@ async function startBuild() {
         } catch (e) {}
         
         // Delete old build folder to avoid locking issues if possible (ignore errors)
-        try { fs.rmSync(path.join(ROOT_DIR, 'build'), { recursive: true, force: true }); } catch (e) {}
+        try { fs.rmSync(path.join(ROOT_DIR, '.build'), { recursive: true, force: true }); } catch (e) {}
         
         if (versionChanged) {
             if (!process.env.GH_TOKEN && !process.env.GITHUB_TOKEN) {
@@ -123,7 +123,7 @@ async function startBuild() {
         }
         
         log.header('Build erfolgreich abgeschlossen! 🎉');
-        console.log(`Dein Installer befindet sich im Ordner: ${colors.bright}build/Farming Simulator Mod Manager Setup ${newVersion}.exe${colors.reset}\n`);
+        console.log(`Dein Installer befindet sich im Ordner: ${colors.bright}.build/Farming Simulator Mod Manager Setup ${newVersion}.exe${colors.reset}\n`);
 
     } catch (err) {
         log.error(`Build abgebrochen: ${err.message}`);
