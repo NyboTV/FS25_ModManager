@@ -1,4 +1,4 @@
-import { ipcMain } from 'electron';
+import { ipcMain, app } from 'electron';
 import * as path from 'path';
 import Store from 'electron-store';
 import { logger } from './main';
@@ -16,7 +16,6 @@ export class SettingsManager {
   private setupIpcHandlers(): void {
     // Lade Einstellungen
     ipcMain.handle('load-settings', () => {
-      logger.debug('Handler: load-settings aufgerufen');
       const settings: any = this.store.get('settings', {
         defaultModFolder: '',
         gamePath: '',
@@ -25,9 +24,9 @@ export class SettingsManager {
         language: 'de',
         debugLogging: false
       });
+      // Aktuelle Version über Electron App-Instanz abrufen
+      settings.currentVersion = app.getVersion();
         
-      logger.enableDebug(settings.debugLogging as boolean);
-      logger.debug('Einstellungen geladen');
       return settings;
     });
 

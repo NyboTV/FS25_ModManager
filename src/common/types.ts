@@ -32,6 +32,9 @@ export interface ModDescData {
   description?: { [lang: string]: string };
   iconFilename?: string;
   multiplayerSupported?: boolean;
+  dependencies?: string[];
+  isMap?: boolean;
+  category?: string;
 }
 
 export interface GameSettings {
@@ -53,6 +56,7 @@ export interface Settings {
   defaultModFolder?: string;
   gamePath?: string;
   theme?: 'light' | 'dark';
+  lastLaunchedProfileId?: string;
 }
 
 export interface ServerModResponse {

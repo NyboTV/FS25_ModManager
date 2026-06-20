@@ -271,7 +271,7 @@ export class ModSyncManager {
       const fileAlreadyExisted = fs.existsSync(filePath);
       let expectedSize = 0;
       let downloadCompleted = false;
-      const file = fs.createWriteStream(filePath);
+      const file = fs.createWriteStream(filePath, { highWaterMark: 1024 * 1024 }); // 1MB Buffer für viel schnelleren Download
       const url = new URL(serverMod.downloadUrl);
       const request = (url.protocol === 'https:' ? https : http).get(serverMod.downloadUrl, (response) => {
         this.currentDownloadRequest = request;
@@ -430,8 +430,23 @@ export class ModSyncManager {
     });
   }
   private setupIpcHandlers(): void {
-    // Server Sync durchführen
-    ipcMain.handle('sync-mods', async (_, profileId, serverUrl) => {
+      // Server-URL testen (FastDL Check)
+      ipcMain.handle('check-fastdl-url', async (_, serverUrl) => {
+        logger.debug(`Handler: check-fastdl-url aufgerufen für Server ${serverUrl}`);
+        try {
+          if (!serverUrl || (!serverUrl.startsWith('http://') && !serverUrl.startsWith('https://'))) {
+            return { success: false, error: 'Ungültige URL. Muss mit http:// oder https:// beginnen.' };
+          }
+          const serverMods = await this.fetchServerModList(serverUrl);
+          return { success: true, count: serverMods.length };
+        } catch (error) {
+          logger.error(`Fehler beim Prüfen der FastDL-URL ${serverUrl}:`, error);
+          return { success: false, error: error instanceof Error ? error.message : String(error) };
+        }
+      });
+
+      // Server Sync durchführen
+      ipcMain.handle('sync-mods', async (_, profileId, serverUrl) => {
       console.log('🔥 sync-mods IPC handler called!');
       console.log('🔥 ProfileId:', profileId);
       console.log('🔥 ServerUrl:', serverUrl);

@@ -40,8 +40,10 @@ export class GameLaunchManager {
         
         // Starte das Spiel
         const { spawn } = require('child_process');
+        const path = require('path');
         logger.info(`Starte Spiel: ${gamePath}`);
         const gameProcess = spawn(gamePath, [], {
+          cwd: path.dirname(gamePath),
           detached: true,
           stdio: 'ignore'
         });

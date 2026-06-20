@@ -22,6 +22,9 @@ const ProfileSettingsView: React.FC<ProfileSettingsViewProps> = ({ settings, mod
   const [isDeploying, setIsDeploying] = useState(false);
   const [deployMessage, setDeployMessage] = useState('');
   const [deployError, setDeployError] = useState('');
+  
+  const [isCheckingUrl, setIsCheckingUrl] = useState(false);
+  const [urlCheckResult, setUrlCheckResult] = useState<{ success?: boolean; message?: string } | null>(null);
 
   useEffect(() => {
     loadProfile();
@@ -164,8 +167,11 @@ const ProfileSettingsView: React.FC<ProfileSettingsViewProps> = ({ settings, mod
   const handleDeployToGame = async () => {
     if (!profile) return;
     
-    if (!settings.defaultModFolder) {
-      setDeployError('Bitte legen Sie zuerst einen Standardmodordner in den Einstellungen fest');
+    const gameVersion = profile.gameVersion || 'fs25';
+    const defaultModFolder = settings.games?.[gameVersion]?.defaultModFolder || settings.defaultModFolder;
+    
+    if (!defaultModFolder) {
+      setDeployError(`Bitte legen Sie zuerst einen Standardmodordner für ${gameVersion.toUpperCase()} in den Einstellungen fest`);
       return;
     }
     
@@ -175,7 +181,7 @@ const ProfileSettingsView: React.FC<ProfileSettingsViewProps> = ({ settings, mod
       setDeployError('');
       
       // Bestätigung vom Benutzer einholen
-      if (!confirm(`Diese Aktion wird alle aktuellen Mods im Ordner "${settings.defaultModFolder}" durch die Mods dieses Profils ersetzen. Möchten Sie fortfahren?`)) {
+      if (!confirm(`Diese Aktion wird alle aktuellen Mods im Ordner "${defaultModFolder}" durch die Mods dieses Profils ersetzen. Möchten Sie fortfahren?`)) {
         setIsDeploying(false);
         setDeployMessage('');
         return;
@@ -184,7 +190,7 @@ const ProfileSettingsView: React.FC<ProfileSettingsViewProps> = ({ settings, mod
       setDeployMessage('Kopiere Mods ins Spiel...');
       
       // Rufe die Funktion zum Bereitstellen der Mods auf
-      const result = await ipcRenderer.invoke('deploy-profile-mods', profile.id, settings.defaultModFolder);
+      const result = await ipcRenderer.invoke('deploy-profile-mods', profile.id, defaultModFolder);
       
       if (result.success) {
         setDeployMessage('Mods wurden erfolgreich ins Spiel kopiert');
@@ -205,6 +211,25 @@ const ProfileSettingsView: React.FC<ProfileSettingsViewProps> = ({ settings, mod
   if (isLoading) {
     return <div className="loading">Lade Profil...</div>;
   }
+
+  const handleCheckUrl = async () => {
+    if (!profile || !profile.serverSyncUrl) return;
+    
+    setIsCheckingUrl(true);
+    setUrlCheckResult(null);
+    try {
+      const result = await ipcRenderer.invoke('check-fastdl-url', profile.serverSyncUrl);
+      if (result.success) {
+        setUrlCheckResult({ success: true, message: `${result.count} Mods gefunden` });
+      } else {
+        setUrlCheckResult({ success: false, message: result.error || 'Fehler beim Prüfen' });
+      }
+    } catch (error) {
+      setUrlCheckResult({ success: false, message: 'Verbindungsfehler' });
+    } finally {
+      setIsCheckingUrl(false);
+    }
+  };
 
   if (!profile) {
     return <div className="error">Profil nicht gefunden</div>;
@@ -265,17 +290,38 @@ const ProfileSettingsView: React.FC<ProfileSettingsViewProps> = ({ settings, mod
         <p>Hier können Sie einen Server-Link eingeben, um Mods mit einem Dedicated Server zu synchronisieren.</p>
         
         <div className="form-group">
-          <label htmlFor="server-sync-url">Server-Link</label>
-          <input
-            type="text"
-            id="server-sync-url"
-            name="serverSyncUrl"
-            value={profile.serverSyncUrl || ''}
-            onChange={handleChange}
-            placeholder="z.B. http://178.63.189.92:8080/mods.html?lang=de"
-          />
-          <small>Der Link sollte auf die Mods-Übersichtsseite des Servers verweisen.</small>
-        </div>
+            <label htmlFor="server-sync-url">Server-Link (FastDL)</label>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <input
+                type="text"
+                id="server-sync-url"
+                name="serverSyncUrl"
+                value={profile.serverSyncUrl || ''}
+                onChange={handleChange}
+                placeholder="z.B. http://178.63.189.92:8080/mods.html?lang=de"
+                style={{ flex: 1 }}
+              />
+              <button 
+                className="btn btn-secondary" 
+                onClick={handleCheckUrl}
+                disabled={isCheckingUrl || !profile.serverSyncUrl}
+                style={{ whiteSpace: 'nowrap' }}
+              >
+                {isCheckingUrl ? 'Prüfe...' : 'Link prüfen'}
+              </button>
+            </div>
+            {urlCheckResult && (
+              <div style={{ 
+                marginTop: '6px', 
+                fontSize: '0.9em', 
+                color: urlCheckResult.success ? '#4ade80' : '#f87171' 
+              }}>
+                {urlCheckResult.success ? '✅ ' : '❌ '}
+                {urlCheckResult.message}
+              </div>
+            )}
+            <small>Der Link sollte auf die Mods-Übersichtsseite des Servers verweisen (Directory Listing oder GIANTS Server).</small>
+          </div>
         
         {profile.lastSyncDate && (
           <div className="info-box">
@@ -400,7 +446,7 @@ const ProfileSettingsView: React.FC<ProfileSettingsViewProps> = ({ settings, mod
         </p>
         
         <div className="info-box">
-          <p><strong>Spielmodordner:</strong> {settings.defaultModFolder}</p>
+          <p><strong>Spielmodordner:</strong> {settings.games?.[profile.gameVersion || 'fs25']?.defaultModFolder || settings.defaultModFolder || 'Nicht festgelegt'}</p>
         </div>
         
         <div className="deploy-actions">

@@ -103,6 +103,11 @@ app.on('ready', () => {
   ipcMain.handle('check-for-updates', async () => {
     return await updateManager.checkForUpdates();
   });
+
+  ipcMain.handle('get-app-version', () => {
+    return app.getVersion();
+  });
+
   ipcMain.handle('select-folder', async () => {
     const { dialog } = require('electron');
     const result = await dialog.showOpenDialog(mainWindow, {
@@ -134,7 +139,7 @@ app.on('ready', () => {
   ipcMain.handle('toggle-mod', async (event, profileId: string, modId: string, isActive: boolean) => {
     const profile = await profileManager.getProfile(profileId);
     if (profile) {
-      const mod = profile.mods.find((m: any) => m.id === modId);
+      const mod = profile.mods.find((m: any) => m.fileName === modId);
       if (mod) {
         mod.isActive = isActive;
         await profileManager.saveProfile(profile);
@@ -147,7 +152,7 @@ app.on('ready', () => {
   ipcMain.handle('delete-mod', async (event, profileId: string, modId: string) => {
     const profile = await profileManager.getProfile(profileId);
     if (profile) {
-      const mod = profile.mods.find((m: any) => m.id === modId);
+      const mod = profile.mods.find((m: any) => m.fileName === modId);
       if (mod && mod.fileName) {
         // Datei im Mod-Ordner löschen
         const modFilePath = path.join(profile.modFolderPath, 'mods', mod.fileName);
@@ -159,7 +164,7 @@ app.on('ready', () => {
           }
         }
       }
-      profile.mods = profile.mods.filter((m: any) => m.id !== modId);
+      profile.mods = profile.mods.filter((m: any) => m.fileName !== modId);
       await profileManager.saveProfile(profile);
       return true;
     }

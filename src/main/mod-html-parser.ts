@@ -105,5 +105,39 @@ export function parseModsFromHtmlCheerio(html: string, serverUrlStr: string): an
     }
   });
   
+  // Wenn keine Dedicated Server Struktur gefunden wurde, suche nach einfachen <a> Links (.zip Dateien)
+  // Das erlaubt die Nutzung von simplen FastDL Webservern (Node.js, Apache Index, etc.)
+  if (mods.length === 0) {
+    $('a').each((i, a) => {
+      const href = $(a).attr('href');
+      const text = $(a).text().trim();
+      
+      if (href && (href.toLowerCase().endsWith('.zip') || text.toLowerCase().endsWith('.zip'))) {
+        // Versuche den Dateinamen zu extrahieren
+        const fileName = href.includes('.zip') ? href.split('/').pop()?.split('?')[0] : text;
+        if (!fileName || !fileName.toLowerCase().endsWith('.zip')) return;
+        
+        // Duplikate vermeiden
+        if (mods.find(m => m.fileName === fileName)) return;
+
+        let downloadUrl = href;
+        if (!downloadUrl.startsWith('http')) {
+           const cleanHref = href.startsWith('/') ? href.substring(1) : href;
+           downloadUrl = baseUrl.endsWith('/') ? `${baseUrl}${cleanHref}` : `${baseUrl}/${cleanHref}`;
+        }
+        
+        mods.push({
+          fileName: fileName,
+          name: fileName.replace(/\.zip$/i, ''),
+          version: '',
+          author: '',
+          fileSize: '',
+          isActive: true,
+          downloadUrl: downloadUrl
+        });
+      }
+    });
+  }
+
   return mods;
 }

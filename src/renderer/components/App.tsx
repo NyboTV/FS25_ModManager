@@ -8,6 +8,7 @@ import ProfileEditPopup from './ProfileEditPopup';
 import SyncProgressPopup from './SyncProgressPopup';
 import ModInfoPopup from './ModInfoPopup';
 import LogAnalyzerView from './LogAnalyzerView';
+import InGameUpdatesPopup from './InGameUpdatesPopup';
 import { Settings, UpdateInfo, SyncProgress, ModInfo } from '../../common/types';
 import { useTranslation } from '../i18n';
 
@@ -58,6 +59,7 @@ const App: React.FC = () => {
   const [updateProgress, setUpdateProgress] = useState({ percent: 0, speed: 0 });
   const [modListReloadKey, setModListReloadKey] = useState(0);
   const [autoLaunchOnSyncComplete, setAutoLaunchOnSyncComplete] = useState(false);
+  const [inGameUpdates, setInGameUpdates] = useState<{ profile: any, changes: string[] } | null>(null);
 
   // Übersetzungsfunktion
   const t = useTranslation(settings.language);
@@ -69,9 +71,32 @@ const App: React.FC = () => {
       
       // Setze das Theme basierend auf den Einstellungen
       document.body.className = savedSettings.theme === 'dark' ? 'theme-dark' : '';
+      
+      // Check for in-game updates
+      if (savedSettings.lastLaunchedProfileId) {
+        try {
+          const profiles = await ipcRenderer.invoke('load-profiles');
+          const lastProfile = profiles.find((p: any) => p.id === savedSettings.lastLaunchedProfileId);
+          if (lastProfile) {
+            const gameVersion = lastProfile.gameVersion || 'fs25';
+            const gamePath = savedSettings.games[gameVersion as keyof typeof savedSettings.games]?.defaultModFolder;
+            if (gamePath) {
+              const result = await ipcRenderer.invoke('check-in-game-mod-updates', lastProfile.id, gamePath);
+              if (result.success && result.hasChanges) {
+                setInGameUpdates({ profile: lastProfile, changes: result.changes });
+              }
+            }
+          }
+        } catch (e) {
+          console.error('Failed to check in-game updates', e);
+        }
+      }
     };
     
     loadSettings();
+  }, []);
+
+  useEffect(() => {
 
     // Event-Listener für IPC-Events
     const handleUpdateAvailable = (event: any, info: UpdateInfo) => {
@@ -133,7 +158,7 @@ const App: React.FC = () => {
       ipcRenderer.removeListener('update-download-progress', handleUpdateProgress);
       ipcRenderer.removeListener('update-downloaded', handleUpdateDownloaded);
     };
-  }, [showSyncProgress, autoLaunchOnSyncComplete, settings]); // settings und autoLaunch als Dependency hinzufügen
+  }, [showSyncProgress, autoLaunchOnSyncComplete]); // Removed 'settings' to prevent infinite loop
 
   // Ref für AutoLaunch & SyncProgress, um in der useEffect Closure immer den aktuellen Wert zu haben
   const syncProgressRef = React.useRef(syncProgress);
@@ -386,7 +411,13 @@ const App: React.FC = () => {
                   {updateInfo.releaseNotes && (
                     <div className="release-notes">
                       <h4>{t('update.releaseNotes')}:</h4>
-                      <div className="notes-content">{updateInfo.releaseNotes}</div>
+                      <div className="notes-content" dangerouslySetInnerHTML={{ 
+                        __html: (() => {
+                          const txt = document.createElement('textarea');
+                          txt.innerHTML = updateInfo.releaseNotes as string;
+                          return txt.value;
+                        })()
+                      }} />
                     </div>
                   )}
                 </>
@@ -395,11 +426,11 @@ const App: React.FC = () => {
                 <div className="update-progress">
                   <p>Update wird heruntergeladen...</p>
                   <div className="progress-bar">
-                    <div className="progress-fill" style={{ width: `${updateProgress.percent}%` }} />
+                    <div className="progress-fill" style={{ width: `${updateProgress.percent || 0}%` }} />
                   </div>
                   <div className="progress-stats">
-                    <span>{Math.round(updateProgress.percent)}%</span>
-                    <span>{(updateProgress.speed / (1024 * 1024)).toFixed(2)} MB/s</span>
+                    <span>{Math.round(updateProgress.percent || 0)}%</span>
+                    <span>{updateProgress.speed ? (updateProgress.speed / (1024 * 1024)).toFixed(1) : '0.0'} MB/s</span>
                   </div>
                 </div>
               )}
@@ -434,6 +465,23 @@ const App: React.FC = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {inGameUpdates && (
+        <InGameUpdatesPopup 
+          profile={inGameUpdates.profile}
+          changes={inGameUpdates.changes}
+          onImport={async (changes) => {
+            const gameVersion = inGameUpdates.profile.gameVersion || 'fs25';
+            const gamePath = settings.games[gameVersion as keyof typeof settings.games]?.defaultModFolder;
+            if (gamePath) {
+              await ipcRenderer.invoke('import-in-game-updates', inGameUpdates.profile.id, gamePath, changes);
+              setModListReloadKey(key => key + 1);
+            }
+            setInGameUpdates(null);
+          }}
+          onIgnore={() => setInGameUpdates(null)}
+        />
       )}
     </div>
   );

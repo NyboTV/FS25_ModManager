@@ -119,6 +119,20 @@ const ModInfoPopup: React.FC<ModInfoPopupProps> = ({
                     <span className="detail-value">{mod.modDescData.multiplayerSupported ? 'Unterstützt' : 'Nicht unterstützt'}</span>
                   </div>
                 )}
+                {mod.modDescData?.category && (
+                  <div className="detail-item">
+                    <span className="detail-label">Kategorie:</span>
+                    <span className="detail-value">{mod.modDescData.category}</span>
+                  </div>
+                )}
+                {mod.modDescData?.dependencies && mod.modDescData.dependencies.length > 0 && (
+                  <div className="detail-item">
+                    <span className="detail-label">Abhängigkeiten:</span>
+                    <span className="detail-value" style={{ color: '#fbbf24' }}>
+                      {mod.modDescData.dependencies.join(', ')}
+                    </span>
+                  </div>
+                )}
               </div>
 
               <div className="detail-group">
@@ -147,7 +161,16 @@ const ModInfoPopup: React.FC<ModInfoPopupProps> = ({
           </div>
         </div>
 
-        <div className="popup-footer">
+        <div className="popup-footer" style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <button 
+            className="btn-secondary" 
+            onClick={() => {
+              const { shell } = window.require('electron');
+              shell.openExternal(`https://www.farming-simulator.com/mods.php?title=fs2025&searchMod=${encodeURIComponent(mod.name)}`);
+            }}
+          >
+            🔍 Auf ModHub suchen
+          </button>
           <button className="button primary" onClick={onClose}>
             {t('common.close')}
           </button>

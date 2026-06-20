@@ -36,6 +36,7 @@ Ein moderner, robuster Mod-Manager für Farming Simulator (FS19, FS22, FS25), en
 - **Vollständige Dateinamen**: Abrufen der originalen Mod-Dateinamen von den Detail-Seiten (nicht verkürzte HTML-Namen)
 - **Sync-Schutz**: Integrierter Spam-Schutz verhindert versehentliche mehrfache Synchronisationen
 - **Fortschrittsanzeige**: Detaillierte Anzeige des Synchronisationsfortschritts
+- **FastDL Webserver**: Ein integrierter, eigenständiger Webserver (`fastdl-server.js`) für blitzschnelle Mod-Downloads. Ideal, wenn ModManager und Dedicated Server auf demselben Host laufen, um die Mods in Gigabit-Geschwindigkeit direkt an die Clients auszuliefern, ohne auf die langsame native In-Game-Download-Geschwindigkeit angewiesen zu sein.
 
 ### 🌍 Mehrsprachigkeitsunterstützung (i18n)
 - **Modulares System**: Vollständig überarbeitetes Internationalisierungssystem

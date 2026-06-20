@@ -156,6 +156,31 @@ export class ModInfoExtractor {
         });
       }
 
+      // Dependencies extrahieren
+      const dependenciesMatch = xmlData.match(/<dependencies>([\s\S]*?)<\/dependencies>/i);
+      info.dependencies = [];
+      if (dependenciesMatch) {
+        const depBlock = dependenciesMatch[1];
+        const depMatches = depBlock.match(/<dependency>[^<]*<\/dependency>/gi);
+        if (depMatches) {
+          info.dependencies = depMatches.map(d => d.replace(/<\/?dependency>/gi, '').trim());
+        }
+      }
+
+      // Ist es eine Map?
+      const isMapMatch = xmlData.match(/<maps>|class="Mission00"/i);
+      info.isMap = !!isMapMatch;
+
+      // Globale Kategorie extrahieren (FS22/25 haben oft <category> am Anfang)
+      const rootCategoryMatch = xmlData.match(/<category>([^<]+)<\/category>/i);
+      if (rootCategoryMatch) {
+        info.category = rootCategoryMatch[1].trim();
+      } else if (info.storeItems && info.storeItems.length > 0) {
+        info.category = info.storeItems[0];
+      } else {
+        info.category = info.isMap ? 'Map' : 'Unknown';
+      }
+
       logger.debug(`XML geparst - Name: ${info.name}, Version: ${info.version}, Author: ${info.author}`);
       
     } catch (error) {

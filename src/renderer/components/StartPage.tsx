@@ -20,7 +20,41 @@ const StartPage: React.FC<StartPageProps> = ({ settings, modListReloadKey }) => 
   const [isLaunching, setIsLaunching] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [deployProgress, setDeployProgress] = useState<{current: number, total: number, message: string} | null>(null);
+  const [serverUpdatesPreview, setServerUpdatesPreview] = useState<{ [profileId: string]: { count: number, loading: boolean } }>({});
   
+  useEffect(() => {
+    const handleDeployProgress = (_: any, progress: any) => {
+      setDeployProgress(progress);
+      setMessage(progress.message);
+    };
+    
+    ipcRenderer.on('deploy-progress', handleDeployProgress);
+    return () => {
+      ipcRenderer.removeListener('deploy-progress', handleDeployProgress);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (selectedProfileId) {
+      const selectedProfile = profiles.find(p => p.id === selectedProfileId);
+      if (selectedProfile?.serverSyncUrl && !serverUpdatesPreview[selectedProfileId]) {
+        setServerUpdatesPreview(prev => ({ ...prev, [selectedProfileId]: { count: 0, loading: true } }));
+        ipcRenderer.invoke('check-server-updates', selectedProfile)
+          .then((res: any) => {
+            if (res.success) {
+              setServerUpdatesPreview(prev => ({ ...prev, [selectedProfileId]: { count: res.count, loading: false } }));
+            } else {
+              setServerUpdatesPreview(prev => ({ ...prev, [selectedProfileId]: { count: 0, loading: false } }));
+            }
+          })
+          .catch(() => {
+             setServerUpdatesPreview(prev => ({ ...prev, [selectedProfileId]: { count: 0, loading: false } }));
+          });
+      }
+    }
+  }, [selectedProfileId, profiles]);
+
   useEffect(() => {
     loadProfiles();
   }, [modListReloadKey]);
@@ -73,16 +107,20 @@ const StartPage: React.FC<StartPageProps> = ({ settings, modListReloadKey }) => 
     
     try {
       setIsLaunching(true);
+      setDeployProgress(null);
       setMessage('Bereite Mods vor...');
       setError('');
       
       const deployResult = await ipcRenderer.invoke('deploy-profile-mods', selectedProfileId, gameSettings.defaultModFolder);
       
       if (!deployResult.success) {
-        throw new Error(deployResult.error || 'Unbekannter Fehler beim Kopieren der Mods');
+        throw new Error(deployResult.error);
       }
       
-      setMessage(`Starte ${gameVersion.toUpperCase()}...`);
+      // Speichere zuletzt genutztes Profil für In-Game Update Check
+      await ipcRenderer.invoke('save-settings', { ...settings, lastLaunchedProfileId: selectedProfileId });
+      
+      setMessage('Mods erfolgreich vorbereitet! Starte Farming Simulator 25...');
       
       const launchResult = await ipcRenderer.invoke('launch-game', gameSettings.gamePath);
       
@@ -94,6 +132,7 @@ const StartPage: React.FC<StartPageProps> = ({ settings, modListReloadKey }) => 
       
       setTimeout(() => {
         setMessage('');
+        setDeployProgress(null);
         setIsLaunching(false);
       }, 3000);
       
@@ -101,6 +140,7 @@ const StartPage: React.FC<StartPageProps> = ({ settings, modListReloadKey }) => 
       console.error('Fehler beim Starten des Spiels:', error);
       setError(`Fehler: ${error instanceof Error ? error.message : String(error)}`);
       setIsLaunching(false);
+      setDeployProgress(null);
     }
   };
   
@@ -220,6 +260,20 @@ const StartPage: React.FC<StartPageProps> = ({ settings, modListReloadKey }) => 
                               <span className="value">{new Date(selectedProfile.lastSyncDate).toLocaleString('de-DE')}</span>
                             </div>
                           )}
+                          
+                          {/* Mini Checkup */}
+                          {serverUpdatesPreview[selectedProfile.id] && (
+                            <div className="info-item" style={{ marginTop: '10px', padding: '8px', background: 'rgba(0,0,0,0.2)', borderRadius: '4px' }}>
+                              <span className="label">Updates verfügbar:</span>
+                              <span className="value" style={{ fontWeight: 'bold', color: serverUpdatesPreview[selectedProfile.id].loading ? '#aaa' : (serverUpdatesPreview[selectedProfile.id].count > 0 ? '#fbbf24' : '#4ade80') }}>
+                                {serverUpdatesPreview[selectedProfile.id].loading 
+                                  ? 'Prüfe Server...' 
+                                  : (serverUpdatesPreview[selectedProfile.id].count > 0 
+                                      ? `⚠️ ${serverUpdatesPreview[selectedProfile.id].count} Mods können aktualisiert werden` 
+                                      : '✅ Alle Mods aktuell')}
+                              </span>
+                            </div>
+                          )}
                         </div>
                       )}
                     </>
@@ -232,9 +286,21 @@ const StartPage: React.FC<StartPageProps> = ({ settings, modListReloadKey }) => 
           {/* Launch Button Bereich - Unten Mittig */}
           <div className="launch-section">
             {message && (
-              <div className="status-message success">
-                <span className="status-icon">✅</span>
-                {message}
+              <div 
+                className="status-message success" 
+                style={{ 
+                  whiteSpace: 'nowrap', 
+                  overflow: 'hidden', 
+                  textOverflow: 'ellipsis', 
+                  maxWidth: '500px', 
+                  margin: '0 auto',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                <span className="status-icon" style={{ flexShrink: 0 }}>✅</span>
+                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{message}</span>
               </div>
             )}
             
@@ -242,6 +308,20 @@ const StartPage: React.FC<StartPageProps> = ({ settings, modListReloadKey }) => 
               <div className="status-message error">
                 <span className="status-icon">❌</span>
                 {error}
+              </div>
+            )}
+            
+            {isLaunching && deployProgress && deployProgress.total > 0 && (
+              <div className="progress-container" style={{ width: '100%', maxWidth: '400px', margin: '15px auto', background: '#333', borderRadius: '8px', overflow: 'hidden', border: '1px solid #444' }}>
+                <div 
+                  className="progress-bar" 
+                  style={{ 
+                    height: '12px', 
+                    background: '#4ade80', 
+                    width: `${Math.max(2, (deployProgress.current / deployProgress.total) * 100)}%`,
+                    transition: 'width 0.1s linear'
+                  }}
+                />
               </div>
             )}
 

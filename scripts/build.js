@@ -3,6 +3,9 @@ const path = require('path');
 const { execSync } = require('child_process');
 const readline = require('readline');
 
+// Lade .env Datei für GitHub Token
+require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
+
 const ROOT_DIR = path.join(__dirname, '..');
 const PKG_JSON_PATH = path.join(ROOT_DIR, 'package.json');
 

@@ -31,6 +31,8 @@ const ProfileEditPopup: React.FC<ProfileEditPopupProps> = ({
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [copyCurrentMods, setCopyCurrentMods] = useState(false);
+  const [isCheckingUrl, setIsCheckingUrl] = useState(false);
+  const [urlCheckResult, setUrlCheckResult] = useState<{ success?: boolean; message?: string } | null>(null);
   
   // Übersetzungsfunktion
   const t = useTranslation(language);
@@ -57,7 +59,7 @@ const ProfileEditPopup: React.FC<ProfileEditPopupProps> = ({
       }
       setErrors({});
     }
-  }, [isOpen, profile, isCreating]);
+  }, [isOpen, profile?.id, isCreating]);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
@@ -79,6 +81,11 @@ const ProfileEditPopup: React.FC<ProfileEditPopupProps> = ({
         ...prev,
         [field]: ''
       }));
+    }
+    
+    // Reset check result when URL changes
+    if (field === 'serverSyncUrl') {
+      setUrlCheckResult(null);
     }
   };
   const validateForm = (): boolean => {
@@ -102,24 +109,53 @@ const ProfileEditPopup: React.FC<ProfileEditPopupProps> = ({
     } catch {
       return false;
     }
-  };  const getDocumentsModPath = (profileName: string): string => {
-    // Erstelle automatischen Pfad im Dokumentenordner 
+  };
+
+  const handleCheckUrl = async () => {
+    if (!formData.serverSyncUrl) return;
+    if (!isValidUrl(formData.serverSyncUrl)) {
+      setUrlCheckResult({ success: false, message: 'Ungültiges URL-Format' });
+      return;
+    }
+
+    setIsCheckingUrl(true);
+    setUrlCheckResult(null);
+    try {
+      const { ipcRenderer } = window.require('electron');
+      const result = await ipcRenderer.invoke('check-fastdl-url', formData.serverSyncUrl);
+      if (result.success) {
+        setUrlCheckResult({ success: true, message: `${result.count} Mods gefunden` });
+      } else {
+        setUrlCheckResult({ success: false, message: result.error || 'Fehler beim Prüfen' });
+      }
+    } catch (error) {
+      setUrlCheckResult({ success: false, message: 'Verbindungsfehler' });
+    } finally {
+      setIsCheckingUrl(false);
+    }
+  };
+
+  const getDocumentsModPath = (profileId: string): string => {
+    // Erstelle automatischen Pfad im Dokumentenordner basierend auf der ID (Zeitstempel)
     const os = require('os');
     const path = require('path');
-    const cleanName = profileName.replace(/[^a-zA-Z0-9]/g, '_');
-    return path.join(os.homedir(), 'Documents', 'FS_ModManager', 'Profiles', cleanName);
+    return path.join(os.homedir(), 'Documents', 'FS_ModManager', 'Profiles', profileId);
   };
 
   const handleSave = () => {
     if (!validateForm()) {
       return;
-    }    const profileData: any = {
-      id: profile?.id || `profile_${Date.now()}`,
+    }
+    
+    const profileId = profile?.id || `profile_${Date.now()}`;
+    
+    const profileData: any = {
+      id: profileId,
       name: formData.name!,
       version: formData.version || '1.0.0',
       description: formData.description,
       serverSyncUrl: formData.serverSyncUrl,
-      modFolderPath: getDocumentsModPath(formData.name!), // Automatischer Pfad
+      modFolderPath: profile?.modFolderPath || getDocumentsModPath(profileId), // Immer alten Pfad behalten!
       gameVersion: formData.gameVersion as 'fs19' | 'fs22' | 'fs25',
       mods: profile?.mods || []
     };
@@ -204,15 +240,36 @@ const ProfileEditPopup: React.FC<ProfileEditPopupProps> = ({
           )}
 
           <div className="form-group">
-            <label htmlFor="serverSyncUrl">{t('profileEdit.serverUrl')}</label>
-            <input
-              id="serverSyncUrl"
-              type="text"
-              value={formData.serverSyncUrl || ''}
-              onChange={(e) => handleInputChange('serverSyncUrl', e.target.value)}
-              className={errors.serverSyncUrl ? 'error' : ''}
-              placeholder={t('profileEdit.serverUrlPlaceholder')}
-            />
+            <label htmlFor="serverSyncUrl">FastDL Server-URL (für Sync)</label>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <input
+                id="serverSyncUrl"
+                type="text"
+                value={formData.serverSyncUrl || ''}
+                onChange={(e) => handleInputChange('serverSyncUrl', e.target.value)}
+                className={errors.serverSyncUrl ? 'error' : ''}
+                placeholder="http://dein-server.de/mods/"
+                style={{ flex: 1 }}
+              />
+              <button 
+                className="button secondary" 
+                onClick={handleCheckUrl}
+                disabled={isCheckingUrl || !formData.serverSyncUrl}
+                style={{ padding: '8px 12px', whiteSpace: 'nowrap' }}
+              >
+                {isCheckingUrl ? 'Prüfe...' : 'Link prüfen'}
+              </button>
+            </div>
+            {urlCheckResult && (
+              <div style={{ 
+                marginTop: '6px', 
+                fontSize: '0.9em', 
+                color: urlCheckResult.success ? '#4ade80' : '#f87171' 
+              }}>
+                {urlCheckResult.success ? '✅ ' : '❌ '}
+                {urlCheckResult.message}
+              </div>
+            )}
             {errors.serverSyncUrl && <span className="error-message">{errors.serverSyncUrl}</span>}
           </div>
         </div>

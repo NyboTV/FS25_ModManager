@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Settings, GameSettings } from '../../common/types';
 import { useTranslation } from '../i18n';
 
@@ -41,7 +41,14 @@ const SettingsView: React.FC<SettingsViewProps> = ({ settings, setSettings }) =>
   const [localSettings, setLocalSettings] = useState<Settings>(migrateSettings(settings));
   const [saveStatus, setSaveStatus] = useState('');
   const [expandedGame, setExpandedGame] = useState<string | null>('fs25');
+  const [appVersion, setAppVersion] = useState<string>(localSettings.currentVersion || '1.0.0');
   const t = useTranslation(settings.language);
+
+  useEffect(() => {
+    ipcRenderer.invoke('get-app-version').then((version: string) => {
+      setAppVersion(version);
+    }).catch(console.error);
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -236,7 +243,7 @@ const SettingsView: React.FC<SettingsViewProps> = ({ settings, setSettings }) =>
             >
               {t('settings.checkUpdatesNow')}
             </button>
-            <small>{t('settings.currentVersion')}: {localSettings.currentVersion || '1.0.0'}</small>
+            <small>{t('settings.currentVersion')}: {appVersion}</small>
           </div>
         </div>
         

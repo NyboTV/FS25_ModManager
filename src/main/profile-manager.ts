@@ -39,6 +39,15 @@ export class ProfileManager {
             const profilePath = path.join(profilesPath, dir, 'profile.json');
             if (fs.existsSync(profilePath)) {
               const profileData = JSON.parse(fs.readFileSync(profilePath, 'utf8'));
+              
+              // Auto-Korrektur: Repariere alte Profile, die noch den veralteten "Friendly Name" Pfad haben
+              const correctModFolderPath = path.join(profilesPath, dir, 'mods');
+              if (profileData.modFolderPath !== correctModFolderPath) {
+                profileData.modFolderPath = correctModFolderPath;
+                fs.writeFileSync(profilePath, JSON.stringify(profileData, null, 2), 'utf8');
+                logger.info(`Profil ${profileData.name} automatisch repariert: Pfad auf ${correctModFolderPath} gesetzt.`);
+              }
+              
               return profileData;
             }
             return null;
@@ -114,11 +123,15 @@ export class ProfileManager {
 
         // Erstelle Verzeichnisstruktur für das Profil
         const profilesPath = path.join(this.appDataPath, 'profiles');
-        const profileModsPath = path.join(profilesPath, profile.id, 'mods');
+        const profileDirPath = path.join(profilesPath, profile.id);
+        const profileModsPath = path.join(profileDirPath, 'mods');
         const targetModFolderPath = profile.modFolderPath || profileModsPath;
 
         if (!fs.existsSync(profilesPath)) {
           fs.mkdirSync(profilesPath, { recursive: true });
+        }
+        if (!fs.existsSync(profileDirPath)) {
+          fs.mkdirSync(profileDirPath, { recursive: true });
         }
         if (!fs.existsSync(targetModFolderPath)) {
           fs.mkdirSync(targetModFolderPath, { recursive: true });
