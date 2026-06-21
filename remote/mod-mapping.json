@@ -970,5 +970,17 @@
     "title": "Sowing Machine Roller Ready",
     "category": "Gameplay",
     "author": "Ifko[nator]"
+  },
+  "FS25_ValtraHitechBP905.zip": {
+    "modId": "361820",
+    "title": "Valtra Hitech BP 905",
+    "category": "Seeding - Planters",
+    "author": "Valtra and Connect Modding LTDA"
+  },
+  "FS25_PackLizard_7X14s_crossplay.zip": {
+    "modId": "363210",
+    "title": "Pack Lizard 7X1s 7X1-4s",
+    "category": "Drivables - Small Tractors",
+    "author": "Kaymara, ToitoineModding, X3D"
   }
 }
