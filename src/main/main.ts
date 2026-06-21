@@ -119,9 +119,20 @@ app.on('ready', () => {
     try {
       logger.info(`Starte lokales ModHub-Mapping für Profil ${profileId}`);
       
+      const profile = await profileManager.getProfile(profileId);
       const profilePath = path.join(app.getPath('documents'), 'FS_ModManager', 'profiles', profileId, 'mods');
       const extractor = new ModInfoExtractor();
       const mods = await extractor.extractAllModsInfo(profilePath);
+      
+      // Füge Server-Synchronisations ModHub-Status hinzu, falls vorhanden
+      if (profile && profile.mods) {
+        mods.forEach(m => {
+          const profileMod = profile.mods.find((pm: any) => pm.fileName === m.fileName);
+          if (profileMod) {
+            m.modHub = profileMod.modHub;
+          }
+        });
+      }
       
       const webContents = windowManager.getMainWindow()?.webContents;
       if (webContents) {
