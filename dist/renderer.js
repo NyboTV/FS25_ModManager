@@ -41945,6 +41945,7 @@ const ModInfoPopup_1 = __importDefault(__webpack_require__(/*! ./ModInfoPopup */
 const LogAnalyzerView_1 = __importDefault(__webpack_require__(/*! ./LogAnalyzerView */ "./src/renderer/components/LogAnalyzerView.tsx"));
 const StorageCleanerView_1 = __importDefault(__webpack_require__(/*! ./StorageCleanerView */ "./src/renderer/components/StorageCleanerView.tsx"));
 const InGameUpdatesPopup_1 = __importDefault(__webpack_require__(/*! ./InGameUpdatesPopup */ "./src/renderer/components/InGameUpdatesPopup.tsx"));
+const ModBrowserView_1 = __importDefault(__webpack_require__(/*! ./ModBrowserView */ "./src/renderer/components/ModBrowserView.tsx"));
 const SplashScreen_1 = __importDefault(__webpack_require__(/*! ./SplashScreen */ "./src/renderer/components/SplashScreen.tsx"));
 const i18n_1 = __webpack_require__(/*! ../i18n */ "./src/renderer/i18n.ts");
 const { ipcRenderer } = window.require('electron');
@@ -42174,6 +42175,8 @@ const App = () => {
             return 'settings';
         if (path.startsWith('/profiles'))
             return 'profiles';
+        if (path.startsWith('/modbrowser'))
+            return 'modbrowser';
         if (path.startsWith('/logs'))
             return 'logs';
         if (path.startsWith('/profile-settings'))
@@ -42214,6 +42217,7 @@ const App = () => {
         react_1.default.createElement("div", { className: "tabs" },
             react_1.default.createElement("div", { className: `tab ${getCurrentTab() === 'start' ? 'active' : ''}`, onClick: () => navigate('/') }, t('nav.start')),
             react_1.default.createElement("div", { className: `tab ${getCurrentTab() === 'profiles' ? 'active' : ''}`, onClick: () => navigate('/profiles') }, t('nav.profiles')),
+            react_1.default.createElement("div", { className: `tab ${getCurrentTab() === 'modbrowser' ? 'active' : ''}`, onClick: () => navigate('/modbrowser') }, "ModHub"),
             react_1.default.createElement("div", { className: `tab ${getCurrentTab() === 'settings' ? 'active' : ''}`, onClick: () => navigate('/settings') }, t('nav.settings')),
             react_1.default.createElement("div", { className: `tab ${getCurrentTab() === 'logs' ? 'active' : ''}`, onClick: () => navigate('/logs') }, t('nav.logs')),
             react_1.default.createElement("div", { className: `tab ${getCurrentTab() === 'storage' ? 'active' : ''}`, onClick: () => navigate('/storage') }, t('nav.storage'))),
@@ -42222,6 +42226,7 @@ const App = () => {
                 react_1.default.createElement(react_router_dom_1.Route, { path: "/", element: react_1.default.createElement(StartPage_1.default, { settings: settings, modListReloadKey: modListReloadKey }) }),
                 react_1.default.createElement(react_router_dom_1.Route, { path: "/profiles", element: react_1.default.createElement(ProfilesView_1.default, { settings: settings, onShowModInfo: handleShowModInfo, modListReloadKey: modListReloadKey }) }),
                 react_1.default.createElement(react_router_dom_1.Route, { path: "/settings", element: react_1.default.createElement(SettingsView_1.default, { settings: settings, setSettings: setSettings }) }),
+                react_1.default.createElement(react_router_dom_1.Route, { path: "/modbrowser", element: react_1.default.createElement(ModBrowserView_1.default, { settings: settings }) }),
                 react_1.default.createElement(react_router_dom_1.Route, { path: "/logs", element: react_1.default.createElement(LogAnalyzerView_1.default, { settings: settings }) }),
                 react_1.default.createElement(react_router_dom_1.Route, { path: "/storage", element: react_1.default.createElement(StorageCleanerView_1.default, { settings: settings }) }))),
         react_1.default.createElement("footer", { className: "footer" },
@@ -42245,7 +42250,9 @@ const App = () => {
                 zIndex: 9999,
                 width: '300px'
             } },
-            react_1.default.createElement("h4", { style: { margin: '0 0 8px 0', fontSize: '14px', color: 'var(--primary-color)' } }, mappingProgress.status === 'checking_updates' ? 'ModHub Update-Check' : t('mapping.title')),
+            react_1.default.createElement("h4", { style: { margin: '0 0 8px 0', fontSize: '14px', color: 'var(--primary-color)' } },
+                mappingProgress.status === 'checking_updates' ? 'ModHub Update-Check' : t('mapping.title'),
+                mappingProgress.profileName ? ` (${mappingProgress.profileName})` : ''),
             react_1.default.createElement("p", { style: { margin: '0 0 10px 0', fontSize: '13px', color: '#ccc' } }, mappingProgress.status === 'checking_updates' ? 'Prüfe auf Updates beim ModHub...' : t('mapping.desc')),
             react_1.default.createElement("div", { style: { display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '4px' } },
                 react_1.default.createElement("span", { style: { textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', maxWidth: '200px' } }, mappingProgress.modName),
@@ -42256,7 +42263,7 @@ const App = () => {
             react_1.default.createElement("div", { className: "progress-bar", style: { height: '6px', backgroundColor: 'var(--surface)', borderRadius: '3px', overflow: 'hidden', marginBottom: '10px' } },
                 react_1.default.createElement("div", { className: "progress-fill", style: { width: `${mappingProgress.total > 0 ? (mappingProgress.current / mappingProgress.total) * 100 : 100}%`, height: '100%', backgroundColor: 'var(--primary-color)' } })),
             react_1.default.createElement("button", { onClick: () => {
-                    window.electron.ipcRenderer.send('cancel-modhub-mapping');
+                    ipcRenderer.send('cancel-modhub-mapping');
                     setMappingProgress(null);
                 }, style: {
                     width: '100%',
@@ -42280,8 +42287,10 @@ const App = () => {
                 zIndex: 9999,
                 width: '300px'
             } },
-            react_1.default.createElement("h4", { style: { margin: '0 0 8px 0', fontSize: '14px', color: 'var(--primary-color)' } }, "Mod Update"),
-            react_1.default.createElement("p", { style: { margin: '0 0 10px 0', fontSize: '13px', color: '#ccc' } },
+            react_1.default.createElement("h4", { style: { margin: '0 0 8px 0', fontSize: '14px', color: 'var(--primary-color)' } },
+                "Mod Update ",
+                modUpdateProgress.profileName ? `(${modUpdateProgress.profileName})` : ''),
+            react_1.default.createElement("p", { style: { margin: '0 0 10px 0', fontSize: '13px', color: '#ccc', wordBreak: 'break-all' } },
                 "Lade Update f\u00FCr ",
                 modUpdateProgress.fileName,
                 "..."),
@@ -42561,6 +42570,239 @@ exports["default"] = LogAnalyzerView;
 
 /***/ }),
 
+/***/ "./src/renderer/components/ModBrowserView.tsx":
+/*!****************************************************!*\
+  !*** ./src/renderer/components/ModBrowserView.tsx ***!
+  \****************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const i18n_1 = __webpack_require__(/*! ../i18n */ "./src/renderer/i18n.ts");
+const { ipcRenderer } = window.require('electron');
+const ModBrowserView = ({ settings }) => {
+    const t = (0, i18n_1.useTranslation)(settings.language);
+    const [mods, setMods] = (0, react_1.useState)([]);
+    const [page, setPage] = (0, react_1.useState)(0);
+    const [hasNext, setHasNext] = (0, react_1.useState)(true);
+    const [loading, setLoading] = (0, react_1.useState)(false);
+    const [error, setError] = (0, react_1.useState)(null);
+    const [profiles, setProfiles] = (0, react_1.useState)([]);
+    const [selectedProfileId, setSelectedProfileId] = (0, react_1.useState)('');
+    const [selectedModId, setSelectedModId] = (0, react_1.useState)(null);
+    const [modDetail, setModDetail] = (0, react_1.useState)(null);
+    const [loadingDetail, setLoadingDetail] = (0, react_1.useState)(false);
+    const [isDownloading, setIsDownloading] = (0, react_1.useState)(false);
+    (0, react_1.useEffect)(() => {
+        loadProfiles();
+    }, []);
+    (0, react_1.useEffect)(() => {
+        fetchPage(page);
+    }, [page]);
+    const loadProfiles = async () => {
+        try {
+            const loadedProfiles = await ipcRenderer.invoke('load-profiles');
+            setProfiles(loadedProfiles);
+            if (loadedProfiles.length > 0) {
+                setSelectedProfileId(loadedProfiles[0].id);
+            }
+        }
+        catch (error) {
+            console.error("Fehler beim Laden der Profile:", error);
+        }
+    };
+    const fetchPage = async (pageNumber) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const result = await ipcRenderer.invoke('fetch-modhub-page', pageNumber);
+            if (result.success) {
+                setMods(result.mods);
+                setHasNext(result.hasNext);
+            }
+            else {
+                setError(result.error || 'Unknown error');
+            }
+        }
+        catch (err) {
+            setError(String(err));
+        }
+        finally {
+            setLoading(false);
+        }
+    };
+    const handleModClick = async (modId) => {
+        setSelectedModId(modId);
+        setModDetail(null);
+        setLoadingDetail(true);
+        try {
+            const result = await ipcRenderer.invoke('fetch-modhub-detail', modId);
+            if (result.success) {
+                setModDetail(result.mod);
+            }
+            else {
+                alert("Fehler beim Laden der Details: " + result.error);
+                setSelectedModId(null);
+            }
+        }
+        catch (err) {
+            alert("Fehler: " + err);
+            setSelectedModId(null);
+        }
+        finally {
+            setLoadingDetail(false);
+        }
+    };
+    const handleDownload = async () => {
+        if (!selectedProfileId || !modDetail)
+            return;
+        setIsDownloading(true);
+        // Wir nutzen das existierende download-modhub-mod (braucht fileName. Wir erfinden einen temporären, 
+        // modhub-service.ts findet den echten Namen über Content-Disposition raus)
+        const tempFileName = modDetail.title.replace(/[^a-zA-Z0-9]/g, '_') + '.zip';
+        ipcRenderer.send('download-modhub-mod', selectedProfileId, tempFileName, modDetail.id);
+        // Das Modal kann offen bleiben, App.tsx Toast zeigt Download-Fortschritt
+        setIsDownloading(false);
+        setSelectedModId(null);
+    };
+    return (react_1.default.createElement("div", { className: "modbrowser-view", style: { padding: '20px', height: '100%', overflowY: 'auto' } },
+        react_1.default.createElement("div", { className: "card", style: { marginBottom: '20px' } },
+            react_1.default.createElement("h2", { style: { margin: '0 0 10px 0' } }, "ModHub Browser"),
+            react_1.default.createElement("p", { style: { margin: '0 0 15px 0', color: 'var(--text-secondary)' } }, "Suche und installiere Mods direkt aus dem offiziellen ModHub."),
+            react_1.default.createElement("div", { style: { display: 'flex', gap: '15px', alignItems: 'center' } },
+                react_1.default.createElement("button", { className: "btn btn-secondary", onClick: () => setPage(p => Math.max(0, p - 1)), disabled: page === 0 || loading }, "Zur\u00FCck"),
+                react_1.default.createElement("span", null,
+                    "Seite ",
+                    page + 1),
+                react_1.default.createElement("button", { className: "btn btn-secondary", onClick: () => setPage(p => p + 1), disabled: !hasNext || loading }, "N\u00E4chste"))),
+        error && (react_1.default.createElement("div", { style: { padding: '15px', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', borderRadius: '8px', marginBottom: '20px' } },
+            "Fehler beim Laden: ",
+            error)),
+        loading ? (react_1.default.createElement("div", { style: { textAlign: 'center', padding: '40px', color: 'var(--text-secondary)' } }, "Lade Mods...")) : (react_1.default.createElement("div", { style: {
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+                gap: '20px'
+            } }, mods.map(mod => (react_1.default.createElement("div", { key: mod.id, className: "mod-card", onClick: () => handleModClick(mod.id), style: {
+                background: 'var(--bg-secondary)',
+                borderRadius: '8px',
+                overflow: 'hidden',
+                cursor: 'pointer',
+                border: '1px solid var(--border-color)',
+                transition: 'transform 0.2s, box-shadow 0.2s',
+                display: 'flex',
+                flexDirection: 'column'
+            }, onMouseEnter: (e) => {
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.boxShadow = '0 8px 16px rgba(0,0,0,0.3)';
+            }, onMouseLeave: (e) => {
+                e.currentTarget.style.transform = 'none';
+                e.currentTarget.style.boxShadow = 'none';
+            } },
+            react_1.default.createElement("div", { style: {
+                    height: '150px',
+                    background: '#111',
+                    backgroundImage: mod.imageUrl ? `url(${mod.imageUrl})` : 'none',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    position: 'relative'
+                } },
+                react_1.default.createElement("div", { style: { position: 'absolute', bottom: 0, left: 0, right: 0, padding: '5px 10px', background: 'rgba(0,0,0,0.7)', display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' } },
+                    react_1.default.createElement("span", null, mod.rating),
+                    react_1.default.createElement("span", { style: { color: 'var(--primary-color)' } }, mod.category))),
+            react_1.default.createElement("div", { style: { padding: '12px', flex: 1, display: 'flex', flexDirection: 'column' } },
+                react_1.default.createElement("h3", { style: { margin: '0 0 8px 0', fontSize: '1rem', lineHeight: '1.2' } }, mod.title),
+                react_1.default.createElement("span", { style: { fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: 'auto' } },
+                    "Von: ",
+                    mod.author))))))),
+        selectedModId && (react_1.default.createElement("div", { style: {
+                position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+                background: 'rgba(0,0,0,0.8)', zIndex: 1000,
+                display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px'
+            }, onClick: () => setSelectedModId(null) },
+            react_1.default.createElement("div", { style: {
+                    background: 'var(--bg-primary)',
+                    borderRadius: '12px',
+                    width: '100%',
+                    maxWidth: '800px',
+                    maxHeight: '90vh',
+                    overflowY: 'auto',
+                    border: '1px solid var(--border-color)',
+                    boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
+                    position: 'relative',
+                    display: 'flex',
+                    flexDirection: 'column'
+                }, onClick: e => e.stopPropagation() },
+                react_1.default.createElement("button", { onClick: () => setSelectedModId(null), style: { position: 'absolute', top: '15px', right: '15px', background: 'rgba(0,0,0,0.5)', border: 'none', color: '#fff', width: '30px', height: '30px', borderRadius: '50%', cursor: 'pointer', zIndex: 10 } }, "\u2715"),
+                loadingDetail ? (react_1.default.createElement("div", { style: { padding: '50px', textAlign: 'center' } }, "Lade Details...")) : modDetail ? (react_1.default.createElement(react_1.default.Fragment, null,
+                    react_1.default.createElement("div", { style: {
+                            width: '100%',
+                            height: '300px',
+                            backgroundImage: `url(${modDetail.imageUrl})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center'
+                        } }),
+                    react_1.default.createElement("div", { style: { padding: '25px', display: 'flex', flexDirection: 'column', gap: '20px' } },
+                        react_1.default.createElement("div", null,
+                            react_1.default.createElement("h2", { style: { margin: '0 0 5px 0' } }, modDetail.title || mods.find(m => m.id === selectedModId)?.title),
+                            react_1.default.createElement("div", { style: { display: 'flex', gap: '15px', color: 'var(--text-secondary)', fontSize: '0.9rem' } },
+                                react_1.default.createElement("span", null,
+                                    "Autor: ",
+                                    modDetail.author),
+                                react_1.default.createElement("span", null,
+                                    "Version: ",
+                                    modDetail.version),
+                                react_1.default.createElement("span", null,
+                                    "Gr\u00F6\u00DFe: ",
+                                    modDetail.size),
+                                react_1.default.createElement("span", null,
+                                    "Kategorie: ",
+                                    modDetail.category))),
+                        react_1.default.createElement("div", { style: { lineHeight: '1.6', color: '#ccc' } }, modDetail.description.map((p, i) => react_1.default.createElement("p", { key: i }, p))),
+                        react_1.default.createElement("div", { style: { background: 'var(--bg-secondary)', padding: '15px', borderRadius: '8px', marginTop: '10px', display: 'flex', gap: '15px', alignItems: 'center' } },
+                            react_1.default.createElement("div", { style: { flex: 1 } },
+                                react_1.default.createElement("label", { style: { display: 'block', marginBottom: '5px', fontSize: '0.85rem', color: 'var(--text-secondary)' } }, "Ziel-Profil f\u00FCr Installation:"),
+                                react_1.default.createElement("select", { value: selectedProfileId, onChange: e => setSelectedProfileId(e.target.value), style: { width: '100%', padding: '8px', borderRadius: '4px', background: 'var(--bg-primary)', color: '#fff', border: '1px solid var(--border-color)' } }, profiles.map(p => (react_1.default.createElement("option", { key: p.id, value: p.id }, p.name))))),
+                            react_1.default.createElement("button", { className: "btn btn-success", style: { padding: '10px 20px', height: 'fit-content', alignSelf: 'flex-end' }, onClick: handleDownload, disabled: isDownloading || !selectedProfileId }, isDownloading ? 'Wird heruntergeladen...' : 'Mod Herunterladen'))))) : null)))));
+};
+exports["default"] = ModBrowserView;
+
+
+/***/ }),
+
 /***/ "./src/renderer/components/ModInfoPopup.tsx":
 /*!**************************************************!*\
   !*** ./src/renderer/components/ModInfoPopup.tsx ***!
@@ -42766,8 +43008,6 @@ const ProfilesView = ({ settings, onShowModInfo, modListReloadKey }) => {
     const [profiles, setProfiles] = (0, react_1.useState)([]);
     const [selectedProfileId, setSelectedProfileId] = (0, react_1.useState)('');
     const [isSyncing, setIsSyncing] = (0, react_1.useState)({});
-    const [showUrlInput, setShowUrlInput] = (0, react_1.useState)(null);
-    const [urlInput, setUrlInput] = (0, react_1.useState)('');
     const [isDownloading, setIsDownloading] = (0, react_1.useState)(false);
     const [categoryFilters, setCategoryFilters] = (0, react_1.useState)({});
     const [searchQueries, setSearchQueries] = (0, react_1.useState)({});
@@ -42976,30 +43216,6 @@ const ProfilesView = ({ settings, onShowModInfo, modListReloadKey }) => {
             alert(`${t('error.prefix')} ${error instanceof Error ? error.message : String(error)}`);
         }
     };
-    const handleAddModFromUrl = async (profileId) => {
-        if (!urlInput)
-            return;
-        setIsDownloading(true);
-        try {
-            const result = await ipcRenderer.invoke('add-mod-from-url', profileId, urlInput);
-            if (result.success) {
-                alert(result.message);
-                await loadProfiles();
-                setShowUrlInput(null);
-                setUrlInput('');
-            }
-            else {
-                alert(`${t('error.prefix')} ${result.error}`);
-            }
-        }
-        catch (error) {
-            console.error(t('mods.downloadError'), error);
-            alert(`${t('error.prefix')} ${error instanceof Error ? error.message : String(error)}`);
-        }
-        finally {
-            setIsDownloading(false);
-        }
-    };
     const getModTitle = (mod) => {
         if (mod.modDescData?.title) {
             return mod.modDescData.title[settings.language] ||
@@ -43051,11 +43267,82 @@ const ProfilesView = ({ settings, onShowModInfo, modListReloadKey }) => {
         react_1.default.createElement("div", { className: "card profile-selection-card" },
             react_1.default.createElement("h2", null, t('profiles.title')),
             react_1.default.createElement("p", null, t('profiles.selectionDesc')),
-            react_1.default.createElement("div", { className: "profile-selector", style: { display: 'flex', gap: '10px', alignItems: 'center', marginTop: '15px' } },
-                react_1.default.createElement("select", { value: selectedProfileId, onChange: (e) => setSelectedProfileId(e.target.value), style: { padding: '8px', flex: 1, borderRadius: '4px', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)' } },
-                    profiles.length === 0 && react_1.default.createElement("option", { value: "" }, t('profiles.noProfiles')),
-                    profiles.map(p => (react_1.default.createElement("option", { key: p.id, value: p.id }, p.name)))),
-                react_1.default.createElement("button", { className: "btn btn-primary", onClick: handleCreateProfile }, t('profiles.createNew')))),
+            react_1.default.createElement("div", { className: "profile-selector-grid", style: {
+                    display: 'flex',
+                    gap: '20px',
+                    marginTop: '15px',
+                    overflowX: 'auto',
+                    padding: '10px 5px 20px 5px',
+                    scrollSnapType: 'x mandatory'
+                } },
+                profiles.map(p => {
+                    const isActive = p.id === selectedProfileId;
+                    const activeModsCount = p.mods.filter(m => m.isActive).length;
+                    return (react_1.default.createElement("div", { key: p.id, onClick: () => setSelectedProfileId(p.id), style: {
+                            minWidth: '200px',
+                            height: '150px',
+                            borderRadius: '12px',
+                            background: isActive ? 'linear-gradient(145deg, rgba(59, 130, 246, 0.15), rgba(30, 64, 175, 0.3))' : 'rgba(255, 255, 255, 0.05)',
+                            border: isActive ? '2px solid var(--primary-color)' : '1px solid var(--border-color)',
+                            boxShadow: isActive ? '0 0 15px rgba(59, 130, 246, 0.4)' : '0 4px 6px rgba(0,0,0,0.2)',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'space-between',
+                            padding: '15px',
+                            transition: 'all 0.2s ease',
+                            scrollSnapAlign: 'start',
+                            position: 'relative'
+                        }, className: "profile-tile", onMouseEnter: (e) => {
+                            if (!isActive) {
+                                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                                e.currentTarget.style.transform = 'translateY(-2px)';
+                            }
+                        }, onMouseLeave: (e) => {
+                            if (!isActive) {
+                                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                                e.currentTarget.style.transform = 'translateY(0)';
+                            }
+                        } },
+                        react_1.default.createElement("div", null,
+                            react_1.default.createElement("h3", { style: { margin: '0 0 8px 0', fontSize: '1.1em', color: isActive ? '#fff' : 'var(--text-primary)', wordBreak: 'break-word', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' } }, p.name),
+                            react_1.default.createElement("span", { style: { fontSize: '0.75em', color: 'var(--text-secondary)', background: 'rgba(0,0,0,0.3)', padding: '3px 8px', borderRadius: '12px' } }, p.gameVersion?.toUpperCase() || 'FS25')),
+                        react_1.default.createElement("div", { style: { display: 'flex', flexDirection: 'column', gap: '8px' } },
+                            react_1.default.createElement("div", { style: { display: 'flex', justifyContent: 'space-between', fontSize: '0.85em', color: '#aaa', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '4px' } },
+                                react_1.default.createElement("span", null, "Gesamt"),
+                                react_1.default.createElement("span", { style: { fontWeight: 'bold', color: '#fff' } }, p.mods.length)),
+                            react_1.default.createElement("div", { style: { display: 'flex', justifyContent: 'space-between', fontSize: '0.85em', color: '#aaa' } },
+                                react_1.default.createElement("span", null, "Aktiv"),
+                                react_1.default.createElement("span", { style: { fontWeight: 'bold', color: 'var(--success-color)' } }, activeModsCount)))));
+                }),
+                react_1.default.createElement("div", { onClick: handleCreateProfile, style: {
+                        minWidth: '200px',
+                        height: '150px',
+                        borderRadius: '12px',
+                        background: 'rgba(255, 255, 255, 0.02)',
+                        border: '2px dashed var(--border-color)',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        padding: '15px',
+                        transition: 'all 0.2s ease',
+                        scrollSnapAlign: 'start',
+                        gap: '15px'
+                    }, className: "profile-tile-add", onMouseEnter: (e) => {
+                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                        e.currentTarget.style.borderColor = 'var(--primary-color)';
+                        e.currentTarget.style.color = 'var(--primary-color)';
+                        e.currentTarget.style.transform = 'translateY(-2px)';
+                    }, onMouseLeave: (e) => {
+                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)';
+                        e.currentTarget.style.borderColor = 'var(--border-color)';
+                        e.currentTarget.style.color = 'var(--text-primary)';
+                        e.currentTarget.style.transform = 'translateY(0)';
+                    } },
+                    react_1.default.createElement("div", { style: { fontSize: '2.5em', color: 'inherit', fontWeight: '300' } }, "+"),
+                    react_1.default.createElement("div", { style: { fontSize: '0.9em', color: 'inherit', textAlign: 'center', fontWeight: '500' } }, t('profiles.createNew') || 'Neues Profil')))),
         selectedProfile && (react_1.default.createElement(react_1.default.Fragment, null,
             react_1.default.createElement("div", { className: "card profile-settings-card" },
                 react_1.default.createElement("div", { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' } },
@@ -43131,16 +43418,15 @@ const ProfilesView = ({ settings, onShowModInfo, modListReloadKey }) => {
                                 }, title: "Pr\u00FCft alle Mods mit Mod-ID auf Updates" }, "\uD83D\uDD04 Updates Pr\u00FCfen"),
                             react_1.default.createElement("button", { className: "btn btn-success btn-sm", onClick: () => handleAddMods(selectedProfile), title: "Mods hinzuf\u00FCgen (Datei)" },
                                 "\u2795 ",
-                                t('profiles.addFile') || 'Datei')),
-                        react_1.default.createElement("button", { className: "btn btn-info btn-sm", onClick: () => setShowUrlInput(selectedProfile.id === showUrlInput ? null : selectedProfile.id), title: "Mod hinzuf\u00FCgen (URL)" },
-                            "\uD83C\uDF10 ",
-                            t('profiles.addUrl') || 'URL'))),
-                showUrlInput === selectedProfile.id && (react_1.default.createElement("div", { className: "url-input-container", style: { margin: '10px 0', padding: '10px', background: 'rgba(0,0,0,0.1)', borderRadius: '4px', display: 'flex', gap: '10px' } },
-                    react_1.default.createElement("input", { type: "text", placeholder: "z.B. https://www.farming-simulator.com/mod.php?mod_id=...", value: urlInput, onChange: (e) => setUrlInput(e.target.value), style: { flex: 1, padding: '8px', borderRadius: '4px', border: '1px solid var(--border-color, #444)', background: 'var(--bg-secondary, #2a2a2a)', color: 'var(--text-primary, #fff)' }, disabled: isDownloading }),
-                    react_1.default.createElement("button", { className: "btn btn-success", onClick: () => handleAddModFromUrl(selectedProfile.id), disabled: isDownloading || !urlInput }, isDownloading ? (t('profiles.downloading') || 'Lädt herunter...') : (t('profiles.add') || 'Hinzufügen')))),
+                                t('profiles.addFile') || 'Datei')))),
                 (() => {
                     const { activeMaps, missingDeps } = checkConflicts(selectedProfile);
-                    const categories = Array.from(new Set(selectedProfile.mods.map(m => m.modHubCategory || m.modDescData?.category || 'Unknown').filter(c => c !== 'Unknown'))).sort();
+                    const categories = Array.from(new Set(selectedProfile.mods.flatMap(m => {
+                        const c = m.modHubCategory || m.modDescData?.category || 'Unknown';
+                        if (c === 'Unknown')
+                            return [];
+                        return c.split('-').map(x => x.trim()).filter(Boolean);
+                    }))).sort();
                     const tags = Array.from(new Set(selectedProfile.mods.flatMap(m => m.tags || []))).sort();
                     const currentCategory = categoryFilters[selectedProfile.id] || 'All';
                     const currentSearch = (searchQueries[selectedProfile.id] || '').toLowerCase();
@@ -43148,7 +43434,11 @@ const ProfilesView = ({ settings, onShowModInfo, modListReloadKey }) => {
                     let filteredMods = selectedProfile.mods;
                     // 1. Kategoriefilter
                     if (currentCategory !== 'All') {
-                        filteredMods = filteredMods.filter(m => (m.modHubCategory || m.modDescData?.category || 'Unknown') === currentCategory || (m.tags || []).includes(currentCategory));
+                        filteredMods = filteredMods.filter(m => {
+                            const c = m.modHubCategory || m.modDescData?.category || 'Unknown';
+                            const cats = c !== 'Unknown' ? c.split('-').map(x => x.trim()).filter(Boolean) : [];
+                            return cats.includes(currentCategory) || (m.tags || []).includes(currentCategory);
+                        });
                     }
                     // 2. Suchfilter
                     if (currentSearch) {
@@ -43198,7 +43488,11 @@ const ProfilesView = ({ settings, onShowModInfo, modListReloadKey }) => {
                                     categories.length > 0 && react_1.default.createElement("optgroup", { label: t("profiles.categories") || "Categories" }, categories.map(cat => (react_1.default.createElement("option", { key: `cat_${cat}`, value: cat },
                                         cat,
                                         " (",
-                                        selectedProfile.mods.filter(m => (m.modHubCategory || m.modDescData?.category) === cat).length,
+                                        selectedProfile.mods.filter(m => {
+                                            const c = m.modHubCategory || m.modDescData?.category || 'Unknown';
+                                            const cats = c !== 'Unknown' ? c.split('-').map(x => x.trim()).filter(Boolean) : [];
+                                            return cats.includes(cat);
+                                        }).length,
                                         ")")))),
                                     tags.length > 0 && react_1.default.createElement("optgroup", { label: t("profiles.customTags") || "Custom Tags" }, tags.map(tag => (react_1.default.createElement("option", { key: `tag_${tag}`, value: tag },
                                         "#",
@@ -43209,7 +43503,9 @@ const ProfilesView = ({ settings, onShowModInfo, modListReloadKey }) => {
                                 currentCategory !== 'All' && (react_1.default.createElement("button", { className: "btn btn-sm btn-secondary", onClick: () => {
                                         const newProfile = { ...selectedProfile };
                                         newProfile.mods.forEach(m => {
-                                            if ((m.modHubCategory || m.modDescData?.category || 'Unknown') === currentCategory || (m.tags || []).includes(currentCategory)) {
+                                            const c = m.modHubCategory || m.modDescData?.category || 'Unknown';
+                                            const cats = c !== 'Unknown' ? c.split('-').map(x => x.trim()).filter(Boolean) : [];
+                                            if (cats.includes(currentCategory) || (m.tags || []).includes(currentCategory)) {
                                                 m.isActive = !m.isActive;
                                             }
                                         });
