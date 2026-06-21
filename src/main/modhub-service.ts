@@ -28,6 +28,7 @@ export class ModHubService {
   private appDataPath: string;
   private isMapping: boolean = false;
   private _cancelRequested: boolean = false;
+  private mappingQueue: Array<{ profileId: string, profileName: string, mods: ModInfo[], webContents: Electron.WebContents }> = [];
 
   constructor() {
     this.appDataPath = path.join(app.getPath('userData'), 'FS25_ModManager_Data');
@@ -40,6 +41,7 @@ export class ModHubService {
 
   public cancelMapping() {
     this._cancelRequested = true;
+    this.mappingQueue = [];
   }
 
   private loadMapping() {
@@ -69,7 +71,7 @@ export class ModHubService {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  public async checkUpdates(webContents: Electron.WebContents) {
+  public async checkUpdates(webContents: Electron.WebContents, limitToModIds?: string[], profileName: string = "Unbekanntes Profil") {
     const stateFile = path.join(app.getPath('userData'), 'modhub-sync-state.json');
     let state: { referenceModId?: string } = {};
     if (fs.existsSync(stateFile)) {
@@ -182,10 +184,7 @@ export class ModHubService {
 
     } catch(e) {
       console.error(`[ModHubService] Globaler Fehler beim Update-Check: ${e instanceof Error ? e.message : String(e)}`);
-    }
-  }
-
-  public async downloadMod(profileId: string, fileName: string, modId: string, webContents: Electron.WebContents) {
+    }  public async downloadMod(profileId: string, fileName: string, modId: string, webContents: Electron.WebContents, modDetail?: any) {
     try {
       // 1. Get profile
       const { profileManager } = require('./main');
@@ -226,6 +225,17 @@ export class ModHubService {
 
       return new Promise((resolve, reject) => {
         writer.on('finish', () => {
+          // Speichere das Mapping direkt ab!
+          if (modDetail) {
+            this.mapping[fileName] = {
+              modHubId: modId,
+              modHubVersion: modDetail.version || '1.0.0.0',
+              modHubTitle: modDetail.title,
+              modHubRating: modDetail.rating || ''
+            };
+            this.saveMapping();
+          }
+          
           webContents.send('mod-update-complete', { modId, fileName, success: true });
           resolve(true);
         });
@@ -237,22 +247,33 @@ export class ModHubService {
         response.data.pipe(writer);
       });
 
-    } catch (error) {
+    } catch (error) {(error) {
       console.error(`[ModHubService] Fehler beim Herunterladen von ${fileName}:`, error);
       webContents.send('mod-update-complete', { modId, fileName, success: false, error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   }
 
-  public async mapMods(mods: ModInfo[], webContents: Electron.WebContents) {
-    if (this.isMapping) return;
+  public async mapMods(profileId: string, profileName: string, mods: ModInfo[], webContents: Electron.WebContents) {
+    this.mappingQueue.push({ profileId, profileName, mods, webContents });
+    this.processQueue();
+  }
+
+  private async processQueue() {
+    if (this.isMapping || this.mappingQueue.length === 0) return;
     this.isMapping = true;
     this._cancelRequested = false;
 
-    try {
-      await this.checkUpdates(webContents);
+    const task = this.mappingQueue.shift();
+    if (!task) {
+      this.isMapping = false;
+      return;
+    }
+    const { mods, webContents, profileName } = task;
 
-      // Falls schon beim Update-Check abgebrochen wurde
+    try {
+      await this.checkUpdates(webContents, undefined, profileName);
+
       if (this._cancelRequested) {
         return;
       }
@@ -425,72 +446,7 @@ export class ModHubService {
   }
 
   public async forceCheckUpdates(webContents: Electron.WebContents, modIdsToCheck: string[]) {
-    if (this.isMapping) {
-      console.log('Force-Update abgebrochen: isMapping ist bereits true.');
-      return;
-    }
-    this.isMapping = true;
-
-    try {
-      const stringModIdsToCheck = modIdsToCheck.map(String);
-      const validMappings = Object.entries(this.mapping).filter(([_, m]) => !m.failed && m.modId !== '!' && stringModIdsToCheck.includes(String(m.modId)));
-      console.log(`Starte Force-Update für ${validMappings.length} Mods (von ${modIdsToCheck.length} übergebenen IDs)`);
-      
-      if (validMappings.length === 0) {
-        // Show an empty toast briefly so user knows it finished
-        webContents.send('modhub-mapping-progress', { 
-          status: 'checking_updates',
-          current: 0, 
-          total: 0,
-          modName: 'Keine ModHub-Mods gefunden'
-        });
-        setTimeout(() => webContents.send('modhub-mapping-complete'), 2000);
-        return;
-      }
-      
-      for (let i = 0; i < validMappings.length; i++) {
-        const [fileName, mappingData] = validMappings[i];
-        
-        webContents.send('modhub-mapping-progress', { 
-          status: 'checking_updates',
-          current: i + 1, 
-          total: validMappings.length,
-          modName: mappingData.title || fileName
-        });
-
-        try {
-          const detailRes = await axios.get(`${BASE_URL}/mod.php?mod_id=${mappingData.modId}&title=fs2025`, { timeout: 10000 });
-          const detail$ = cheerio.load(detailRes.data);
-          
-          let version = '';
-          let released = '';
-          let size = '';
-          detail$('.table-row').each((_, el) => {
-            const key = detail$(el).find('.table-cell').first().text().trim().toLowerCase();
-            const val = detail$(el).find('.table-cell').last().text().trim();
-            if (key.includes('version')) version = val;
-            if (key.includes('released') || key.includes('datum')) released = val;
-            if (key.includes('size') || key.includes('größe')) size = val;
-          });
-
-          if (version) {
-            this.mapping[fileName].version = version;
-            if (released) this.mapping[fileName].released = released;
-            if (size) this.mapping[fileName].size = size;
-          }
-
-          await this.delay(500);
-        } catch(e: any) {
-          console.error(`Fehler beim Force-Update-Check für ModId ${mappingData.modId}:`, e.message);
-          await this.delay(5000); // Wait on network error
-        }
-      }
-      
-      this.saveMapping();
-      webContents.send('modhub-mapping-complete');
-    } finally {
-      this.isMapping = false;
-    }
+    await this.checkUpdates(webContents, modIdsToCheck, "Manuelles Update");
   }
 }
 
