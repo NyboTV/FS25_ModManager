@@ -247,7 +247,7 @@ export class ModHubService {
         response.data.pipe(writer);
       });
 
-    } catch (error) {(error) {
+    } catch (error) {
       console.error(`[ModHubService] Fehler beim Herunterladen von ${fileName}:`, error);
       webContents.send('mod-update-complete', { modId, fileName, success: false, error: error instanceof Error ? error.message : String(error) });
       throw error;
