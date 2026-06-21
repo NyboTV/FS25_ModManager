@@ -83,7 +83,7 @@ async function scrapeModhub() {
       }
 
       p++;
-      await delay(200); 
+      await delay(1000); // 1 Sekunde Pause für Paginierung, um "socket hang up" (Ban) zu vermeiden
     } catch (err: any) {
       console.error(`Fehler beim Scannen von Seite ${p}:`, err.message);
       break;
@@ -107,7 +107,7 @@ async function scrapeModhub() {
       const { data } = await axios.get(`${BASE_URL}/mod.php?mod_id=${modId}`, { timeout: 10000 });
       const $ = cheerio.load(data);
       
-      let title = $('h2.title').text().trim();
+      let title = $('h2').first().text().trim();
       if (!title) title = $('h1').text().trim() || 'Unknown';
       
       let author = 'Unknown';
@@ -150,7 +150,7 @@ async function scrapeModhub() {
       console.error(`  -> Fehler bei Mod ${modId}:`, err.message);
     }
 
-    await delay(1000); // 1 Sekunde Pause reicht hier, da reines HTTP
+    await delay(2000); // 2 Sekunden Pause für Detailseite, extrem wichtig gegen ModHub IP-Block!
   }
 
   console.log(`\nScraping beendet! Insgesamt sind nun ${Object.keys(mapping).length} Mods gemappt.`);
