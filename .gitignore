@@ -36,3 +36,4 @@ yarn-error.log*
 Thumbs.db
 
 ai-script/
+/.agents
