@@ -184,7 +184,10 @@ export class ModHubService {
 
     } catch(e) {
       console.error(`[ModHubService] Globaler Fehler beim Update-Check: ${e instanceof Error ? e.message : String(e)}`);
-    }  public async downloadMod(profileId: string, fileName: string, modId: string, webContents: Electron.WebContents, modDetail?: any) {
+    }
+  }
+
+  public async downloadMod(profileId: string, fileName: string, modId: string, webContents: Electron.WebContents, modDetail?: any) {
     try {
       // 1. Get profile
       const { profileManager } = require('./main');
