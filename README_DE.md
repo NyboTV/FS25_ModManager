@@ -1,4 +1,4 @@
-# FS25 Mod Manager
+# FS Mod Manager
 
 [![GitHub Release](https://img.shields.io/github/v/release/NyboTV/FS25_ModManager?style=for-the-badge&color=success)](https://github.com/NyboTV/FS25_ModManager/releases/latest)
 [![GitHub Downloads](https://img.shields.io/github/downloads/NyboTV/FS25_ModManager/total?style=for-the-badge&color=blue)](https://github.com/NyboTV/FS25_ModManager/releases)
@@ -6,7 +6,7 @@
 
 Ein moderner, robuster Mod-Manager für Farming Simulator (FS19, FS22, FS25), entwickelt mit TypeScript, Electron und React. Die Anwendung ermöglicht Ihnen, verschiedene Mod-Profile zu erstellen, zu verwalten und nahtlos mit Dedicated Servern zu synchronisieren. Mit einer benutzerfreundlichen Oberfläche und fortschrittlichen Funktionen für die einfache Organisation Ihrer Farming Simulator Mods.
 
-![FS25 Mod Manager Screenshot](https://raw.githubusercontent.com/NyboTV/FS25_ModManager/refs/heads/master/dist/image/screenshot.png)
+![FS Mod Manager Screenshot](https://raw.githubusercontent.com/NyboTV/FS25_ModManager/refs/heads/master/dist/image/screenshot.png)
 
 ## 🚀 Installation
 
@@ -50,6 +50,14 @@ Ein moderner, robuster Mod-Manager für Farming Simulator (FS19, FS22, FS25), en
 - **Erweiterbar**: Einfaches Hinzufügen neuer Sprachen durch separate Sprachdateien
 - **Aufgeräumt**: Alle nicht verwendeten Übersetzungsschlüssel wurden entfernt
 
+### 🛠️ Auto-Debugger (Log-Analyse)
+- **Fehlererkennung**: Scannt die `log.txt` deines Spiels automatisch auf Fehler
+- **Problematische Mods**: Erkennt sofort, welche Mods für Abstürze oder Probleme verantwortlich sind
+
+### 🧹 Speicher-Bereinigung (Junk-Cleaner)
+- **Erkennung von Dateileichen**: Scannt deinen globalen Mod-Ordner nach verwaisten Mods
+- **Speicherplatz freigeben**: Löscht ungenutzte Mods, die in keinem deiner Singleplayer-Profile mehr verwendet werden
+
 ### 🎨 Moderne Benutzeroberfläche
 - **Dunkles Design**: Modernes, augenfreundliches Design
 - **Intuitive Navigation**: Einfache Bedienung durch strukturierte Tabs
@@ -59,11 +67,11 @@ Ein moderner, robuster Mod-Manager für Farming Simulator (FS19, FS22, FS25), en
 ## 📖 Anleitung zur Verwendung
 
 ### Erste Einrichtung
-1. **Anwendung starten**: Starten Sie den FS25 Mod Manager über die Desktop-Verknüpfung
+1. **Anwendung starten**: Starten Sie den FS Mod Manager über die Desktop-Verknüpfung
 2. **Grundeinstellungen konfigurieren**:
    - Gehen Sie zu den Einstellungen (⚙️ Tab)
-   - **Standard-Mod-Ordner**: Wählen Sie Ihren Mods-Ordner (z.B. `Dokumente\My Games\FarmingSimulator2025\mods`)
-   - **Spiel-Executable**: Wählen Sie die `FarmingSimulator2025.exe` Datei direkt aus
+   - **Standard-Mod-Ordner**: Wählen Sie Ihren Farming Simulator Mods-Ordner aus (z.B. `Dokumente\My Games\FarmingSimulator2025\mods`)
+   - **Spiel-Executable**: Wählen Sie die Spiel-Executable direkt aus (z.B. `FarmingSimulator2025.exe`)
    - **Sprache**: Wählen Sie zwischen Deutsch und Englisch
    - **Debug-Logging**: Optional für erweiterte Fehlerverfolgung aktivieren
 

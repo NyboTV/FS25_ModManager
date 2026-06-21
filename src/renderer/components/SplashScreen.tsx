@@ -25,7 +25,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete, language }) => 
     <div className={`splash-screen ${fadingOut ? 'fade-out' : ''}`}>
       <div className="splash-content">
         <div className="tractor-icon">🚜</div>
-        <h1 className="splash-title">FS25 Mod Manager</h1>
+        <h1 className="splash-title">FS Mod Manager</h1>
         <p className="splash-subtitle">{t("start.loadingProfiles") || "Lade Profile und Einstellungen..."}</p>
         <div className="splash-loader">
           <div className="loader-bar"></div>

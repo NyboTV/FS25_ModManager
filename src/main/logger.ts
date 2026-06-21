@@ -31,7 +31,7 @@ class Logger {
 
   private initLogFile(): void {
     const timestamp = new Date().toISOString();
-    const header = `=== FS25 MOD MANAGER LOG - GESTARTET ${timestamp} ===\n`;
+    const header = `=== FS MOD MANAGER LOG - GESTARTET ${timestamp} ===\n`;
     fs.writeFileSync(this.logFilePath, header);
   }
 

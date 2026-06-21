@@ -1,6 +1,6 @@
 <!-- Use this file to provide workspace-specific custom instructions to Copilot. For more details, visit https://code.visualstudio.com/docs/copilot/copilot-customization#_use-a-githubcopilotinstructionsmd-file -->
 
-# FS25 Mod Manager
+# FS Mod Manager
 
 Dies ist ein Farming Simulator 25 Mod-Manager, der mit TypeScript, Electron und React entwickelt wurde. Die Anwendung ermöglicht Benutzern, verschiedene Mod-Profile zu erstellen und mit Dedicated Servern zu synchronisieren.
 

@@ -51,7 +51,7 @@ let logAnalyzer: LogAnalyzer;
 export const logger = new Logger(appDataPath);
 
 // Setze Anwendungsnamen
-app.setName('FS25 Mod Manager');
+app.setName('FS Mod Manager');
 
 // Logging-Status aus den Einstellungen laden
 const settings = store.get('settings', {
@@ -62,7 +62,7 @@ const settings = store.get('settings', {
 }) as { debugLogging: boolean; language: 'en' | 'de'; currentVersion: string; autoCheckUpdates: boolean };
 
 logger.enableDebug(settings.debugLogging);
-logger.info('FS25 Mod Manager wird gestartet');
+logger.info('FS Mod Manager wird gestartet');
 
 import axios from 'axios';
 
