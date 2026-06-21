@@ -41983,13 +41983,14 @@ const App = () => {
         status: 'downloading'
     });
     const [mappingProgress, setMappingProgress] = (0, react_1.useState)(null);
-    const [modUpdateProgress, setModUpdateProgress] = (0, react_1.useState)(null);
+    const [activeDownloads, setActiveDownloads] = (0, react_1.useState)({});
     const [showModInfo, setShowModInfo] = (0, react_1.useState)(false);
     const [selectedMod, setSelectedMod] = (0, react_1.useState)(null);
     const [updateInfo, setUpdateInfo] = (0, react_1.useState)(null);
     const [showUpdateDialog, setShowUpdateDialog] = (0, react_1.useState)(false);
     const [updateStatus, setUpdateStatus] = (0, react_1.useState)('available');
     const [updateProgress, setUpdateProgress] = (0, react_1.useState)({ percent: 0, speed: 0 });
+    const [updateErrorMsg, setUpdateErrorMsg] = (0, react_1.useState)('');
     const [modListReloadKey, setModListReloadKey] = (0, react_1.useState)(0);
     const [autoLaunchOnSyncComplete, setAutoLaunchOnSyncComplete] = (0, react_1.useState)(false);
     const [inGameUpdates, setInGameUpdates] = (0, react_1.useState)(null);
@@ -42069,8 +42070,13 @@ const App = () => {
         const handleUpdateDownloaded = () => {
             setUpdateStatus('ready');
         };
+        const handleUpdateError = (e, errorMsg) => {
+            setUpdateStatus('error');
+            setUpdateErrorMsg(errorMsg);
+        };
         ipcRenderer.on('update-download-progress', handleUpdateProgress);
         ipcRenderer.on('update-downloaded', handleUpdateDownloaded);
+        ipcRenderer.on('update-error', handleUpdateError);
         const handleMappingProgress = (_, data) => setMappingProgress(data);
         const handleMappingComplete = () => {
             setMappingProgress(null);
@@ -42078,14 +42084,22 @@ const App = () => {
         };
         ipcRenderer.on('modhub-mapping-progress', handleMappingProgress);
         ipcRenderer.on('modhub-mapping-complete', handleMappingComplete);
-        const handleModUpdateProgress = (_, data) => setModUpdateProgress(data);
+        const handleModUpdateProgress = (_, data) => {
+            setActiveDownloads(prev => ({ ...prev, [data.modId]: data }));
+        };
         const handleModUpdateComplete = (_, data) => {
-            setModUpdateProgress(null);
+            setActiveDownloads(prev => {
+                const next = { ...prev };
+                delete next[data.modId];
+                return next;
+            });
             if (data.success) {
                 setModListReloadKey(key => key + 1);
             }
             else {
-                alert(`Fehler beim Update von ${data.fileName}: ${data.error}`);
+                if (data.error !== 'Abgebrochen') {
+                    alert(`Fehler beim Update von ${data.fileName}: ${data.error}`);
+                }
             }
         };
         ipcRenderer.on('mod-update-progress', handleModUpdateProgress);
@@ -42097,6 +42111,7 @@ const App = () => {
             ipcRenderer.removeListener('sync-error', handleSyncError);
             ipcRenderer.removeListener('update-download-progress', handleUpdateProgress);
             ipcRenderer.removeListener('update-downloaded', handleUpdateDownloaded);
+            ipcRenderer.removeListener('update-error', handleUpdateError);
             ipcRenderer.removeListener('modhub-mapping-progress', handleMappingProgress);
             ipcRenderer.removeListener('modhub-mapping-complete', handleMappingComplete);
             ipcRenderer.removeListener('mod-update-progress', handleModUpdateProgress);
@@ -42279,7 +42294,7 @@ const App = () => {
                     cursor: 'pointer',
                     fontSize: '12px'
                 }, onMouseOver: (e) => e.currentTarget.style.backgroundColor = 'var(--surface)', onMouseOut: (e) => e.currentTarget.style.backgroundColor = 'transparent' }, "Abbrechen"))),
-        modUpdateProgress && (react_1.default.createElement("div", { className: "mapping-toast", style: {
+        Object.keys(activeDownloads).length > 0 && (react_1.default.createElement("div", { className: "mapping-toast", style: {
                 position: 'fixed',
                 bottom: mappingProgress ? '140px' : '20px',
                 right: '20px',
@@ -42289,22 +42304,39 @@ const App = () => {
                 padding: '15px',
                 boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
                 zIndex: 9999,
-                width: '300px'
+                width: '320px',
+                maxHeight: '400px',
+                overflowY: 'auto'
             } },
-            react_1.default.createElement("h4", { style: { margin: '0 0 8px 0', fontSize: '14px', color: 'var(--primary-color)' } },
-                "Mod Update ",
-                modUpdateProgress.profileName ? `(${modUpdateProgress.profileName})` : ''),
-            react_1.default.createElement("p", { style: { margin: '0 0 10px 0', fontSize: '13px', color: '#ccc', wordBreak: 'break-all' } },
-                "Lade Update f\u00FCr ",
-                modUpdateProgress.fileName,
-                "..."),
-            react_1.default.createElement("div", { style: { display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '4px' } },
-                react_1.default.createElement("span", null, modUpdateProgress.status === 'starting' ? 'Verbinde...' : 'Lade herunter'),
-                react_1.default.createElement("span", null,
-                    modUpdateProgress.percent,
-                    "%")),
-            react_1.default.createElement("div", { className: "progress-bar", style: { height: '6px', backgroundColor: 'var(--surface)', borderRadius: '3px', overflow: 'hidden', marginBottom: '10px' } },
-                react_1.default.createElement("div", { className: "progress-fill", style: { width: `${modUpdateProgress.percent}%`, height: '100%', backgroundColor: '#ef4444' } })))),
+            react_1.default.createElement("h4", { style: { margin: '0 0 12px 0', fontSize: '14px', color: 'var(--primary-color)' } },
+                "Mod Downloads (",
+                Object.keys(activeDownloads).length,
+                ")"),
+            react_1.default.createElement("div", { style: { display: 'flex', flexDirection: 'column', gap: '15px' } }, Object.values(activeDownloads).map((download) => (react_1.default.createElement("div", { key: download.modId, style: { borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '10px' } },
+                react_1.default.createElement("div", { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' } },
+                    react_1.default.createElement("h5", { style: { margin: '0 0 4px 0', fontSize: '13px', color: '#fff' } },
+                        download.profileName ? `[${download.profileName}] ` : '',
+                        download.fileName),
+                    react_1.default.createElement("button", { onClick: () => {
+                            if (confirm(t('downloads.cancelConfirm') || 'Download wirklich abbrechen?')) {
+                                ipcRenderer.send('cancel-mod-download', download.modId);
+                            }
+                        }, title: t('downloads.cancel') || 'Abbrechen', style: {
+                            background: 'none',
+                            border: 'none',
+                            color: 'var(--text-muted)',
+                            cursor: 'pointer',
+                            fontSize: '16px',
+                            padding: '0 4px',
+                            lineHeight: '1'
+                        } }, "\u2715")),
+                react_1.default.createElement("div", { style: { display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '4px', color: '#ccc' } },
+                    react_1.default.createElement("span", null, download.status === 'queued' ? 'In Warteschlange...' : download.status === 'starting' ? 'Verbinde...' : 'Lade herunter'),
+                    react_1.default.createElement("span", null,
+                        download.percent,
+                        "%")),
+                react_1.default.createElement("div", { className: "progress-bar", style: { height: '6px', backgroundColor: 'var(--surface)', borderRadius: '3px', overflow: 'hidden', marginBottom: '0' } },
+                    react_1.default.createElement("div", { className: "progress-fill", style: { width: `${download.percent}%`, height: '100%', backgroundColor: download.status === 'queued' ? '#6b7280' : '#ef4444' } })))))))),
         react_1.default.createElement(SyncProgressPopup_1.default, { isOpen: showSyncProgress, progress: syncProgress, onCancel: handleCancelSync, onSkipCurrentMod: handleSkipCurrentMod, onProvideLocalMod: handleProvideLocalMod, autoLaunch: autoLaunchOnSyncComplete, onAutoLaunchChange: setAutoLaunchOnSyncComplete, language: settings.language }),
         react_1.default.createElement(ModInfoPopup_1.default, { mod: selectedMod, isOpen: showModInfo, onClose: () => setShowModInfo(false), language: settings.language }),
         showUpdateDialog && updateInfo && (react_1.default.createElement("div", { className: "popup-overlay" },
@@ -42349,12 +42381,17 @@ const App = () => {
                                 " MB/s")))),
                     updateStatus === 'ready' && (react_1.default.createElement("div", { className: "update-ready" },
                         react_1.default.createElement("p", null, t('update.ready')),
-                        react_1.default.createElement("p", null, t('update.restarting'))))),
+                        react_1.default.createElement("p", null, t('update.restarting')))),
+                    updateStatus === 'error' && (react_1.default.createElement("div", { className: "update-error", style: { color: '#ef4444', marginTop: '10px' } },
+                        react_1.default.createElement("p", null,
+                            react_1.default.createElement("strong", null, "Fehler beim Update:")),
+                        react_1.default.createElement("div", { style: { background: 'rgba(239, 68, 68, 0.1)', padding: '10px', borderRadius: '4px', fontSize: '12px', wordBreak: 'break-all' } }, updateErrorMsg)))),
                 react_1.default.createElement("div", { className: "popup-footer" },
                     updateStatus === 'available' && (react_1.default.createElement(react_1.default.Fragment, null,
                         react_1.default.createElement("button", { className: "button secondary", onClick: () => setShowUpdateDialog(false) }, t('update.later')),
                         react_1.default.createElement("button", { className: "button primary", onClick: handleDownloadUpdate }, t('update.download')))),
                     updateStatus === 'downloading' && (react_1.default.createElement("button", { className: "button secondary", disabled: true }, "Herunterladen...")),
+                    updateStatus === 'error' && (react_1.default.createElement("button", { className: "button secondary", onClick: () => setShowUpdateDialog(false) }, "Schlie\u00DFen")),
                     updateStatus === 'ready' && (react_1.default.createElement("button", { className: "button primary", onClick: handleInstallUpdate }, "Jetzt Neustarten & Installieren")))))),
         inGameUpdates && (react_1.default.createElement(InGameUpdatesPopup_1.default, { profile: inGameUpdates.profile, changes: inGameUpdates.changes, onImport: async (changes) => {
                 const gameVersion = inGameUpdates.profile.gameVersion || 'fs25';
@@ -44643,6 +44680,29 @@ const client_1 = __webpack_require__(/*! react-dom/client */ "./node_modules/rea
 const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/dist/index.js");
 const App_1 = __importDefault(__webpack_require__(/*! ./components/App */ "./src/renderer/components/App.tsx"));
 __webpack_require__(/*! ./styles/main.scss */ "./src/renderer/styles/main.scss");
+const electron_1 = __webpack_require__(/*! electron */ "electron");
+// Override console methods to forward to main process logger
+const originalConsoleLog = console.log;
+const originalConsoleError = console.error;
+const originalConsoleWarn = console.warn;
+const originalConsoleDebug = console.debug;
+const serializeArgs = (args) => args.map(a => typeof a === 'object' && a !== null ? JSON.stringify(a, Object.getOwnPropertyNames(a)) : String(a));
+console.log = (...args) => {
+    originalConsoleLog(...args);
+    electron_1.ipcRenderer.send('renderer-log', 'info', ...serializeArgs(args));
+};
+console.error = (...args) => {
+    originalConsoleError(...args);
+    electron_1.ipcRenderer.send('renderer-log', 'error', ...serializeArgs(args));
+};
+console.warn = (...args) => {
+    originalConsoleWarn(...args);
+    electron_1.ipcRenderer.send('renderer-log', 'warn', ...serializeArgs(args));
+};
+console.debug = (...args) => {
+    originalConsoleDebug(...args);
+    electron_1.ipcRenderer.send('renderer-log', 'debug', ...serializeArgs(args));
+};
 const container = document.getElementById('root');
 const root = (0, client_1.createRoot)(container);
 root.render(react_1.default.createElement(react_1.default.StrictMode, null,
@@ -45371,6 +45431,16 @@ module.exports = "data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%
 /***/ ((module) => {
 
 module.exports = "data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3e%3cpath fill=%27none%27 stroke=%27%23343a40%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%272%27 d=%27M2 5l6 6 6-6%27/%3e%3c/svg%3e";
+
+/***/ }),
+
+/***/ "electron":
+/*!***************************!*\
+  !*** external "electron" ***!
+  \***************************/
+/***/ ((module) => {
+
+module.exports = require("electron");
 
 /***/ })
 

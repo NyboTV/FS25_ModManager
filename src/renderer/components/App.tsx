@@ -51,14 +51,15 @@ const App: React.FC = () => {
   });
 
   const [mappingProgress, setMappingProgress] = useState<{current: number, total: number, modName: string, status: string, profileName?: string} | null>(null);
-  const [modUpdateProgress, setModUpdateProgress] = useState<{modId: string, fileName: string, status: string, percent: number, profileName?: string} | null>(null);
+  const [activeDownloads, setActiveDownloads] = useState<Record<string, {modId: string, fileName: string, status: string, percent: number, profileName?: string}>>({});
 
   const [showModInfo, setShowModInfo] = useState(false);
   const [selectedMod, setSelectedMod] = useState<ModInfo | null>(null);
   const [updateInfo, setUpdateInfo] = useState<UpdateInfo | null>(null);
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
-  const [updateStatus, setUpdateStatus] = useState<'available' | 'downloading' | 'ready'>('available');
+  const [updateStatus, setUpdateStatus] = useState<'available' | 'downloading' | 'ready' | 'error'>('available');
   const [updateProgress, setUpdateProgress] = useState({ percent: 0, speed: 0 });
+  const [updateErrorMsg, setUpdateErrorMsg] = useState<string>('');
   const [modListReloadKey, setModListReloadKey] = useState(0);
   const [autoLaunchOnSyncComplete, setAutoLaunchOnSyncComplete] = useState(false);
   const [inGameUpdates, setInGameUpdates] = useState<{ profile: any, changes: string[] } | null>(null);
@@ -148,9 +149,15 @@ const App: React.FC = () => {
     const handleUpdateDownloaded = () => {
       setUpdateStatus('ready');
     };
+
+    const handleUpdateError = (e: any, errorMsg: string) => {
+      setUpdateStatus('error');
+      setUpdateErrorMsg(errorMsg);
+    };
     
     ipcRenderer.on('update-download-progress', handleUpdateProgress);
     ipcRenderer.on('update-downloaded', handleUpdateDownloaded);
+    ipcRenderer.on('update-error', handleUpdateError);
 
     const handleMappingProgress = (_: any, data: any) => setMappingProgress(data);
     const handleMappingComplete = () => {
@@ -161,13 +168,21 @@ const App: React.FC = () => {
     ipcRenderer.on('modhub-mapping-progress', handleMappingProgress);
     ipcRenderer.on('modhub-mapping-complete', handleMappingComplete);
 
-    const handleModUpdateProgress = (_: any, data: any) => setModUpdateProgress(data);
+    const handleModUpdateProgress = (_: any, data: any) => {
+      setActiveDownloads(prev => ({ ...prev, [data.modId]: data }));
+    };
     const handleModUpdateComplete = (_: any, data: any) => {
-      setModUpdateProgress(null);
+      setActiveDownloads(prev => {
+        const next = { ...prev };
+        delete next[data.modId];
+        return next;
+      });
       if (data.success) {
         setModListReloadKey(key => key + 1);
       } else {
-        alert(`Fehler beim Update von ${data.fileName}: ${data.error}`);
+        if (data.error !== 'Abgebrochen') {
+          alert(`Fehler beim Update von ${data.fileName}: ${data.error}`);
+        }
       }
     };
 
@@ -181,6 +196,7 @@ const App: React.FC = () => {
       ipcRenderer.removeListener('sync-error', handleSyncError);
       ipcRenderer.removeListener('update-download-progress', handleUpdateProgress);
       ipcRenderer.removeListener('update-downloaded', handleUpdateDownloaded);
+      ipcRenderer.removeListener('update-error', handleUpdateError);
       ipcRenderer.removeListener('modhub-mapping-progress', handleMappingProgress);
       ipcRenderer.removeListener('modhub-mapping-complete', handleMappingComplete);
       ipcRenderer.removeListener('mod-update-progress', handleModUpdateProgress);
@@ -436,34 +452,63 @@ const App: React.FC = () => {
           </div>
         )}
 
-      {modUpdateProgress && (
-        <div className="mapping-toast" style={{
-          position: 'fixed',
-          bottom: mappingProgress ? '140px' : '20px',
-          right: '20px',
-          backgroundColor: 'rgba(20, 20, 25, 0.95)',
-          border: '1px solid var(--border-color)',
-          borderRadius: '8px',
-          padding: '15px',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
-          zIndex: 9999,
-          width: '300px'
-        }}>
-          <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', color: 'var(--primary-color)' }}>
-            Mod Update {modUpdateProgress.profileName ? `(${modUpdateProgress.profileName})` : ''}
-          </h4>
-          <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: '#ccc', wordBreak: 'break-all' }}>
-            Lade Update für {modUpdateProgress.fileName}...
-          </p>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '4px' }}>
-            <span>{modUpdateProgress.status === 'starting' ? 'Verbinde...' : 'Lade herunter'}</span>
-            <span>{modUpdateProgress.percent}%</span>
+      {Object.keys(activeDownloads).length > 0 && (
+          <div className="mapping-toast" style={{
+            position: 'fixed',
+            bottom: mappingProgress ? '140px' : '20px',
+            right: '20px',
+            backgroundColor: 'rgba(20, 20, 25, 0.95)',
+            border: '1px solid var(--border-color)',
+            borderRadius: '8px',
+            padding: '15px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+            zIndex: 9999,
+            width: '320px',
+            maxHeight: '400px',
+            overflowY: 'auto'
+          }}>
+            <h4 style={{ margin: '0 0 12px 0', fontSize: '14px', color: 'var(--primary-color)' }}>
+              Mod Downloads ({Object.keys(activeDownloads).length})
+            </h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+              {Object.values(activeDownloads).map((download) => (
+                <div key={download.modId} style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '10px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <h5 style={{ margin: '0 0 4px 0', fontSize: '13px', color: '#fff' }}>
+                      {download.profileName ? `[${download.profileName}] ` : ''}{download.fileName}
+                    </h5>
+                    <button 
+                      onClick={() => {
+                        if (confirm(t('downloads.cancelConfirm') || 'Download wirklich abbrechen?')) {
+                          ipcRenderer.send('cancel-mod-download', download.modId);
+                        }
+                      }}
+                      title={t('downloads.cancel') || 'Abbrechen'}
+                      style={{ 
+                        background: 'none', 
+                        border: 'none', 
+                        color: 'var(--text-muted)', 
+                        cursor: 'pointer',
+                        fontSize: '16px',
+                        padding: '0 4px',
+                        lineHeight: '1'
+                      }}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '4px', color: '#ccc' }}>
+                    <span>{download.status === 'queued' ? 'In Warteschlange...' : download.status === 'starting' ? 'Verbinde...' : 'Lade herunter'}</span>
+                    <span>{download.percent}%</span>
+                  </div>
+                  <div className="progress-bar" style={{ height: '6px', backgroundColor: 'var(--surface)', borderRadius: '3px', overflow: 'hidden', marginBottom: '0' }}>
+                    <div className="progress-fill" style={{ width: `${download.percent}%`, height: '100%', backgroundColor: download.status === 'queued' ? '#6b7280' : '#ef4444' }} />
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="progress-bar" style={{ height: '6px', backgroundColor: 'var(--surface)', borderRadius: '3px', overflow: 'hidden', marginBottom: '10px' }}>
-            <div className="progress-fill" style={{ width: `${modUpdateProgress.percent}%`, height: '100%', backgroundColor: '#ef4444' }} />
-          </div>
-        </div>
-      )}
+        )}
 
       {/* Popups */}
       <SyncProgressPopup
@@ -531,6 +576,14 @@ const App: React.FC = () => {
                   <p>{t('update.restarting')}</p>
                 </div>
               )}
+              {updateStatus === 'error' && (
+                <div className="update-error" style={{ color: '#ef4444', marginTop: '10px' }}>
+                  <p><strong>Fehler beim Update:</strong></p>
+                  <div style={{ background: 'rgba(239, 68, 68, 0.1)', padding: '10px', borderRadius: '4px', fontSize: '12px', wordBreak: 'break-all' }}>
+                    {updateErrorMsg}
+                  </div>
+                </div>
+              )}
             </div>
             <div className="popup-footer">
               {updateStatus === 'available' && (
@@ -546,6 +599,11 @@ const App: React.FC = () => {
               {updateStatus === 'downloading' && (
                 <button className="button secondary" disabled>
                   Herunterladen...
+                </button>
+              )}
+              {updateStatus === 'error' && (
+                <button className="button secondary" onClick={() => setShowUpdateDialog(false)}>
+                  Schließen
                 </button>
               )}
               {updateStatus === 'ready' && (

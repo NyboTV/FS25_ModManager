@@ -37,6 +37,9 @@ export class UpdateManager {
     
     autoUpdater.on('error', (err) => {
       logger.error('Fehler beim Updater: ' + err);
+      if (this.mainWindow) {
+        this.mainWindow.webContents.send('update-error', err.message || err.toString());
+      }
     });
     
     autoUpdater.on('download-progress', (progressObj) => {

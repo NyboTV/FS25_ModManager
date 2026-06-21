@@ -501,9 +501,9 @@ export class ModSyncManager {
 
       // Server Sync durchführen
       ipcMain.handle('sync-mods', async (_, profileId, serverUrl) => {
-      console.log('🔥 sync-mods IPC handler called!');
-      console.log('🔥 ProfileId:', profileId);
-      console.log('🔥 ServerUrl:', serverUrl);
+      logger.info('🔥 sync-mods IPC handler called!');
+      logger.info('🔥 ProfileId: ' + profileId);
+      logger.info('🔥 ServerUrl: ' + serverUrl);
       
       logger.debug(`Handler: sync-mods aufgerufen für Profil ${profileId} mit Server ${serverUrl}`);
       try {

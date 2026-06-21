@@ -124,7 +124,16 @@ app.on('ready', () => {
     return app.getVersion();
   });
 
-
+  // Listener für Frontend-Logs
+  ipcMain.on('renderer-log', (event, level, ...args) => {
+    const message = `[Frontend] ${args.join(' ')}`;
+    switch(level) {
+      case 'info': logger.info(message); break;
+      case 'warn': logger.warn(message); break;
+      case 'error': logger.error(message); break;
+      default: logger.debug(message);
+    }
+  });
 
   // Hinzugefügt: Lokales ModHub-Mapping starten
   ipcMain.on('start-modhub-mapping', async (event, profileId) => {
@@ -170,8 +179,12 @@ app.on('ready', () => {
     try {
       await modHubService.downloadMod(profileId, fileName, modId, event.sender, modDetail);
     } catch (err) {
-      console.error('Fehler beim Download des ModHub Mods:', err);
+      logger.error('Fehler beim Download des ModHub Mods', err);
     }
+  });
+
+  ipcMain.on('cancel-mod-download', (event, modId) => {
+    modHubService.cancelDownload(modId);
   });
 
   ipcMain.on('force-modhub-updates', async (event, profileId) => {
@@ -320,7 +333,7 @@ app.on('ready', () => {
 
   ipcMain.handle('sync-profile', async (event, profileId: string) => {
     const profile = await profileManager.getProfile(profileId);
-    console.log('Syncing profile:', profileId);
+    logger.info('Syncing profile: ' + profileId);
     if (profile && profile.serverSyncUrl) {
       try {
         // Sende Progress-Updates

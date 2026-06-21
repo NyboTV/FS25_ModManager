@@ -4,6 +4,10 @@ All notable changes to the FS25 ModManager will be documented in this file.
 
 ## [Unreleased]
 
+## [1.1.2] - 2026-06-21
+
+## [1.1.1] - 2026-06-21
+
 ## [1.1.0] - 2026-06-21
 - **Feature:** Implemented a full in-app browser for the official ModHub (including a custom Dark Mode).
 - **Feature:** Automatic interception of ModHub downloads in the app browser with direct installation into the selected profile.
