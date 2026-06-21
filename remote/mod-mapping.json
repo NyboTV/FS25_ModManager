@@ -982,5 +982,95 @@
     "title": "Pack Lizard 7X1s 7X1-4s",
     "category": "Drivables - Small Tractors",
     "author": "Kaymara, ToitoineModding, X3D"
+  },
+  "FS25_PackRenault_7X14s.zip": {
+    "modId": "363194",
+    "title": "Pack Renault 7X1s 7X1-4s",
+    "category": "Drivables - Small Tractors",
+    "author": "Kaymara, ToitoineModding, X3D"
+  },
+  "FS25_series9R.zip": {
+    "modId": "354319",
+    "title": "John Deere 9R Series (2015-2021)",
+    "category": "Drivables - Large Tractors",
+    "author": "Custom Modding"
+  },
+  "FS25_sidequest1200.zip": {
+    "modId": "359814",
+    "title": "Demco 1200 Gallon SideQuest",
+    "category": "Yield Improvements - Fertilizer Spreaders",
+    "author": "Custom Modding"
+  },
+  "FS25_StalkRollers.zip": {
+    "modId": "360759",
+    "title": "Lizard Stalk Rollers",
+    "category": "Yield Improvements - Rollers",
+    "author": "Custom Modding"
+  },
+  "FS25_MacDon974.zip": {
+    "modId": "363413",
+    "title": "MacDon 974 Flex-Draper Series",
+    "category": "Combine Harvesting - Grain Headers",
+    "author": "Casearias"
+  },
+  "FS25_QuivogneRollmaxGL.zip": {
+    "modId": "364130",
+    "title": "Quivogne Rollmax GL",
+    "category": "Yield Improvements - Rollers",
+    "author": "Univers Simu Modding"
+  },
+  "FS25_Round_Balers_Pack_With_Windrower.zip": {
+    "modId": "363412",
+    "title": "Round Balers Pack With Windrower",
+    "category": "Baling - Round Balers",
+    "author": "Hispano"
+  },
+  "FS25_vicon_Fanex604.zip": {
+    "modId": "358245",
+    "title": "Vicon FANEX 604",
+    "category": "Grassland - Tedders",
+    "author": "Agrar Design Austria"
+  },
+  "FS25_GrimmeUniaVL20S.zip": {
+    "modId": "363256",
+    "title": "Grimme VL 20 S/Unia Kora",
+    "category": "Rootcrops - Potato Planters",
+    "author": "Kamilos0397"
+  },
+  "FS25_LizardMultiRollPack.zip": {
+    "modId": "363831",
+    "title": "Lizard Multi Roll Pack",
+    "category": "Soil Cultivation - Cultivators",
+    "author": "Holzs FS"
+  },
+  "FS25_lizardGrampos.zip": {
+    "modId": "362189",
+    "title": "LIZARD GMP G5-G9",
+    "category": "Soil Cultivation - Plows",
+    "author": "ortin modding"
+  },
+  "FS25_Large_Shed_Agua_Limpa_Farm.zip": {
+    "modId": "363922",
+    "title": "Large Shed Água Limpa Farm",
+    "category": "Placeable - Sheds",
+    "author": "Andrade ML / Renegados Modding"
+  },
+  "FS25_FarmHouse_AL.zip": {
+    "modId": "363927",
+    "title": "AL Farm House",
+    "category": "Placeable - Farmhouses",
+    "author": "Andrade ML / Renegados Modding"
+  },
+  "FS25_CentralWarehouse.zip": {
+    "modId": "364281",
+    "title": "Central Warehouse",
+    "category": "Placeable - Grain silos",
+    "author": "[LSMT] FalPos"
+  },
+  "FS25_ManureHeapSmall.zip": {
+    "modId": "363484",
+    "title": "Manure Heap Small",
+    "category": "Placeable - Grain silos",
+    "author": "InsaneSimGuy"
   }
 }
