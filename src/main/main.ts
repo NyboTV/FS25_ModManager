@@ -120,7 +120,9 @@ app.on('ready', () => {
       logger.info(`Starte lokales ModHub-Mapping für Profil ${profileId}`);
       
       const profile = await profileManager.getProfile(profileId);
-      const profilePath = path.join(app.getPath('documents'), 'FS_ModManager', 'profiles', profileId, 'mods');
+      if (!profile) return;
+        
+      const profilePath = profile.modFolderPath;
       const extractor = new ModInfoExtractor();
       const mods = await extractor.extractAllModsInfo(profilePath);
       
@@ -130,8 +132,13 @@ app.on('ready', () => {
           const profileMod = profile.mods.find((pm: any) => pm.fileName === m.fileName);
           if (profileMod) {
             m.modHub = profileMod.modHub;
+            logger.debug(`[ModHub Injection] ${m.fileName} hat modHub='${m.modHub}' aus Profil. (isActive: ${profileMod.isActive})`);
+          } else {
+            logger.debug(`[ModHub Injection] ${m.fileName} wurde NICHT im Profil gefunden.`);
           }
         });
+      } else {
+        logger.warn(`[ModHub Injection] Profil oder profile.mods ist leer! profileId=${profileId}`);
       }
       
       const webContents = windowManager.getMainWindow()?.webContents;
@@ -140,6 +147,18 @@ app.on('ready', () => {
       }
     } catch (error) {
       logger.error('Fehler beim ModHub-Mapping: ' + (error instanceof Error ? error.message : String(error)));
+    }
+  });
+
+  ipcMain.on('cancel-modhub-mapping', () => {
+    modHubService.cancelMapping();
+  });
+
+  ipcMain.on('download-modhub-mod', async (event, profileId, fileName, modId) => {
+    try {
+      await modHubService.downloadMod(profileId, fileName, modId, event.sender);
+    } catch (err) {
+      console.error('Fehler beim Download des ModHub Mods:', err);
     }
   });
 
