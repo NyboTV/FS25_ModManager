@@ -20,7 +20,7 @@ yarn-error.log*
 
 # IDE-Dateien
 .idea
-.agent
+.agents
 .vscode/*
 !.vscode/tasks.json
 !.vscode/launch.json
