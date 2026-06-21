@@ -25,11 +25,21 @@ export interface LocalModMapping {
 export class ModHubService {
   private mappingFile: string;
   private mapping: Record<string, LocalModMapping> = {};
-  private isMapping = false;
+  private appDataPath: string;
+  private isMapping: boolean = false;
+  private _cancelRequested: boolean = false;
 
   constructor() {
-    this.mappingFile = path.join(app.getPath('userData'), 'local-mapping.json');
+    this.appDataPath = path.join(app.getPath('userData'), 'FS25_ModManager_Data');
+    if (!fs.existsSync(this.appDataPath)) {
+      fs.mkdirSync(this.appDataPath, { recursive: true });
+    }
+    this.mappingFile = path.join(this.appDataPath, 'local-mapping.json');
     this.loadMapping();
+  }
+
+  public cancelMapping() {
+    this._cancelRequested = true;
   }
 
   private loadMapping() {
@@ -92,6 +102,11 @@ export class ModHubService {
       const updatedModIds: string[] = [];
 
       while (!foundReference && page < 20) {
+        if (this._cancelRequested) {
+          console.log("[ModHubService] Update-Check durch Benutzer abgebrochen.");
+          break;
+        }
+        
         let pageHtml = page0Res.data;
         if (page > 0) {
           const pageRes = await axios.get(`${BASE_URL}/mods.php?title=fs2025&page=${page}`, { timeout: 10000 });
@@ -166,32 +181,103 @@ export class ModHubService {
       fs.writeFileSync(stateFile, JSON.stringify(state));
 
     } catch(e) {
-      console.error('Fehler beim Smart Update Check:', e);
+      console.error(`[ModHubService] Globaler Fehler beim Update-Check: ${e instanceof Error ? e.message : String(e)}`);
+    }
+  }
+
+  public async downloadMod(profileId: string, fileName: string, modId: string, webContents: Electron.WebContents) {
+    try {
+      // 1. Get profile
+      const { profileManager } = require('./main');
+      const profile = profileManager.getProfile(profileId);
+      if (!profile) throw new Error("Profile not found");
+
+      const targetPath = path.join(profile.modFolderPath, fileName);
+      const downloadUrl = `${BASE_URL}/mod.php?action=download&mod_id=${modId}`;
+
+      console.log(`[ModHubService] Starte Download für ${fileName} von ${downloadUrl}`);
+      webContents.send('mod-update-progress', { modId, fileName, status: 'starting', percent: 0 });
+
+      const response = await axios({
+        url: downloadUrl,
+        method: 'GET',
+        responseType: 'stream',
+        timeout: 30000,
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        }
+      });
+
+      const totalLength = parseInt(response.headers['content-length'] || '0', 10);
+      let downloadedLength = 0;
+
+      const writer = fs.createWriteStream(targetPath);
+
+      response.data.on('data', (chunk: Buffer) => {
+        downloadedLength += chunk.length;
+        if (totalLength > 0) {
+          const percent = Math.round((downloadedLength / totalLength) * 100);
+          // Limit IPC spam
+          if (percent % 5 === 0) {
+            webContents.send('mod-update-progress', { modId, fileName, status: 'downloading', percent });
+          }
+        }
+      });
+
+      return new Promise((resolve, reject) => {
+        writer.on('finish', () => {
+          webContents.send('mod-update-complete', { modId, fileName, success: true });
+          resolve(true);
+        });
+        writer.on('error', (err) => {
+          fs.unlink(targetPath, () => {});
+          webContents.send('mod-update-complete', { modId, fileName, success: false, error: err.message });
+          reject(err);
+        });
+        response.data.pipe(writer);
+      });
+
+    } catch (error) {
+      console.error(`[ModHubService] Fehler beim Herunterladen von ${fileName}:`, error);
+      webContents.send('mod-update-complete', { modId, fileName, success: false, error: error instanceof Error ? error.message : String(error) });
+      throw error;
     }
   }
 
   public async mapMods(mods: ModInfo[], webContents: Electron.WebContents) {
     if (this.isMapping) return;
     this.isMapping = true;
+    this._cancelRequested = false;
 
     try {
       await this.checkUpdates(webContents);
 
+      // Falls schon beim Update-Check abgebrochen wurde
+      if (this._cancelRequested) {
+        return;
+      }
+
       const unknownMods = mods.filter(m => {
         // Niemals Mappen, wenn der Server explizit "no" für diesen Mod gemeldet hat
-        if (m.modHub === 'no' || m.modHub?.toLowerCase() === 'no') return false;
+        if (m.modHub === 'no' || m.modHub?.toLowerCase() === 'no') {
+          console.log(`[ModHubService] Überspringe Mod ${m.fileName} explizit (modHub='${m.modHub}')`);
+          return false;
+        }
 
         const mapped = this.mapping[m.fileName];
         if (!mapped) return true;
         
-        // Erneut mappen, wenn es zuvor fehlgeschlagen ist (und es nicht explizit 'no' ist)
-        if (mapped.failed || mapped.modId === '!') {
-          return true;
-        }
         return false;
       });
+      
+      console.log(`[ModHubService] Nach Filter: ${unknownMods.length} Mods werden auf ModHub gesucht.`);
 
       for (let i = 0; i < unknownMods.length; i++) {
+        if (this._cancelRequested) {
+          console.log("[ModHubService] Mapping durch Benutzer abgebrochen.");
+          break;
+        }
+
         const mod = unknownMods[i];
         const searchTitle = mod.modDescData?.title?.['en'] || mod.modDescData?.title?.['de'] || mod.name;
 
