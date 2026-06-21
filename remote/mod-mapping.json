@@ -214,5 +214,65 @@
     "title": "Unknown",
     "category": "Trailers - Auger Wagons",
     "author": "IMAK, ML Studio"
+  },
+  "FS25_IMAK_GE_19270.zip": {
+    "modId": "319023",
+    "title": "Unknown",
+    "category": "Forage Harvesting - Levelers",
+    "author": "IMAK, ML Studio"
+  },
+  "FS25_IMAK_DF2000.zip": {
+    "modId": "311913",
+    "title": "Unknown",
+    "category": "Yield Improvements - Fertilizer Spreaders",
+    "author": "IMAK, ML Studio"
+  },
+  "FS25_9RHHP830.zip": {
+    "modId": "358701",
+    "title": "Unknown",
+    "category": "Drivables - Large Tractors",
+    "author": "DB554"
+  },
+  "FS25_CaseIH_Magnum_2025.zip": {
+    "modId": "331898",
+    "title": "Unknown",
+    "category": "Drivables - Large Tractors",
+    "author": "Jolly Farms Modding"
+  },
+  "FS25_newHolland8340.zip": {
+    "modId": "314471",
+    "title": "Unknown",
+    "category": "Drivables - Small Tractors",
+    "author": "750Ti Modding"
+  },
+  "FS25_New_Holland_CX580.zip": {
+    "modId": "356321",
+    "title": "Unknown",
+    "category": "Combine Harvesting - Harvesters",
+    "author": "AE MAPING"
+  },
+  "FS25_Poettinger_200VCPro.zip": {
+    "modId": "331693",
+    "title": "Unknown",
+    "category": "Baling - Round Balers",
+    "author": "Kastor [d-s-agrarservice]"
+  },
+  "FS25_hardiMega_2200.zip": {
+    "modId": "326363",
+    "title": "Unknown",
+    "category": "Yield Improvements - Sprayers",
+    "author": "Puszkap"
+  },
+  "FS25_Krampe_BigBody_750.zip": {
+    "modId": "308256",
+    "title": "Unknown",
+    "category": "Trailers - Trailers",
+    "author": "B3N"
+  },
+  "FS25_Claas_Quadrant_5300_Evolution.zip": {
+    "modId": "309244",
+    "title": "Unknown",
+    "category": "Baling - Square balers",
+    "author": "Nico Du 55"
   }
 }
