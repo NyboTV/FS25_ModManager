@@ -178,10 +178,14 @@ export class ModHubService {
       await this.checkUpdates(webContents);
 
       const unknownMods = mods.filter(m => {
+        // Niemals Mappen, wenn der Server explizit "no" für diesen Mod gemeldet hat
+        if (m.modHub === 'no' || m.modHub?.toLowerCase() === 'no') return false;
+
         const mapped = this.mapping[m.fileName];
         if (!mapped) return true;
-        // Retry mapping if it previously failed but the server says it is a ModHub mod (or didn't explicitly say "no")
-        if ((mapped.failed || mapped.modId === '!') && m.modHub && m.modHub !== 'no') {
+        
+        // Erneut mappen, wenn es zuvor fehlgeschlagen ist (und es nicht explizit 'no' ist)
+        if (mapped.failed || mapped.modId === '!') {
           return true;
         }
         return false;
