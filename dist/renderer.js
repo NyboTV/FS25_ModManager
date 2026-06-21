@@ -42626,12 +42626,23 @@ const ModBrowserView = ({ settings }) => {
     const [selectedModId, setSelectedModId] = (0, react_1.useState)(null);
     const [modDetail, setModDetail] = (0, react_1.useState)(null);
     const [loadingDetail, setLoadingDetail] = (0, react_1.useState)(false);
+    const [searchQuery, setSearchQuery] = (0, react_1.useState)('');
+    const [category, setCategory] = (0, react_1.useState)('All');
     const [isDownloading, setIsDownloading] = (0, react_1.useState)(false);
     (0, react_1.useEffect)(() => {
         loadProfiles();
     }, []);
     (0, react_1.useEffect)(() => {
-        fetchPage(page);
+        // Reset to page 0 when search or category changes
+        if (page !== 0) {
+            setPage(0);
+        }
+        else {
+            fetchPage(0, searchQuery, category);
+        }
+    }, [searchQuery, category]);
+    (0, react_1.useEffect)(() => {
+        fetchPage(page, searchQuery, category);
     }, [page]);
     const loadProfiles = async () => {
         try {
@@ -42645,11 +42656,11 @@ const ModBrowserView = ({ settings }) => {
             console.error("Fehler beim Laden der Profile:", error);
         }
     };
-    const fetchPage = async (pageNumber) => {
+    const fetchPage = async (pageNumber, search = '', cat = 'All') => {
         setLoading(true);
         setError(null);
         try {
-            const result = await ipcRenderer.invoke('fetch-modhub-page', pageNumber);
+            const result = await ipcRenderer.invoke('fetch-modhub-page', pageNumber, search, cat);
             if (result.success) {
                 setMods(result.mods);
                 setHasNext(result.hasNext);
@@ -42694,7 +42705,7 @@ const ModBrowserView = ({ settings }) => {
         // Wir nutzen das existierende download-modhub-mod (braucht fileName. Wir erfinden einen temporären, 
         // modhub-service.ts findet den echten Namen über Content-Disposition raus)
         const tempFileName = modDetail.title.replace(/[^a-zA-Z0-9]/g, '_') + '.zip';
-        ipcRenderer.send('download-modhub-mod', selectedProfileId, tempFileName, modDetail.id);
+        ipcRenderer.send('download-modhub-mod', selectedProfileId, tempFileName, modDetail.id, modDetail);
         // Das Modal kann offen bleiben, App.tsx Toast zeigt Download-Fortschritt
         setIsDownloading(false);
         setSelectedModId(null);
@@ -42704,11 +42715,16 @@ const ModBrowserView = ({ settings }) => {
             react_1.default.createElement("h2", { style: { margin: '0 0 10px 0' } }, "ModHub Browser"),
             react_1.default.createElement("p", { style: { margin: '0 0 15px 0', color: 'var(--text-secondary)' } }, "Suche und installiere Mods direkt aus dem offiziellen ModHub."),
             react_1.default.createElement("div", { style: { display: 'flex', gap: '15px', alignItems: 'center' } },
-                react_1.default.createElement("button", { className: "btn btn-secondary", onClick: () => setPage(p => Math.max(0, p - 1)), disabled: page === 0 || loading }, "Zur\u00FCck"),
-                react_1.default.createElement("span", null,
-                    "Seite ",
-                    page + 1),
-                react_1.default.createElement("button", { className: "btn btn-secondary", onClick: () => setPage(p => p + 1), disabled: !hasNext || loading }, "N\u00E4chste"))),
+                react_1.default.createElement("input", { type: "text", placeholder: "Mod suchen...", value: searchQuery, onChange: e => setSearchQuery(e.target.value), style: { flex: 1, padding: '10px', borderRadius: '4px', border: '1px solid var(--border-color)', background: 'var(--bg-primary)', color: 'var(--text-primary)' } }),
+                react_1.default.createElement("select", { value: category, onChange: e => setCategory(e.target.value), style: { padding: '10px', borderRadius: '4px', border: '1px solid var(--border-color)', background: 'var(--bg-primary)', color: 'var(--text-primary)' } },
+                    react_1.default.createElement("option", { value: "All" }, "Alle Kategorien"),
+                    react_1.default.createElement("option", { value: "map" }, "Karten"),
+                    react_1.default.createElement("option", { value: "tractor" }, "Traktoren"),
+                    react_1.default.createElement("option", { value: "harvester" }, "Erntemaschinen"),
+                    react_1.default.createElement("option", { value: "trailer" }, "Anh\u00E4nger"),
+                    react_1.default.createElement("option", { value: "implement" }, "Ger\u00E4te"),
+                    react_1.default.createElement("option", { value: "object" }, "Objekte"),
+                    react_1.default.createElement("option", { value: "script" }, "Skripte")))),
         error && (react_1.default.createElement("div", { style: { padding: '15px', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', borderRadius: '8px', marginBottom: '20px' } },
             "Fehler beim Laden: ",
             error)),
@@ -42748,6 +42764,12 @@ const ModBrowserView = ({ settings }) => {
                 react_1.default.createElement("span", { style: { fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: 'auto' } },
                     "Von: ",
                     mod.author))))))),
+        !loading && !error && (react_1.default.createElement("div", { style: { display: 'flex', gap: '15px', alignItems: 'center', justifyContent: 'center', marginTop: '20px' } },
+            react_1.default.createElement("button", { className: "btn btn-secondary", onClick: () => setPage(p => Math.max(0, p - 1)), disabled: page === 0 }, "Zur\u00FCck"),
+            react_1.default.createElement("span", null,
+                "Seite ",
+                page + 1),
+            react_1.default.createElement("button", { className: "btn btn-secondary", onClick: () => setPage(p => p + 1), disabled: !hasNext }, "N\u00E4chste"))),
         selectedModId && (react_1.default.createElement("div", { style: {
                 position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
                 background: 'rgba(0,0,0,0.8)', zIndex: 1000,
