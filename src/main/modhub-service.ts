@@ -177,7 +177,15 @@ export class ModHubService {
     try {
       await this.checkUpdates(webContents);
 
-      const unknownMods = mods.filter(m => !this.mapping[m.fileName]);
+      const unknownMods = mods.filter(m => {
+        const mapped = this.mapping[m.fileName];
+        if (!mapped) return true;
+        // Retry mapping if it previously failed but the server says it is a ModHub mod (or didn't explicitly say "no")
+        if ((mapped.failed || mapped.modId === '!') && m.modHub && m.modHub !== 'no') {
+          return true;
+        }
+        return false;
+      });
 
       for (let i = 0; i < unknownMods.length; i++) {
         const mod = unknownMods[i];
