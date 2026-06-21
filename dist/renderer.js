@@ -41982,6 +41982,7 @@ const App = () => {
         status: 'downloading'
     });
     const [mappingProgress, setMappingProgress] = (0, react_1.useState)(null);
+    const [modUpdateProgress, setModUpdateProgress] = (0, react_1.useState)(null);
     const [showModInfo, setShowModInfo] = (0, react_1.useState)(false);
     const [selectedMod, setSelectedMod] = (0, react_1.useState)(null);
     const [updateInfo, setUpdateInfo] = (0, react_1.useState)(null);
@@ -42076,6 +42077,18 @@ const App = () => {
         };
         ipcRenderer.on('modhub-mapping-progress', handleMappingProgress);
         ipcRenderer.on('modhub-mapping-complete', handleMappingComplete);
+        const handleModUpdateProgress = (_, data) => setModUpdateProgress(data);
+        const handleModUpdateComplete = (_, data) => {
+            setModUpdateProgress(null);
+            if (data.success) {
+                setModListReloadKey(key => key + 1);
+            }
+            else {
+                alert(`Fehler beim Update von ${data.fileName}: ${data.error}`);
+            }
+        };
+        ipcRenderer.on('mod-update-progress', handleModUpdateProgress);
+        ipcRenderer.on('mod-update-complete', handleModUpdateComplete);
         return () => {
             ipcRenderer.removeListener('update-available', handleUpdateAvailable);
             ipcRenderer.removeListener('sync-progress', handleSyncProgress);
@@ -42085,6 +42098,8 @@ const App = () => {
             ipcRenderer.removeListener('update-downloaded', handleUpdateDownloaded);
             ipcRenderer.removeListener('modhub-mapping-progress', handleMappingProgress);
             ipcRenderer.removeListener('modhub-mapping-complete', handleMappingComplete);
+            ipcRenderer.removeListener('mod-update-progress', handleModUpdateProgress);
+            ipcRenderer.removeListener('mod-update-complete', handleModUpdateComplete);
         };
     }, [showSyncProgress, autoLaunchOnSyncComplete]); // Removed 'settings' to prevent infinite loop
     // Ref für AutoLaunch & SyncProgress, um in der useEffect Closure immer den aktuellen Wert zu haben
@@ -42238,8 +42253,45 @@ const App = () => {
                     mappingProgress.current,
                     " / ",
                     mappingProgress.total)),
-            react_1.default.createElement("div", { className: "progress-bar", style: { height: '6px', backgroundColor: 'var(--surface)', borderRadius: '3px', overflow: 'hidden' } },
-                react_1.default.createElement("div", { className: "progress-fill", style: { width: `${mappingProgress.total > 0 ? (mappingProgress.current / mappingProgress.total) * 100 : 100}%`, height: '100%', backgroundColor: 'var(--primary-color)' } })))),
+            react_1.default.createElement("div", { className: "progress-bar", style: { height: '6px', backgroundColor: 'var(--surface)', borderRadius: '3px', overflow: 'hidden', marginBottom: '10px' } },
+                react_1.default.createElement("div", { className: "progress-fill", style: { width: `${mappingProgress.total > 0 ? (mappingProgress.current / mappingProgress.total) * 100 : 100}%`, height: '100%', backgroundColor: 'var(--primary-color)' } })),
+            react_1.default.createElement("button", { onClick: () => {
+                    window.electron.ipcRenderer.send('cancel-modhub-mapping');
+                    setMappingProgress(null);
+                }, style: {
+                    width: '100%',
+                    padding: '6px',
+                    backgroundColor: 'transparent',
+                    border: '1px solid var(--border-color)',
+                    color: 'var(--text-color)',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontSize: '12px'
+                }, onMouseOver: (e) => e.currentTarget.style.backgroundColor = 'var(--surface)', onMouseOut: (e) => e.currentTarget.style.backgroundColor = 'transparent' }, "Abbrechen"))),
+        modUpdateProgress && (react_1.default.createElement("div", { className: "mapping-toast", style: {
+                position: 'fixed',
+                bottom: mappingProgress ? '140px' : '20px',
+                right: '20px',
+                backgroundColor: 'rgba(20, 20, 25, 0.95)',
+                border: '1px solid var(--border-color)',
+                borderRadius: '8px',
+                padding: '15px',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+                zIndex: 9999,
+                width: '300px'
+            } },
+            react_1.default.createElement("h4", { style: { margin: '0 0 8px 0', fontSize: '14px', color: 'var(--primary-color)' } }, "Mod Update"),
+            react_1.default.createElement("p", { style: { margin: '0 0 10px 0', fontSize: '13px', color: '#ccc' } },
+                "Lade Update f\u00FCr ",
+                modUpdateProgress.fileName,
+                "..."),
+            react_1.default.createElement("div", { style: { display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '4px' } },
+                react_1.default.createElement("span", null, modUpdateProgress.status === 'starting' ? 'Verbinde...' : 'Lade herunter'),
+                react_1.default.createElement("span", null,
+                    modUpdateProgress.percent,
+                    "%")),
+            react_1.default.createElement("div", { className: "progress-bar", style: { height: '6px', backgroundColor: 'var(--surface)', borderRadius: '3px', overflow: 'hidden', marginBottom: '10px' } },
+                react_1.default.createElement("div", { className: "progress-fill", style: { width: `${modUpdateProgress.percent}%`, height: '100%', backgroundColor: '#ef4444' } })))),
         react_1.default.createElement(SyncProgressPopup_1.default, { isOpen: showSyncProgress, progress: syncProgress, onCancel: handleCancelSync, onSkipCurrentMod: handleSkipCurrentMod, onProvideLocalMod: handleProvideLocalMod, autoLaunch: autoLaunchOnSyncComplete, onAutoLaunchChange: setAutoLaunchOnSyncComplete, language: settings.language }),
         react_1.default.createElement(ModInfoPopup_1.default, { mod: selectedMod, isOpen: showModInfo, onClose: () => setShowModInfo(false), language: settings.language }),
         showUpdateDialog && updateInfo && (react_1.default.createElement("div", { className: "popup-overlay" },
@@ -43187,10 +43239,27 @@ const ProfilesView = ({ settings, onShowModInfo, modListReloadKey }) => {
                                             alignItems: 'center',
                                             gap: '4px'
                                         } }, "\uD83C\uDF10 ModHub")),
+                                    mod.modHubId && mod.modHubId !== '!' && mod.modHubVersion && mod.version && mod.version !== mod.modHubVersion && (react_1.default.createElement("span", { title: `Update auf Version ${mod.modHubVersion} verfügbar!`, style: {
+                                            background: 'rgba(239, 68, 68, 0.2)',
+                                            color: '#ef4444',
+                                            padding: '2px 6px',
+                                            borderRadius: '4px',
+                                            fontSize: '0.7rem',
+                                            fontWeight: 'bold',
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '4px'
+                                        } }, "\u26A0\uFE0F Update")),
                                     mod.tags && mod.tags.length > 0 && (react_1.default.createElement("div", { className: "mod-tags", style: { display: 'inline-flex', gap: '4px' } }, mod.tags.map(t => (react_1.default.createElement("span", { key: t, style: { background: 'rgba(59, 130, 246, 0.2)', color: '#60a5fa', padding: '2px 6px', borderRadius: '12px', fontSize: '0.75rem' } },
                                         "#",
                                         t))))))),
                             react_1.default.createElement("div", { className: "mod-actions" },
+                                mod.modHubId && mod.modHubId !== '!' && mod.modHubVersion && mod.version && mod.version !== mod.modHubVersion && (react_1.default.createElement("button", { className: "btn btn-sm", style: { backgroundColor: '#ef4444', color: 'white' }, onClick: () => {
+                                        ipcRenderer.send('download-modhub-mod', selectedProfile.id, mod.fileName, mod.modHubId);
+                                    } },
+                                    "\u2B07\uFE0F Update (",
+                                    mod.modHubVersion,
+                                    ")")),
                                 react_1.default.createElement("button", { className: `btn btn-sm ${mod.isActive ? 'btn-warning' : 'btn-success'}`, onClick: () => handleToggleMod(selectedProfile.id, mod.fileName, !mod.isActive) }, mod.isActive ? t('mods.deactivate') : t('mods.activate')),
                                 react_1.default.createElement("button", { className: "btn btn-sm btn-info", onClick: () => onShowModInfo(mod) }, t('mods.info')),
                                 react_1.default.createElement("button", { className: "btn btn-sm btn-danger", onClick: () => handleDeleteMod(selectedProfile.id, mod.fileName) }, t('mods.delete')))))))) : (react_1.default.createElement("div", { className: "no-mods" }, selectedProfile.mods.length > 0 ? 'Keine Mods in dieser Kategorie gefunden.' : t('mods.noMods')))));
