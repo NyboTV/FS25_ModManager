@@ -6,7 +6,7 @@ interface ModInfoPopupProps {
   mod: ModInfo | null;
   isOpen: boolean;
   onClose: () => void;
-  language: 'en' | 'de';
+  language: 'en' | 'de' | 'fr';
 }
 
 const ModInfoPopup: React.FC<ModInfoPopupProps> = ({
@@ -176,7 +176,7 @@ const ModInfoPopup: React.FC<ModInfoPopupProps> = ({
                 shell.openExternal(`https://www.farming-simulator.com/mod.php?mod_id=${mod.modHubId}&title=fs2025`);
               }}
             >
-              🌐 Im ModHub öffnen
+              {t('mods.openInModHub')}
             </button>
           ) : (
             <button 
@@ -186,7 +186,7 @@ const ModInfoPopup: React.FC<ModInfoPopupProps> = ({
                 shell.openExternal(`https://www.farming-simulator.com/mods.php?title=fs2025&searchMod=${encodeURIComponent(mod.name)}`);
               }}
             >
-              🔍 Auf ModHub suchen
+              🔍 {t('mods.searchModHub')}
             </button>
           )}
           <button className="button primary" onClick={onClose}>

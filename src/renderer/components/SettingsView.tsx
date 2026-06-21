@@ -43,6 +43,14 @@ const SettingsView: React.FC<SettingsViewProps> = ({ settings, setSettings }) =>
   const [expandedGame, setExpandedGame] = useState<string | null>('fs25');
   const [appVersion, setAppVersion] = useState<string>(localSettings.currentVersion || '1.0.0');
   const t = useTranslation(settings.language);
+  const [profiles, setProfiles] = useState<any[]>([]);
+
+  useEffect(() => {
+    ipcRenderer.invoke('load-profiles').then((loadedProfiles: any) => {
+      const mpProfiles = (loadedProfiles || []).filter((p: any) => p.serverSyncUrl || p.serverModListUrl || p.serverWebStatsUrl);
+      setProfiles(mpProfiles);
+    }).catch(console.error);
+  }, []);
 
   useEffect(() => {
     ipcRenderer.invoke('get-app-version').then((version: string) => {
@@ -69,6 +77,11 @@ const SettingsView: React.FC<SettingsViewProps> = ({ settings, setSettings }) =>
         ipcRenderer.invoke('save-settings', updatedSettings).catch((err: any) => {
           console.error('Failed to save language setting', err);
         });
+      }
+      
+      // Bei Beta-Updates sofort anwenden
+      if (name === 'betaUpdates') {
+        ipcRenderer.invoke('set-beta-updates', newValue).catch(console.error);
       }
   };
 
@@ -139,7 +152,27 @@ const SettingsView: React.FC<SettingsViewProps> = ({ settings, setSettings }) =>
           >
             <option value="de">Deutsch</option>
             <option value="en">English</option>
+            <option value="fr">Français</option>
           </select>
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="autostart-select">{t('settings.autoStartProfile') || 'Auto-Start Profil'}</label>
+          <select 
+            id="autostart-select" 
+            name="autoStartProfileId" 
+            value={localSettings.autoStartProfileId || ''} 
+            onChange={handleChange}
+            className="dark-select"
+          >
+            <option value="">{t('settings.autoStartProfileNone') || 'Keins'}</option>
+            {profiles.map(p => (
+              <option key={p.id} value={p.id}>{p.name} ({p.gameVersion?.toUpperCase() || 'FS25'})</option>
+            ))}
+          </select>
+          <small style={{ color: 'var(--text-color)', opacity: 0.7, marginTop: '4px', display: 'block' }}>
+            {t('settings.autoStartProfileInfo') || 'Nur Multiplayer-Profile mit Sync-URL werden unterstützt.'}
+          </small>
         </div>
 
         <div className="form-group game-settings-section">
@@ -229,16 +262,32 @@ const SettingsView: React.FC<SettingsViewProps> = ({ settings, setSettings }) =>
                 {t('settings.autoCheckUpdates')}
               </label>
             </div>
+            <div className="form-group">
+              <label className="checkbox-label">
+                <input 
+                  type="checkbox" 
+                  name="betaUpdates"
+                  checked={localSettings.betaUpdates || false}
+                  onChange={handleChange}
+                />
+                {t('settings.betaUpdates')}
+              </label>
+              <small>{t('settings.betaUpdatesDesc')}</small>
+            </div>
             <button 
               className="btn btn-secondary"
               onClick={async () => {
-                const updateInfo = await ipcRenderer.invoke('check-for-updates');
-                if (updateInfo.hasUpdate) {
-                  alert(t('settings.updateAvailable')
-                    .replace('{latest}', updateInfo.latestVersion)
-                    .replace('{current}', updateInfo.currentVersion));
-                } else {
-                  alert(t('settings.noUpdates'));
+                try {
+                  const updateInfo = await ipcRenderer.invoke('check-for-updates');
+                  if (updateInfo && updateInfo.hasUpdate) {
+                    alert(t('settings.updateAvailable')
+                      .replace('{latest}', updateInfo.latestVersion)
+                      .replace('{current}', updateInfo.currentVersion));
+                  } else {
+                    alert(t('settings.noUpdates'));
+                  }
+                } catch (err: any) {
+                  alert(`${t('common.error') || 'Fehler'}: ${err.message || err.toString()}`);
                 }
               }}
             >

@@ -4,6 +4,7 @@ export interface Profile {
   version: string;
   description?: string;
   serverSyncUrl?: string;
+  serverModListUrl?: string;
   modFolderPath: string;
   gameVersion: 'fs19' | 'fs22' | 'fs25'; // Neue Property für Spielversion
   lastSyncDate?: string;
@@ -37,6 +38,8 @@ export interface ModInfo {
   modHubPlatform?: string;
   modHubManufacturer?: string;
   modDescData?: ModDescData;
+  isDLC?: boolean;
+  isFromServer?: boolean;
 }
 
 export interface ModDescData {
@@ -63,14 +66,16 @@ export interface Settings {
     fs25: GameSettings;
   };
   autoCheckUpdates: boolean;
-  language: 'en' | 'de';
+  language: 'en' | 'de' | 'fr';
   debugLogging: boolean;
+  betaUpdates?: boolean;
   currentVersion?: string;
   selectedGame?: 'fs19' | 'fs22' | 'fs25';
   defaultModFolder?: string;
   gamePath?: string;
   theme?: 'light' | 'dark';
   lastLaunchedProfileId?: string;
+  autoStartProfileId?: string | null;
 }
 
 export interface ServerModResponse {
@@ -94,8 +99,11 @@ export interface SyncProgress {
   currentFileProgress: number;
   speedMbPerSec?: number;
   etaSeconds?: number;
-  status: 'downloading' | 'extracting' | 'verifying' | 'completed' | 'error' | 'cancelled' | 'saving' | 'launching';
+  status: 'downloading' | 'extracting' | 'verifying' | 'completed' | 'error' | 'cancelled' | 'saving' | 'launching' | 'paused';
+  downloadSource?: 'fastDL' | 'modList' | 'modsPage';
   failedMods?: string[];
+  errorMessage?: string;
+  totalServerMods?: number;
 }
 
 export interface PopupData {
@@ -110,6 +118,7 @@ export interface UpdateInfo {
   latestVersion: string;
   downloadUrl?: string;
   releaseNotes?: string;
+  isPreRelease?: boolean;
 }
 
 export interface LanguageStrings {

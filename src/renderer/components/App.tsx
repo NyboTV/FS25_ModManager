@@ -10,8 +10,8 @@ import StorageCleanerView from './StorageCleanerView';
 import InGameUpdatesPopup from './InGameUpdatesPopup';
 import ModBrowserView from './ModBrowserView';
 import SplashScreen from './SplashScreen';
-import { Settings, UpdateInfo, SyncProgress, ModInfo } from '../../common/types';
-import { useTranslation } from '../i18n';
+import { Profile, Settings, UpdateInfo, SyncProgress, ModInfo } from '../../common/types';
+import { t as tGlobal, useTranslation } from '../i18n';
 
 const { ipcRenderer } = window.require('electron');
 
@@ -40,6 +40,7 @@ const App: React.FC = () => {
 
   // Popup-States
   const [appIsReady, setAppIsReady] = useState(false);
+  const [isInitialDataLoaded, setIsInitialDataLoaded] = useState(false);
   
   const [showSyncProgress, setShowSyncProgress] = useState(false);
   const [syncProgress, setSyncProgress] = useState<SyncProgress>({
@@ -63,36 +64,86 @@ const App: React.FC = () => {
   const [modListReloadKey, setModListReloadKey] = useState(0);
   const [autoLaunchOnSyncComplete, setAutoLaunchOnSyncComplete] = useState(false);
   const [inGameUpdates, setInGameUpdates] = useState<{ profile: any, changes: string[] } | null>(null);
+  const [profiles, setProfiles] = useState<Profile[]>([]);
+  const [autoLaunchCountdown, setAutoLaunchCountdown] = useState<number | null>(null);
+  const autoLaunchTimerRef = React.useRef<any>(null);
+
+  const handleCancelAutoLaunch = () => {
+    if (autoLaunchTimerRef.current) {
+      clearInterval(autoLaunchTimerRef.current);
+      autoLaunchTimerRef.current = null;
+    }
+    setAutoLaunchCountdown(null);
+  };
+
+  const reloadProfiles = async () => {
+    try {
+      const loadedProfiles = await ipcRenderer.invoke('load-profiles');
+      setProfiles(loadedProfiles);
+    } catch (error) {
+      console.error('Fehler beim Neuladen der Profile:', error);
+    }
+  };
 
   // Übersetzungsfunktion
   const t = useTranslation(settings.language);
   useEffect(() => {
-    // Lade die App-Einstellungen beim Start
+    // Lade die App-Einstellungen und Profile beim Start
     const loadSettings = async () => {
-      const savedSettings = await ipcRenderer.invoke('load-settings');
-      setSettings(savedSettings);
-      
-      // Setze das Theme basierend auf den Einstellungen
-      document.body.className = savedSettings.theme === 'dark' ? 'theme-dark' : '';
-      
-      // Check for in-game updates
-      if (savedSettings.lastLaunchedProfileId) {
-        try {
-          const profiles = await ipcRenderer.invoke('load-profiles');
-          const lastProfile = profiles.find((p: any) => p.id === savedSettings.lastLaunchedProfileId);
-          if (lastProfile) {
-            const gameVersion = lastProfile.gameVersion || 'fs25';
-            const gamePath = savedSettings.games[gameVersion as keyof typeof savedSettings.games]?.defaultModFolder;
-            if (gamePath) {
-              const result = await ipcRenderer.invoke('check-in-game-mod-updates', lastProfile.id, gamePath);
-              if (result.success && result.hasChanges) {
-                setInGameUpdates({ profile: lastProfile, changes: result.changes });
-              }
+      try {
+        const savedSettings = await ipcRenderer.invoke('load-settings');
+        setSettings(savedSettings);
+        
+        // Setze das Theme basierend auf den Einstellungen
+        document.body.className = savedSettings.theme === 'dark' ? 'theme-dark' : '';
+        
+        // Lade Profile initial, um Startup-Check / Health-Check im Main-Prozess auszuführen
+        const loadedProfiles = await ipcRenderer.invoke('load-profiles');
+        setProfiles(loadedProfiles);
+        
+        // Check for Auto-Start Profile (Multiplayer only)
+        if (savedSettings.autoStartProfileId) {
+          const autoProfile = loadedProfiles.find((p: any) => p.id === savedSettings.autoStartProfileId);
+          if (autoProfile) {
+            const isMultiplayer = !!(autoProfile.serverSyncUrl || autoProfile.serverModListUrl || autoProfile.serverWebStatsUrl);
+            if (isMultiplayer) {
+              console.log(`Auto Start triggered for profile: ${autoProfile.name} (${autoProfile.id})`);
+              localStorage.setItem('selectedProfileId', autoProfile.id);
+              setAutoLaunchOnSyncComplete(true);
+              
+              setTimeout(async () => {
+                try {
+                  await ipcRenderer.invoke('sync-profile', autoProfile.id);
+                } catch (syncErr) {
+                  console.error('Auto Start Sync failed:', syncErr);
+                }
+              }, 2500);
             }
           }
-        } catch (e) {
-          console.error('Failed to check in-game updates', e);
         }
+        
+        // Check for in-game updates
+        if (savedSettings.lastLaunchedProfileId && loadedProfiles.length > 0) {
+          try {
+            const lastProfile = loadedProfiles.find((p: any) => p.id === savedSettings.lastLaunchedProfileId);
+            if (lastProfile) {
+              const gameVersion = lastProfile.gameVersion || 'fs25';
+              const gamePath = savedSettings.games[gameVersion as keyof typeof savedSettings.games]?.defaultModFolder;
+              if (gamePath) {
+                const result = await ipcRenderer.invoke('check-in-game-mod-updates', lastProfile.id, gamePath);
+                if (result.success && result.hasChanges) {
+                  setInGameUpdates({ profile: lastProfile, changes: result.changes });
+                }
+              }
+            }
+          } catch (e) {
+            console.error('Failed to check in-game updates', e);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load initial settings/profiles', err);
+      } finally {
+        setIsInitialDataLoaded(true);
       }
     };
     
@@ -120,7 +171,7 @@ const App: React.FC = () => {
     
     // Auto Launch
     if (autoLaunchOnSyncComplete) {
-      setSyncProgress(prev => ({ ...prev, status: 'launching', currentMod: 'Starte Spiel...' }));
+      setSyncProgress(prev => ({ ...prev, status: 'launching', currentMod: tGlobal('start.startingGame', settingsRef.current.language) }));
       try {
         const profiles = await ipcRenderer.invoke('load-profiles');
         // Hacky way to get profileId since it might be in state
@@ -132,7 +183,7 @@ const App: React.FC = () => {
     }
   };
   const handleSyncError = (event: any, error: string) => {
-    setSyncProgress(prev => ({ ...prev, status: 'error' }));
+    setSyncProgress(prev => ({ ...prev, status: 'error', errorMessage: error }));
     setModListReloadKey(key => key + 1); // Trigger Reload auch bei Fehler
   };
 
@@ -181,7 +232,7 @@ const App: React.FC = () => {
         setModListReloadKey(key => key + 1);
       } else {
         if (data.error !== 'Abgebrochen') {
-          alert(`Fehler beim Update von ${data.fileName}: ${data.error}`);
+          alert(`${tGlobal('update.errorTitle', settingsRef.current.language)} ${data.fileName}: ${data.error}`);
         }
       }
     };
@@ -225,6 +276,7 @@ const App: React.FC = () => {
             const gameVersion = (profile.gameVersion as keyof typeof settingsRef.current.games) || 'fs25';
             const gameSettings = settingsRef.current.games?.[gameVersion];
             if (gameSettings?.defaultModFolder && gameSettings?.gamePath) {
+              setShowSyncProgress(false);
               await ipcRenderer.invoke('deploy-profile-mods', profile.id, gameSettings.defaultModFolder);
               await ipcRenderer.invoke('launch-game', gameSettings.gamePath);
             }
@@ -239,13 +291,36 @@ const App: React.FC = () => {
     const handleSyncCompleteOverride = () => {
       setSyncProgress(prev => ({ ...prev, status: 'completed' }));
       setModListReloadKey(key => key + 1);
-      onSyncCompleteAsync();
+      
+      if (autoLaunchRef.current && syncProgressRef.current.profileId) {
+        let secondsLeft = 5;
+        setAutoLaunchCountdown(secondsLeft);
+        
+        if (autoLaunchTimerRef.current) {
+          clearInterval(autoLaunchTimerRef.current);
+        }
+        
+        autoLaunchTimerRef.current = setInterval(() => {
+          secondsLeft -= 1;
+          if (secondsLeft <= 0) {
+            clearInterval(autoLaunchTimerRef.current);
+            autoLaunchTimerRef.current = null;
+            setAutoLaunchCountdown(null);
+            onSyncCompleteAsync();
+          } else {
+            setAutoLaunchCountdown(secondsLeft);
+          }
+        }, 1000);
+      }
     };
 
     ipcRenderer.removeAllListeners('sync-complete');
     ipcRenderer.on('sync-complete', handleSyncCompleteOverride);
     
     return () => {
+      if (autoLaunchTimerRef.current) {
+        clearInterval(autoLaunchTimerRef.current);
+      }
       ipcRenderer.removeListener('sync-complete', handleSyncCompleteOverride);
     }
   }, []); // Dieser Effekt kümmert sich nur um sync-complete Override
@@ -273,6 +348,20 @@ const App: React.FC = () => {
       });
     } catch (error) {
       console.error('Fehler beim Abbrechen der Synchronisation:', error);
+    }
+  };
+
+  const handlePauseToggle = async () => {
+    try {
+      if (syncProgress.status === 'paused') {
+        await ipcRenderer.invoke('resume-sync');
+        setSyncProgress(prev => ({ ...prev, status: 'downloading' }));
+      } else {
+        await ipcRenderer.invoke('pause-sync');
+        setSyncProgress(prev => ({ ...prev, status: 'paused' }));
+      }
+    } catch (error) {
+      console.error('Fehler beim Umschalten des Pausenstatus:', error);
     }
   };
   // Aktuellen Tab basierend auf der URL bestimmen
@@ -314,7 +403,7 @@ const App: React.FC = () => {
 
   return (
     <div className="container">
-      {!appIsReady && <SplashScreen onComplete={() => setAppIsReady(true)} language={settings?.language} />}
+      {!appIsReady && <SplashScreen onComplete={() => setAppIsReady(true)} language={settings?.language} isReady={isInitialDataLoaded} />}
       <header className="header">
         <h1>{t('app.title')}</h1>
         
@@ -373,12 +462,15 @@ const App: React.FC = () => {
       </div>
       <div className="content">
         <Routes>
-          <Route path="/" element={<StartPage settings={settings} modListReloadKey={modListReloadKey} />} />
+          <Route path="/" element={<StartPage settings={settings} modListReloadKey={modListReloadKey} initialProfiles={profiles} onReloadProfiles={reloadProfiles} />} />
           <Route path="/profiles" element={
             <ProfilesView 
               settings={settings} 
+              setSettings={setSettings}
               onShowModInfo={handleShowModInfo}
               modListReloadKey={modListReloadKey}
+              initialProfiles={profiles}
+              onReloadProfiles={reloadProfiles}
             />
           } />
           <Route path="/settings" element={<SettingsView settings={settings} setSettings={setSettings} />} />
@@ -398,7 +490,7 @@ const App: React.FC = () => {
           </div>
         </div>
         <div className="legal">
-          Farming Simulator ist eine eingetragene Marke von GIANTS Software GmbH. Diese Anwendung steht in keiner Verbindung zu GIANTS Software.
+          {t('footer.legal') || 'Farming Simulator ist eine eingetragene Marke von GIANTS Software GmbH. Diese Anwendung steht in keiner Verbindung zu GIANTS Software.'}
         </div>
       </footer>      
 
@@ -416,11 +508,11 @@ const App: React.FC = () => {
             width: '300px'
           }}>
             <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', color: 'var(--primary-color)' }}>
-              {mappingProgress.status === 'checking_updates' ? 'ModHub Update-Check' : t('mapping.title')}
+              {mappingProgress.status === 'checking_updates' ? t('mapping.modHubCheck') : t('mapping.title')}
               {mappingProgress.profileName ? ` (${mappingProgress.profileName})` : ''}
             </h4>
             <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: '#ccc' }}>
-              {mappingProgress.status === 'checking_updates' ? 'Prüfe auf Updates beim ModHub...' : t('mapping.desc')}
+              {mappingProgress.status === 'checking_updates' ? t('mapping.checkingUpdates') : t('mapping.desc')}
             </p>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '4px' }}>
               <span style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', maxWidth: '200px' }}>{mappingProgress.modName}</span>
@@ -447,7 +539,7 @@ const App: React.FC = () => {
                 onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'var(--surface)'}
                 onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
               >
-                Abbrechen
+                {t('common.cancel')}
               </button>
           </div>
         )}
@@ -468,7 +560,7 @@ const App: React.FC = () => {
             overflowY: 'auto'
           }}>
             <h4 style={{ margin: '0 0 12px 0', fontSize: '14px', color: 'var(--primary-color)' }}>
-              Mod Downloads ({Object.keys(activeDownloads).length})
+              {t('downloads.title')} ({Object.keys(activeDownloads).length})
             </h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
               {Object.values(activeDownloads).map((download) => (
@@ -498,7 +590,13 @@ const App: React.FC = () => {
                     </button>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '4px', color: '#ccc' }}>
-                    <span>{download.status === 'queued' ? 'In Warteschlange...' : download.status === 'starting' ? 'Verbinde...' : 'Lade herunter'}</span>
+                    <span>
+                      {download.status === 'queued' 
+                        ? t('downloads.queued') 
+                        : download.status === 'starting' 
+                        ? t('downloads.connecting') 
+                        : t('downloads.downloading')}
+                    </span>
                     <span>{download.percent}%</span>
                   </div>
                   <div className="progress-bar" style={{ height: '6px', backgroundColor: 'var(--surface)', borderRadius: '3px', overflow: 'hidden', marginBottom: '0' }}>
@@ -514,12 +612,15 @@ const App: React.FC = () => {
       <SyncProgressPopup
         isOpen={showSyncProgress}
         progress={syncProgress}
-        onCancel={handleCancelSync}
+        onCancel={autoLaunchCountdown !== null ? handleCancelAutoLaunch : handleCancelSync}
         onSkipCurrentMod={handleSkipCurrentMod}
         onProvideLocalMod={handleProvideLocalMod}
+        onPauseToggle={handlePauseToggle}
         autoLaunch={autoLaunchOnSyncComplete}
         onAutoLaunchChange={setAutoLaunchOnSyncComplete}
         language={settings.language}
+        autoLaunchCountdown={autoLaunchCountdown}
+        onCancelAutoLaunch={handleCancelAutoLaunch}
       />
 
       <ModInfoPopup
@@ -542,7 +643,7 @@ const App: React.FC = () => {
                   <p>{t('update.available')}</p>
                   <div className="version-info">
                     <div>{t('update.current')}: <strong>{updateInfo.currentVersion}</strong></div>
-                    <div>{t('update.latest')}: <strong>{updateInfo.latestVersion}</strong></div>
+                    <div>{t('update.latest')}: <strong>{updateInfo.latestVersion}</strong> {updateInfo.isPreRelease && <span style={{ color: '#fbbf24', marginLeft: '5px', fontSize: '0.85em', border: '1px solid #fbbf24', padding: '1px 4px', borderRadius: '4px' }}>🧪 Beta</span>}</div>
                   </div>
                   {updateInfo.releaseNotes && (
                     <div className="release-notes">
@@ -578,7 +679,7 @@ const App: React.FC = () => {
               )}
               {updateStatus === 'error' && (
                 <div className="update-error" style={{ color: '#ef4444', marginTop: '10px' }}>
-                  <p><strong>Fehler beim Update:</strong></p>
+                  <p><strong>{t('update.errorTitle')}</strong></p>
                   <div style={{ background: 'rgba(239, 68, 68, 0.1)', padding: '10px', borderRadius: '4px', fontSize: '12px', wordBreak: 'break-all' }}>
                     {updateErrorMsg}
                   </div>
@@ -598,17 +699,17 @@ const App: React.FC = () => {
               )}
               {updateStatus === 'downloading' && (
                 <button className="button secondary" disabled>
-                  Herunterladen...
+                  {t('update.downloading')}
                 </button>
               )}
               {updateStatus === 'error' && (
                 <button className="button secondary" onClick={() => setShowUpdateDialog(false)}>
-                  Schließen
+                  {t('common.close')}
                 </button>
               )}
               {updateStatus === 'ready' && (
                 <button className="button primary" onClick={handleInstallUpdate}>
-                  Jetzt Neustarten & Installieren
+                  {t('update.restartAndInstall')}
                 </button>
               )}
             </div>
@@ -620,6 +721,7 @@ const App: React.FC = () => {
         <InGameUpdatesPopup 
           profile={inGameUpdates.profile}
           changes={inGameUpdates.changes}
+          language={settings.language}
           onImport={async (changes) => {
             const gameVersion = inGameUpdates.profile.gameVersion || 'fs25';
             const gamePath = settings.games[gameVersion as keyof typeof settings.games]?.defaultModFolder;

@@ -8,14 +8,52 @@ const { ipcRenderer } = window.require('electron');
 interface StartPageProps {
   settings: Settings;
   modListReloadKey?: number;
+  initialProfiles?: Profile[];
+  onReloadProfiles?: () => void;
 }
 
-const StartPage: React.FC<StartPageProps> = ({ settings, modListReloadKey }) => {
+const StartPage: React.FC<StartPageProps> = ({ 
+  settings, 
+  modListReloadKey,
+  initialProfiles = [],
+  onReloadProfiles
+}) => {
   const navigate = useNavigate();
   const t = useTranslation(settings.language);
   
-  const [profiles, setProfiles] = useState<Profile[]>([]);
-  const [selectedProfileId, setSelectedProfileId] = useState<string>('');
+  const [profiles, setProfiles] = useState<Profile[]>(initialProfiles);
+  const [selectedProfileId, setSelectedProfileId] = useState<string>(() => {
+    const saved = localStorage.getItem('selectedProfileId');
+    if (saved) return saved;
+    return initialProfiles.length > 0 ? initialProfiles[0].id : '';
+  });
+  
+  const selectedProfileIdRef = React.useRef(selectedProfileId);
+
+  useEffect(() => {
+    if (initialProfiles && initialProfiles.length > 0) {
+      setProfiles(initialProfiles);
+      setIsLoading(false);
+      if (!selectedProfileIdRef.current) {
+        const saved = localStorage.getItem('selectedProfileId');
+        if (saved && initialProfiles.some(p => p.id === saved)) {
+          setSelectedProfileId(saved);
+        } else {
+          setSelectedProfileId(initialProfiles[0].id);
+        }
+      }
+    }
+  }, [initialProfiles]);
+
+  useEffect(() => {
+    selectedProfileIdRef.current = selectedProfileId;
+    if (selectedProfileId) {
+      localStorage.setItem('selectedProfileId', selectedProfileId);
+    } else {
+      localStorage.removeItem('selectedProfileId');
+    }
+  }, [selectedProfileId]);
+
   const [isLoading, setIsLoading] = useState(true);
   const [isLaunching, setIsLaunching] = useState(false);
   const [message, setMessage] = useState('');
@@ -44,7 +82,7 @@ const StartPage: React.FC<StartPageProps> = ({ settings, modListReloadKey }) => 
       const selectedProfile = profiles.find(p => p.id === selectedProfileId);
       if (selectedProfile) {
         // Mod Updates
-        if (selectedProfile.serverSyncUrl && !serverUpdatesPreview[selectedProfileId]) {
+        if (selectedProfile.serverWebStatsUrl && !serverUpdatesPreview[selectedProfileId]) {
           setServerUpdatesPreview(prev => ({ ...prev, [selectedProfileId]: { count: 0, loading: true } }));
           ipcRenderer.invoke('check-server-updates', selectedProfile)
             .then((res: any) => {
@@ -93,17 +131,50 @@ const StartPage: React.FC<StartPageProps> = ({ settings, modListReloadKey }) => 
   }, [selectedProfileId, profiles]);
 
   useEffect(() => {
-    loadProfiles();
+    if (profiles.length === 0 || (modListReloadKey && modListReloadKey > 0)) {
+      loadProfiles();
+    } else {
+      setIsLoading(false);
+    }
   }, [modListReloadKey]);
+
+  useEffect(() => {
+    if (selectedProfileId) {
+      ipcRenderer.send('watch-profile-mods', selectedProfileId);
+    }
+    return () => {
+      ipcRenderer.send('watch-profile-mods', '');
+    };
+  }, [selectedProfileId]);
+
+  useEffect(() => {
+    const handleModsChanged = () => {
+      console.log('StartPage: Mods folder changed, reloading profiles...');
+      loadProfiles();
+    };
+    ipcRenderer.on('profile-mods-changed', handleModsChanged);
+    return () => {
+      ipcRenderer.removeListener('profile-mods-changed', handleModsChanged);
+    };
+  }, []);
   
   const loadProfiles = async () => {
     try {
       setIsLoading(true);
       const loadedProfiles = await ipcRenderer.invoke('load-profiles');
       setProfiles(loadedProfiles);
+      if (onReloadProfiles) onReloadProfiles();
       
+      const currentId = selectedProfileIdRef.current;
       if (loadedProfiles.length > 0) {
-        setSelectedProfileId(loadedProfiles[0].id);
+        const exists = loadedProfiles.some((p: Profile) => p.id === currentId);
+        if (!currentId || !exists) {
+          setSelectedProfileId(loadedProfiles[0].id);
+        } else {
+          setSelectedProfileId(currentId);
+        }
+      } else {
+        setSelectedProfileId('');
       }
     } catch (error) {
       console.error('Fehler beim Laden der Profile:', error);
@@ -261,268 +332,320 @@ const StartPage: React.FC<StartPageProps> = ({ settings, modListReloadKey }) => 
           </div>
         </div>
       ) : (
-        <>
-          {/* Hauptinhalt Bereich */}
-          <div className="main-content-area">
-            {/* Profil Auswahl */}
-            <div className="profile-selection-card">
-              <h2>🎮 {t("start.selectProfile") || "Profil auswählen"}</h2>
-              <div className="profile-selector">
-                <select 
-                  value={selectedProfileId}
-                  onChange={handleProfileChange}
-                  disabled={isLaunching}
-                  className="profile-select"
-                >
-                  {profiles.map(profile => (
-                    <option key={profile.id} value={profile.id}>
-                      {profile.name} ({profile.gameVersion?.toUpperCase() || 'FS25'})
-                    </option>
-                  ))}
-                </select>
-              </div>
+        <div className="dashboard-layout">
+          {/* Left Column: Sleek Profiles Sidebar */}
+          <div className="profiles-sidebar">
+            <div className="sidebar-header">
+              <h2>🎮 {t('profiles.selection') || 'Profilauswahl'}</h2>
             </div>
+            <div className="sidebar-profiles-list">
+              {profiles.map(profile => {
+                const isSelected = profile.id === selectedProfileId;
+                const totalMods = profile.mods?.length || 0;
+                const activeMods = profile.mods?.filter(m => m.isActive).length || 0;
+                const isMultiplayer = !!(profile.serverSyncUrl || profile.serverModListUrl || profile.serverWebStatsUrl);
+                
+                return (
+                  <div 
+                    key={profile.id} 
+                    className={`sidebar-profile-item ${isSelected ? 'active' : ''}`}
+                    onClick={() => !isLaunching && setSelectedProfileId(profile.id)}
+                  >
+                    <div className="profile-item-main">
+                      <span className="profile-item-name">{profile.name}</span>
+                      <span className={`game-badge ${profile.gameVersion || 'fs25'}`}>
+                        {profile.gameVersion?.toUpperCase() || 'FS25'}
+                      </span>
+                    </div>
+                    <div className="profile-item-sub">
+                      <span className="profile-item-mods">📦 {activeMods}/{totalMods} Mods</span>
+                      {isMultiplayer && (
+                        <span className="profile-item-mp" title="Multiplayer / Server Profile">
+                          👥 MP
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
 
-            {/* Profil Details Grid */}
+          {/* Right Column: Profile Dashboard details */}
+          <div className="dashboard-main-area">
             {selectedProfileId && (
-              <div className="profile-details-grid">
+              <div className="dashboard-main-grid">
                 {(() => {
                   const selectedProfile = profiles.find(p => p.id === selectedProfileId);
                   if (!selectedProfile) return null;
 
+                  const modsList = selectedProfile.mods || [];
+                  const dlcsList = modsList.filter(m => m.isDLC === true || m.fileName.toLowerCase().startsWith('pdlc_'));
+                  const normalModsList = modsList.filter(m => !(m.isDLC === true || m.fileName.toLowerCase().startsWith('pdlc_')));
+                  const totalNormal = normalModsList.length;
+                  const activeNormal = normalModsList.filter(m => m.isActive).length;
+                  const inactiveNormal = totalNormal - activeNormal;
+                  const totalDlcs = dlcsList.length;
+                  const isMultiplayer = !!(selectedProfile.serverSyncUrl || selectedProfile.serverModListUrl || selectedProfile.serverWebStatsUrl);
+
                   return (
                     <>
-                      {/* Profil Info */}
-                      <div className="info-card">
-                        <h3>📋 {t("start.profileInfo") || "Profil-Informationen"}</h3>
-                        <div className="info-item">
-                          <span className="label">{t("start.name") || "Name:"}</span>
-                          <span className="value">{selectedProfile.name}</span>
-                        </div>
-                        <div className="info-item">
-                          <span className="label">{t("start.gameVersion") || "Game version:"}</span>
-                          <span className="value">{selectedProfile.gameVersion?.toUpperCase() || 'FS25'}</span>
-                        </div>
-                        <div className="info-item">
-                          <span className="label">{t("start.version") || "Version:"}</span>
-                          <span className="value">{selectedProfile.version}</span>
-                        </div>
-                        {selectedProfile.description && (
-                          <div className="info-item">
-                            <span className="label">{t("start.description") || "Description:"}</span>
-                            <span className="value">{selectedProfile.description}</span>
+                      {/* Premium Console Hero Banner */}
+                      <div className="console-hero-card">
+                        <div className="hero-info-section">
+                          <div className="hero-title-row">
+                            <h2>{selectedProfile.name}</h2>
+                            <span className={`game-badge-large ${selectedProfile.gameVersion || 'fs25'}`}>
+                              {selectedProfile.gameVersion?.toUpperCase() || 'FS25'}
+                            </span>
                           </div>
-                        )}
-                      </div>
 
-                      {/* Mod Statistiken */}
-                      <div className="info-card">
-                        <h3>{t("start.modStats") || "📦 Mod Overview"}</h3>
-                        <div className="mod-stats">
-                          <div className="stat-item">
-                            <span className="stat-number">{selectedProfile.mods.length}</span>
-                            <span className="stat-label">{t("start.total") || "Total"}</span>
-                          </div>
-                          <div className="stat-item active">
-                            <span className="stat-number">{selectedProfile.mods.filter(m => m.isActive).length}</span>
-                            <span className="stat-label">{t("start.active") || "Active"}</span>
-                          </div>
-                          <div className="stat-item inactive">
-                            <span className="stat-number">{selectedProfile.mods.filter(m => !m.isActive).length}</span>
-                            <span className="stat-label">{t("start.inactive") || "Inactive"}</span>
+                          {selectedProfile.description ? (
+                            <p className="hero-desc">{selectedProfile.description}</p>
+                          ) : (
+                            <p className="hero-desc-placeholder">{t('mods.noDescription') || 'Keine Beschreibung vorhanden'}</p>
+                          )}
+
+                          <div className="hero-meta-row">
+                            <div className="hero-meta-item">
+                              <span className="label">{t('start.version') || 'Version'}:</span>
+                              <span className="val">v{selectedProfile.version || '1.0.0'}</span>
+                            </div>
+                            <div className="hero-meta-item">
+                              <span className="label">{t('profileEdit.autoBackup') || 'Backup'}:</span>
+                              <span className="val">
+                                {selectedProfile.autoBackupSavegame 
+                                  ? `${t('profileEdit.savegameNum') || 'Savegame'} ${selectedProfile.savegameIndex || 1}` 
+                                  : (t('start.never') || 'Deaktiviert')}
+                              </span>
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      {/* Server Info */}
-                      {(selectedProfile.serverSyncUrl || selectedProfile.serverWebStatsUrl) && (
-                        <div className="info-card">
-                          <h3>{t("start.serverInfo") || "🌐 Server & Multiplayer"}</h3>
-                          {selectedProfile.serverSyncUrl && (
-                            <>
-                              <div className="info-item">
-                                <span className="label">{t("start.syncUrl") || "Sync URL:"}</span>
-                                <span className="value" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '200px' }} title={selectedProfile.serverSyncUrl}>
-                                  {selectedProfile.serverSyncUrl}
-                                </span>
+                        <div className="hero-launch-section">
+                          {message && (
+                            <div className="status-message success">
+                              <span className="icon">✅</span>
+                              <span className="txt" title={message}>{message}</span>
+                            </div>
+                          )}
+                          
+                          {error && (
+                            <div className="status-message error">
+                              <span className="icon">❌</span>
+                              <span className="txt">{error}</span>
+                            </div>
+                          )}
+                          
+                          {isLaunching && deployProgress && deployProgress.total > 0 && (
+                            <div className="deploy-progress-container">
+                              <div className="deploy-progress-labels">
+                                <span>{deployProgress.message}</span>
+                                <span>{Math.round((deployProgress.current / deployProgress.total) * 100)}%</span>
                               </div>
-                              {selectedProfile.lastSyncDate && (
-                                <div className="info-item">
-                                  <span className="label">{t("start.lastSync") || "Last sync:"}</span>
-                                  <span className="value">{new Date(selectedProfile.lastSyncDate).toLocaleString('de-DE')}</span>
+                              <div className="deploy-progress-track">
+                                <div 
+                                  className="deploy-progress-bar" 
+                                  style={{ 
+                                    width: `${(deployProgress.current / deployProgress.total) * 100}%`,
+                                    transition: 'width 0.1s linear'
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          )}
+
+                          <button 
+                            className="hero-play-button"
+                            onClick={handleStartGame}
+                            disabled={isLaunching}
+                          >
+                            {isLaunching ? (
+                              <>
+                                <span className="loading-spinner small" style={{ borderLeftColor: 'white' }}></span>
+                                {t('start.startingGame') || 'Spiel startet...'}
+                              </>
+                            ) : (
+                              <>
+                                <span>🚜</span> {t('start.startGame') || 'Spiel starten'}
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Bottom Widgets Grid */}
+                      <div className="widgets-grid">
+                        {/* Widget 1: Mod Overview Stats */}
+                        <div className="dashboard-card">
+                          <h3>📊 {t('start.modStats') || 'Mod-Übersicht'}</h3>
+                          <div className="stats-flex-layout">
+                            <div className="stat-item">
+                              <span className="stat-num">{totalNormal}</span>
+                              <span className="stat-label">{t('start.total') || 'Mods gesamt'}</span>
+                            </div>
+                            <div className="stat-item active-mod">
+                              <span className="stat-num">{activeNormal}</span>
+                              <span className="stat-label">{t('start.active') || 'Aktiv'}</span>
+                            </div>
+                            <div className="stat-item">
+                              <span className="stat-num">{inactiveNormal}</span>
+                              <span className="stat-label">{t('start.inactive') || 'Inaktiv'}</span>
+                            </div>
+                            {totalDlcs > 0 && (
+                              <div className="stat-item dlc-mod">
+                                <span className="stat-num">{totalDlcs}</span>
+                                <span className="stat-label">{t('profiles.dlcs') || 'DLCs'}</span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Widget 2: Server Info or ModHub Updates */}
+                        {isMultiplayer ? (
+                          <div className="dashboard-card">
+                            <h3>
+                              <span>🌐 {t('start.serverInfo') || 'Server & Multiplayer'}</span>
+                              {selectedProfile.serverWebStatsUrl && liveServerStats[selectedProfile.id] && !liveServerStats[selectedProfile.id].loading && !liveServerStats[selectedProfile.id].error && liveServerStats[selectedProfile.id].stats?.serverName !== 'Unknown' && (
+                                <div className="pulse-badge">
+                                  <span className="pulse-dot"></span>
+                                  Online
                                 </div>
                               )}
-                              
-                              {/* Mini Checkup */}
-                              {serverUpdatesPreview[selectedProfile.id] && (
-                                <div className="info-item" style={{ marginTop: '10px', padding: '8px', background: 'rgba(0,0,0,0.2)', borderRadius: '4px' }}>
-                                  <span className="label">{t("start.updatesAvailableLabel") || "Updates available:"}</span>
-                                  <span className="value" style={{ fontWeight: 'bold', color: serverUpdatesPreview[selectedProfile.id].loading ? '#aaa' : (serverUpdatesPreview[selectedProfile.id].count > 0 ? '#fbbf24' : '#4ade80') }}>
-                                    {serverUpdatesPreview[selectedProfile.id].loading 
-                                      ? (t("start.checkingServer") || 'Prüfe Server...') 
-                                      : (serverUpdatesPreview[selectedProfile.id].count > 0 
-                                          ? (t("start.modsCanBeUpdated") || '⚠️ {count} Mods können aktualisiert werden').replace('{count}', serverUpdatesPreview[selectedProfile.id].count.toString()) 
-                                          : (t("start.allModsUpToDate") || '✅ Alle Mods aktuell'))}
+                            </h3>
+
+                            <div className="server-details-list">
+                              {selectedProfile.serverModListUrl && (
+                                <div className="server-detail-row">
+                                  <span className="lbl">{t('start.serverModUrl') || 'Server Mod URL'}:</span>
+                                  <span className="val" style={{ color: 'var(--success-color)', fontWeight: 'bold' }}>
+                                    ✅ {t('start.configured') || 'Aktiviert'}
                                   </span>
                                 </div>
                               )}
-                            </>
-                          )}
-                          
-                          {/* Live Server Stats */}
-                          {selectedProfile.serverWebStatsUrl && liveServerStats[selectedProfile.id] && (
-                            <div style={{ marginTop: '15px', padding: '10px', background: 'rgba(59, 130, 246, 0.1)', borderLeft: '4px solid #3b82f6', borderRadius: '4px' }}>
-                              <h4 style={{ margin: '0 0 10px 0', color: '#60a5fa' }}>{t("start.liveServerStats") || "📡 Live Server Status"}</h4>
-                              {liveServerStats[selectedProfile.id].loading ? (
-                                <span style={{ color: '#ccc', fontSize: '0.9rem' }}>{t("start.connectingToServer") || "Connecting to server..."}</span>
-                              ) : liveServerStats[selectedProfile.id].error ? (
-                                <span style={{ color: '#f87171', fontSize: '0.9rem' }}>{t("start.serverOfflineLabel") || "Server-Webinterface ist offline oder nicht erreichbar."}</span>
-                              ) : liveServerStats[selectedProfile.id].stats?.serverName === 'Unknown' ? (
-                                <div style={{ fontSize: '0.95rem', color: '#fca5a5', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                  <span>🔴</span>
-                                  <span>Das Spiel auf dem Server ist aktuell gestoppt (Offline).</span>
+                              {selectedProfile.serverSyncUrl && (
+                                <div className="server-detail-row">
+                                  <span className="lbl">{t('start.fastdlUrl') || 'FastDL URL'}:</span>
+                                  <span className="val" style={{ color: 'var(--success-color)', fontWeight: 'bold' }}>
+                                    ✅ {t('start.configured') || 'Aktiviert'}
+                                  </span>
                                 </div>
-                              ) : (
-                                <div style={{ fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <span style={{ color: '#94a3b8' }}>{t("start.server") || "Server:"}</span>
-                                    <span style={{ fontWeight: 'bold', color: '#f8fafc' }}>{liveServerStats[selectedProfile.id].stats?.serverName}</span>
-                                  </div>
-                                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <span style={{ color: '#94a3b8' }}>{t("start.map") || "Map:"}</span>
-                                    <span style={{ fontWeight: 'bold', color: '#f8fafc' }}>{liveServerStats[selectedProfile.id].stats?.mapName}</span>
-                                  </div>
-                                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <span style={{ color: '#94a3b8' }}>{t("start.players") || "Players:"}</span>
-                                    <span style={{ fontWeight: 'bold', color: '#f8fafc' }}>
-                                      {liveServerStats[selectedProfile.id].stats?.playersOnline} / {liveServerStats[selectedProfile.id].stats?.capacity}
-                                    </span>
-                                  </div>
-                                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <span style={{ color: '#94a3b8' }}>{t("start.balance") || "Balance:"}</span>
-                                    <span style={{ fontWeight: 'bold', color: '#4ade80' }}>
-                                      {Number(liveServerStats[selectedProfile.id].stats?.money || 0).toLocaleString('de-DE')} €
-                                    </span>
-                                  </div>
+                              )}
+                              {selectedProfile.lastSyncDate && (
+                                <div className="server-detail-row">
+                                  <span className="lbl">{t('start.lastSync') || 'Letzte Synchronisation'}:</span>
+                                  <span className="val">
+                                    {new Date(selectedProfile.lastSyncDate).toLocaleDateString()}
+                                  </span>
+                                </div>
+                              )}
+
+                              {/* Live Server Stats */}
+                              {selectedProfile.serverWebStatsUrl && liveServerStats[selectedProfile.id] && (
+                                <div className="server-live-stats-box">
+                                  {liveServerStats[selectedProfile.id].loading ? (
+                                    <div className="loading-state">
+                                      <span className="loading-spinner small"></span>
+                                      <span>{t('start.connectingToServer') || 'Abfragen...'}</span>
+                                    </div>
+                                  ) : liveServerStats[selectedProfile.id].error ? (
+                                    <div className="error-state">
+                                      <span>🔴</span>
+                                      <span>{t('start.serverOfflineLabel') || 'Server offline.'}</span>
+                                    </div>
+                                  ) : liveServerStats[selectedProfile.id].stats?.serverName === 'Unknown' ? (
+                                    <div className="offline-state">
+                                      <span>🔴</span>
+                                      <span>Spiel gestoppt (Server offline).</span>
+                                    </div>
+                                  ) : (
+                                    <div className="stats-list">
+                                      <div className="stat-row">
+                                        <span className="label">{t('start.server') || 'Name'}</span>
+                                        <span className="val">{liveServerStats[selectedProfile.id].stats?.serverName}</span>
+                                      </div>
+                                      <div className="stat-row">
+                                        <span className="label">{t('start.map') || 'Map'}</span>
+                                        <span className="val">{liveServerStats[selectedProfile.id].stats?.mapName}</span>
+                                      </div>
+                                      <div className="stat-row">
+                                        <span className="label">{t('start.players') || 'Spieler'}</span>
+                                        <span className="val highlight-green">
+                                          {liveServerStats[selectedProfile.id].stats?.playersOnline} / {liveServerStats[selectedProfile.id].stats?.capacity}
+                                        </span>
+                                      </div>
+                                      <div className="stat-row">
+                                        <span className="label">{t('start.balance') || 'Kontostand'}</span>
+                                        <span className="val highlight-gold">
+                                          {Number(liveServerStats[selectedProfile.id].stats?.money || 0).toLocaleString('de-DE')} €
+                                        </span>
+                                      </div>
+                                    </div>
+                                  )}
                                 </div>
                               )}
                             </div>
-                          )}
-                        </div>
-                      )}
+                          </div>
+                        ) : (
+                          <div className="dashboard-card">
+                            <h3>🔍 {t('start.modHubUpdatesTitle') || 'ModHub Updates'}</h3>
+                            {(() => {
+                              const updatableMods = selectedProfile.mods.filter(m => {
+                                if (!m.isActive) return false;
+                                return m.modHubVersion && m.version && m.version !== m.modHubVersion;
+                              });
 
-                      {/* ModHub Info für Singleplayer */}
-                      {!selectedProfile.serverSyncUrl && (
-                        <div className="info-card">
-                          <h3>{t("start.modHubUpdatesTitle") || "🔍 ModHub Updates"}</h3>
-                          {(() => {
-                             const updatableMods = selectedProfile.mods.filter(m => {
-                               // Wir checken nur aktive Mods
-                               if (!m.isActive) return false;
-                               if (m.modHubVersion && m.version) {
-                                 return m.version !== m.modHubVersion;
-                               }
-                               return false;
-                             });
+                              if (updatableMods.length === 0) {
+                                return (
+                                  <div className="no-updates-badge">
+                                    <span>✅</span>
+                                    <span>{t('start.allModsUpToDate') || 'Alle aktiven Mods sind aktuell!'}</span>
+                                  </div>
+                                );
+                              }
 
-                             if (updatableMods.length === 0) {
-                               return (
-                                 <div style={{ color: '#4ade80', marginTop: '10px', fontSize: '0.95rem' }}>
-                                   ✅ Alle aktiven Mods sind auf dem neuesten ModHub-Stand!
-                                 </div>
-                               );
-                             }
-
-                             return (
-                               <div style={{ marginTop: '10px', padding: '10px', background: 'rgba(251, 191, 36, 0.1)', borderLeft: '4px solid #fbbf24', borderRadius: '4px' }}>
-                                 <h4 style={{ margin: '0 0 5px 0', color: '#fbbf24' }}>⚠️ {updatableMods.length} Updates verfügbar!</h4>
-                                 <p style={{ fontSize: '0.85rem', color: '#ccc', margin: '0 0 10px 0' }}>Die Versionen auf ModHub sind neuer als deine lokalen Mods.</p>
-                                 <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '0.9rem', maxHeight: '150px', overflowY: 'auto' }}>
-                                   {updatableMods.map((u) => {
+                              return (
+                                <div className="updates-list-wrapper">
+                                  <div className="updates-summary-text">
+                                    ⚠️ {(t('start.modsCanBeUpdated') || '{count} Updates verfügbar!').replace('{count}', String(updatableMods.length))}
+                                  </div>
+                                  <div className="updates-scroll-area">
+                                    {updatableMods.map(u => {
                                       const title = u.modDescData?.title?.['en'] || u.modDescData?.title?.['de'] || u.name;
                                       const modUrl = u.modHubId ? `https://www.farming-simulator.com/mod.php?mod_id=${u.modHubId}` : '#';
                                       return (
-                                        <li key={u.fileName} style={{ margin: '3px 0' }}>
-                                          <a href="#" style={{ color: '#60a5fa', textDecoration: 'none' }} onClick={(e) => { e.preventDefault(); if (u.modHubId) window.require('electron').shell.openExternal(modUrl); }}>{title}</a> 
-                                          <span style={{ color: '#94a3b8', fontSize: '0.8rem', marginLeft: '5px' }}>
-                                            (Lokal: v{u.version} ➔ ModHub: v{u.modHubVersion})
+                                        <div key={u.fileName} className="update-item-row">
+                                          <a 
+                                            href="#" 
+                                            className="update-item-link"
+                                            onClick={(e) => { 
+                                              e.preventDefault(); 
+                                              if (u.modHubId) window.require('electron').shell.openExternal(modUrl); 
+                                            }}
+                                            title={title}
+                                          >
+                                            {title}
+                                          </a>
+                                          <span className="update-item-version">
+                                            v{u.version} ➔ <strong className="new-version">v{u.modHubVersion}</strong>
                                           </span>
-                                        </li>
+                                        </div>
                                       );
-                                   })}
-                                 </ul>
-                               </div>
-                             );
-                          })()}
-                        </div>
-                      )}
+                                    })}
+                                  </div>
+                                </div>
+                              );
+                            })()}
+                          </div>
+                        )}
+                      </div>
                     </>
                   );
                 })()}
               </div>
             )}
           </div>
-
-          {/* Launch Button Bereich - Unten Mittig */}
-          <div className="launch-section">
-            {message && (
-              <div 
-                className="status-message success" 
-                style={{ 
-                  whiteSpace: 'nowrap', 
-                  overflow: 'hidden', 
-                  textOverflow: 'ellipsis', 
-                  maxWidth: '500px', 
-                  margin: '0 auto',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
-              >
-                <span className="status-icon" style={{ flexShrink: 0 }}>✅</span>
-                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{message}</span>
-              </div>
-            )}
-            
-            {error && (
-              <div className="status-message error">
-                <span className="status-icon">❌</span>
-                {error}
-              </div>
-            )}
-            
-            {isLaunching && deployProgress && deployProgress.total > 0 && (
-              <div className="progress-container" style={{ width: '100%', maxWidth: '400px', margin: '15px auto', background: '#333', borderRadius: '8px', overflow: 'hidden', border: '1px solid #444' }}>
-                <div 
-                  className="progress-bar" 
-                  style={{ 
-                    height: '12px', 
-                    background: '#4ade80', 
-                    width: `${Math.max(2, (deployProgress.current / deployProgress.total) * 100)}%`,
-                    transition: 'width 0.1s linear'
-                  }}
-                />
-              </div>
-            )}
-
-            <button 
-              className="launch-button"
-              onClick={handleStartGame}
-              disabled={isLaunching || !selectedProfileId}
-            >
-              {isLaunching ? (
-                <>
-                  <span className="loading-spinner small"></span>
-                  Starte Spiel...
-                </>
-              ) : (
-                <>
-                  🚜 Spiel starten
-                </>
-              )}
-            </button>
-          </div>
-        </>
+        </div>
       )}
     </div>
   );

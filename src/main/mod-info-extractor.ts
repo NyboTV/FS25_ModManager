@@ -16,11 +16,12 @@ export class ModInfoExtractor {
         return;
       }
 
-      yauzl.open(zipFilePath, { lazyEntries: true }, (err: any, zipfile: any) => {
-        if (err) {
-          reject(err);
-          return;
-        }
+      try {
+        yauzl.open(zipFilePath, { lazyEntries: true }, (err: any, zipfile: any) => {
+          if (err) {
+            reject(err);
+            return;
+          }
 
         let modDescFound = false;
         let modInfo: any = {
@@ -96,6 +97,9 @@ export class ModInfoExtractor {
           resolve(modInfo);
         });
       });
+      } catch (e) {
+        reject(e);
+      }
     });
   }
 
@@ -115,9 +119,9 @@ export class ModInfoExtractor {
         info.name = decodeHtmlEntities(titleMatch[1].trim());
       }
 
-      // Version extrahieren
-      const versionMatch = xmlData.match(/descVersion="([^"]+)"/i) ||
-                          xmlData.match(/<version>([^<]+)<\/version>/i);
+      // Version extrahieren (Priorisiere den <version> Tag gegenüber descVersion Attribut)
+      const versionMatch = xmlData.match(/<version>([^<]+)<\/version>/i) ||
+                          xmlData.match(/descVersion="([^"]+)"/i);
       if (versionMatch) {
         info.version = versionMatch[1].trim();
       }

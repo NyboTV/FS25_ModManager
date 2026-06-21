@@ -47,6 +47,14 @@ export class ModHubService {
     this.mappingQueue = [];
   }
 
+  public isMappingActive(): boolean {
+    return this.isMapping;
+  }
+
+  public hasActiveDownloads(): boolean {
+    return this.activeDownloads.size > 0 || this.downloadQueue.length > 0;
+  }
+
   private loadMapping() {
     if (fs.existsSync(this.mappingFile)) {
       try {
@@ -219,7 +227,44 @@ export class ModHubService {
       if (!profile) throw new Error("Profile not found");
 
       // Fallback to old URL structure if no direct CDN URL is provided
-      const downloadUrl = modDetail?.url || `${BASE_URL}/mod.php?action=download&mod_id=${modId}`;
+      let downloadUrl = modDetail?.url || `${BASE_URL}/mod.php?action=download&mod_id=${modId}`;
+
+      if (!downloadUrl.toLowerCase().endsWith('.zip') && downloadUrl.includes('mod.php')) {
+        try {
+          logger.info(`[ModHubService] Scrape Detailseite für ModId ${modId} zur Ermittlung des direkten CDN-Links...`);
+          const detailUrl = `${BASE_URL}/mod.php?mod_id=${modId}&title=fs2025`;
+          const detailRes = await axios.get(detailUrl, {
+            timeout: 10000,
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            }
+          });
+          const detail$ = cheerio.load(detailRes.data);
+          
+          const zipLinks: string[] = [];
+          detail$('a[href]').each((_, el) => {
+            const href = detail$(el).attr('href') || '';
+            if (href.toLowerCase().endsWith('.zip')) {
+              zipLinks.push(href);
+            }
+          });
+
+          if (zipLinks.length > 0) {
+            // Bevorzuge den Link, der den Dateinamen des Ziel-Mods enthält oder darauf endet
+            const exactMatch = zipLinks.find(link => 
+              link.toLowerCase().endsWith(`/${fileName.toLowerCase()}`) || 
+              link.toLowerCase().includes(fileName.toLowerCase())
+            );
+            const scrapedUrl = exactMatch || zipLinks[0];
+            logger.info(`[ModHubService] Direkten Link für ModId ${modId} ermittelt: ${scrapedUrl}`);
+            downloadUrl = scrapedUrl;
+          } else {
+            logger.warn(`[ModHubService] Kein direkter ZIP-Link auf Detailseite für ModId ${modId} gefunden.`);
+          }
+        } catch (e: any) {
+          logger.error(`[ModHubService] Fehler beim Ermitteln des direkten Links für ModId ${modId}:`, e);
+        }
+      }
 
       logger.info(`[ModHubService] Starte Download für ${fileName} von ${downloadUrl}`);
       webContents.send('mod-update-progress', { modId, fileName, status: 'starting', percent: 0 });
@@ -238,6 +283,11 @@ export class ModHubService {
           'Referer': BASE_URL + '/'
         }
       });
+
+      const contentType = response.headers['content-type'] || '';
+      if (contentType.toLowerCase().includes('text/html')) {
+        throw new Error('ModHub returned HTML page instead of zip file (blocked or invalid link)');
+      }
 
       // Echten Dateinamen aus Content-Disposition extrahieren
       let realFileName = fileName;
@@ -276,7 +326,22 @@ export class ModHubService {
       });
 
         return new Promise((resolve, reject) => {
+          const abortHandler = () => {
+            writer.destroy();
+            fs.unlink(targetPath, () => {});
+            reject(new Error('Abgebrochen'));
+          };
+          abortController.signal.addEventListener('abort', abortHandler);
+
+          response.data.on('error', (err: any) => {
+            abortController.signal.removeEventListener('abort', abortHandler);
+            writer.destroy();
+            fs.unlink(targetPath, () => {});
+            reject(err);
+          });
+
           writer.on('finish', async () => {
+            abortController.signal.removeEventListener('abort', abortHandler);
             // Speichere das Mapping direkt ab!
             if (modDetail) {
               this.mapping[realFileName] = {
@@ -295,26 +360,75 @@ export class ModHubService {
               const { profileManager } = require('./main');
               const currentProfile = await profileManager.getProfile(profileId);
               if (currentProfile) {
+                const modInProfile = currentProfile.mods.find((m: any) => m.fileName === realFileName);
+                if (modInProfile) {
+                  const modPath = path.join(currentProfile.modFolderPath, realFileName);
+                  logger.info(`[ModHubService] Extrahiere Metadaten für neu heruntergeladenen Mod ${realFileName}...`);
+                  try {
+                    const info = await profileManager.modInfoExtractor.extractModInfo(modPath);
+                    if (info) {
+                      modInProfile.name = info.name || modInProfile.name;
+                      modInProfile.version = info.version || modInProfile.version;
+                      modInProfile.author = info.author || modInProfile.author;
+                      modInProfile.modDescData = {
+                        author: info.author,
+                        version: info.version,
+                        title: { de: info.name, en: info.name },
+                        description: { de: info.description, en: info.description },
+                        iconFilename: info.iconFilename,
+                        multiplayerSupported: info.multiplayer,
+                        category: info.category || 'Unknown'
+                      };
+
+                      // Aktualisiere auch unser lokales Mapping mit der neuen Version
+                      if (!this.mapping[realFileName]) {
+                        this.mapping[realFileName] = {
+                          modId: modId,
+                          version: info.version || '1.0.0.0',
+                          title: info.name || realFileName.replace(/\.zip$/i, ''),
+                          category: info.category || 'Unknown',
+                          author: info.author || 'Unknown'
+                        };
+                      } else {
+                        this.mapping[realFileName].version = info.version || this.mapping[realFileName].version;
+                      }
+                      this.saveMapping();
+                    }
+                  } catch (e: any) {
+                    logger.error(`[ModHubService] Fehler beim Auslesen der modDesc für neu heruntergeladenen Mod ${realFileName}:`, e);
+                  }
+
+                  try {
+                    const stats = fs.statSync(modPath);
+                    const fileSizeMB = stats.size / (1024 * 1024);
+                    modInProfile.fileSize = fileSizeMB >= 1 ? `${fileSizeMB.toFixed(2)} MB` : `${(stats.size / 1024).toFixed(2)} KB`;
+                  } catch (e) {}
+                }
+
                 await profileManager.saveProfile(currentProfile);
               }
             } catch (err) {
               logger.error("[ModHubService] Fehler beim Speichern des Profils nach Download", err);
             }
             
+            
             this.activeDownloads.delete(modId);
             webContents.send('mod-update-complete', { modId, fileName: realFileName, success: true });
             this.processDownloadQueue();
             resolve(true);
           });
-        writer.on('error', (err) => {
-          this.activeDownloads.delete(modId);
-          fs.unlink(targetPath, () => {});
-          webContents.send('mod-update-complete', { modId, fileName: realFileName, success: false, error: err.message });
-          this.processDownloadQueue();
-          reject(err);
+
+          writer.on('error', (err) => {
+            abortController.signal.removeEventListener('abort', abortHandler);
+            this.activeDownloads.delete(modId);
+            fs.unlink(targetPath, () => {});
+            webContents.send('mod-update-complete', { modId, fileName: realFileName, success: false, error: err.message });
+            this.processDownloadQueue();
+            reject(err);
+          });
+
+          response.data.pipe(writer);
         });
-        response.data.pipe(writer);
-      });
 
     } catch (error: any) {
       this.activeDownloads.delete(modId);
@@ -540,7 +654,58 @@ export class ModHubService {
   }
 
   public async forceCheckUpdates(webContents: Electron.WebContents, modIdsToCheck: string[]) {
-    await this.checkUpdates(webContents, modIdsToCheck, "Manuelles Update");
+    if (!modIdsToCheck || modIdsToCheck.length === 0) {
+      webContents.send('modhub-mapping-complete');
+      return;
+    }
+    
+    logger.info(`[ModHubService] Führe manuellen Force-Update-Check für ${modIdsToCheck.length} Mods durch...`);
+    
+    try {
+      let updatedCount = 0;
+      for (let i = 0; i < modIdsToCheck.length; i++) {
+        const id = modIdsToCheck[i];
+        
+        // Sende Fortschritt an die UI, damit das Overlay auftaucht
+        webContents.send('modhub-mapping-progress', {
+          current: i + 1,
+          total: modIdsToCheck.length,
+          modName: `Mod-ID ${id}`,
+          status: 'searching'
+        });
+
+        try {
+          const detailRes = await axios.get(`${BASE_URL}/mod.php?mod_id=${id}&title=fs2025`, { timeout: 10000 });
+          const detail$ = cheerio.load(detailRes.data);
+          
+          let version = '';
+          detail$('.table-row').each((_, el) => {
+            const key = detail$(el).find('.table-cell').first().text().trim().toLowerCase();
+            const val = detail$(el).find('.table-cell').last().text().trim();
+            if (key.includes('version')) version = val;
+          });
+
+          const fileName = Object.keys(this.mapping).find(k => this.mapping[k].modId === id);
+          if (fileName && version && this.mapping[fileName].version !== version) {
+            this.mapping[fileName].version = version;
+            updatedCount++;
+          }
+          await this.delay(300);
+        } catch (e) {
+          logger.error(`Fehler beim manuellen Update-Check für ModId ${id}`, e);
+        }
+      }
+      
+      if (updatedCount > 0) {
+        this.saveMapping();
+      }
+      
+      logger.info(`[ModHubService] Manueller Check abgeschlossen. ${updatedCount} aktualisiert.`);
+    } catch (e) {
+      logger.error(`[ModHubService] Globaler Fehler im Force-Check`, e);
+    } finally {
+      webContents.send('modhub-mapping-complete');
+    }
   }
 }
 

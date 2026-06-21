@@ -4,22 +4,31 @@ import { useTranslation } from '../i18n';
 
 interface SplashScreenProps {
   onComplete: () => void;
-  language?: 'en' | 'de' | string;
+  language?: 'en' | 'de' | 'fr' | string;
+  isReady: boolean;
 }
 
-const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete, language }) => {
+const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete, language, isReady }) => {
   const [fadingOut, setFadingOut] = useState(false);
-  const t = useTranslation((language as 'en' | 'de') || 'de');
+  const [minTimeElapsed, setMinTimeElapsed] = useState(false);
+  const t = useTranslation((language as 'en' | 'de' | 'fr') || 'de');
 
   useEffect(() => {
-    // Zeige den Splash-Screen für mindestens 2 Sekunden, dann ausfaden
+    // Mindestens 2 Sekunden anzeigen
     const timer = setTimeout(() => {
-      setFadingOut(true);
-      setTimeout(onComplete, 500); // 500ms für die CSS Transition
+      setMinTimeElapsed(true);
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, [onComplete]);
+  }, []);
+
+  useEffect(() => {
+    if (minTimeElapsed && isReady && !fadingOut) {
+      setFadingOut(true);
+      const timer = setTimeout(onComplete, 500); // 500ms für die CSS Transition
+      return () => clearTimeout(timer);
+    }
+  }, [minTimeElapsed, isReady, fadingOut, onComplete]);
 
   return (
     <div className={`splash-screen ${fadingOut ? 'fade-out' : ''}`}>

@@ -40,7 +40,7 @@ export class ProfileManager {
 
   private setupIpcHandlers(): void {
     // Lade Profile
-    ipcMain.handle('load-profiles', () => {
+    ipcMain.handle('load-profiles', async () => {
       logger.debug('Handler: load-profiles aufgerufen');
       try {
         const profilesPath = path.join(this.appDataPath, 'profiles');
@@ -49,33 +49,22 @@ export class ProfileManager {
           fs.mkdirSync(profilesPath, { recursive: true });
           return [];
         }
-          logger.debug(`Lese Profile aus: ${profilesPath}`);
-        const profiles = fs.readdirSync(profilesPath)
+        logger.debug(`Lese Profile aus: ${profilesPath}`);
+        const dirs = fs.readdirSync(profilesPath)
           .filter(item => {
             const itemPath = path.join(profilesPath, item);
             return fs.statSync(itemPath).isDirectory();
-          })
-          .map(dir => {
-            const profilePath = path.join(profilesPath, dir, 'profile.json');
-            if (fs.existsSync(profilePath)) {
-              const profileData = JSON.parse(fs.readFileSync(profilePath, 'utf8'));
-              
-              // Auto-Korrektur: Repariere alte Profile, die noch den veralteten "Friendly Name" Pfad haben
-              const correctModFolderPath = path.join(profilesPath, dir, 'mods');
-              if (profileData.modFolderPath !== correctModFolderPath) {
-                profileData.modFolderPath = correctModFolderPath;
-                fs.writeFileSync(profilePath, JSON.stringify(profileData, null, 2), 'utf8');
-                logger.info(`Profil ${profileData.name} automatisch repariert: Pfad auf ${correctModFolderPath} gesetzt.`);
-              }
-              
-              return this.injectModHubData(profileData);
-            }
-            return null;
-          })
-          .filter(profile => profile !== null);
+          });
+          
+        const profiles = [];
+        for (const dir of dirs) {
+          const profileData = await this.getProfile(dir);
+          if (profileData) {
+            profiles.push(profileData);
+          }
+        }
           
         logger.info(`${profiles.length} Profile erfolgreich geladen`);
-        logger.debug(`Geladene Profile: ${profiles.map(p => p.name).join(', ')}`);
         return profiles;
       } catch (error) {
         logger.error('Fehler beim Laden der Profile', error);
@@ -265,6 +254,18 @@ export class ProfileManager {
         return [];
       }
     });
+
+    // Re-scan complete profile and force metadata extraction
+    ipcMain.handle('rescan-profile-mods', async (_, profileId) => {
+      logger.debug(`Handler: rescan-profile-mods aufgerufen für Profil ${profileId}`);
+      try {
+        const result = await this.rescanProfileMods(profileId);
+        return { success: true, profile: result };
+      } catch (error) {
+        logger.error(`Fehler im Handler rescan-profile-mods für ${profileId}:`, error);
+        return { success: false, error: error instanceof Error ? error.message : String(error) };
+      }
+    });
   }
 
   /**
@@ -300,35 +301,256 @@ export class ProfileManager {
       const profileData = JSON.parse(fs.readFileSync(profilePath, 'utf8'));
       // --- Mods-Liste beim Laden immer mit Ordner abgleichen ---
       const modsDir = profileData.modFolderPath || path.join(this.appDataPath, 'profiles', profileId, 'mods');
+      let profileChanged = false;
+
       if (fs.existsSync(modsDir)) {
         const modFiles = fs.readdirSync(modsDir).filter(f => f.endsWith('.zip') || f.endsWith('.ms2'));
-        // Filtere alle Mods aus der JSON raus, deren Datei nicht mehr existiert
-        profileData.mods = (profileData.mods || []).filter((mod: any) => modFiles.includes(mod.fileName));
-        // Optional: Mods aus dem Ordner, die noch nicht in der Liste sind, hinzufügen (z. B. nach manuellem Kopieren)
+        
+        // 1. Filtere alle Mods aus der JSON raus, deren Datei nicht mehr existiert
+        const initialCount = (profileData.mods || []).length;
+        profileData.mods = (profileData.mods || []).filter((mod: any) => 
+          modFiles.includes(mod.fileName) || 
+          mod.isDLC === true || 
+          mod.fileName.toLowerCase().startsWith('pdlc_')
+        );
+        if (profileData.mods.length !== initialCount) {
+          profileChanged = true;
+          logger.info(`Startup Check: Verwaiste Mods aus profile.json für ${profileData.name} entfernt.`);
+        }
+        
+        // 2. Abgleich mit dem physischen Ordner
         for (const file of modFiles) {
-          if (!profileData.mods.find((mod: any) => mod.fileName === file)) {
-            // Minimaldaten, Details werden beim nächsten Import/Speichern ergänzt
-            profileData.mods.push({
-              name: file.replace(/\.(zip|ms2)$/i, ''),
-              version: '',
-              author: '',
+          let existingMod = profileData.mods.find((mod: any) => mod.fileName === file);
+          const filePath = path.join(modsDir, file);
+          
+          if (!existingMod) {
+            // Mod existiert im Ordner, fehlt aber in der JSON
+            logger.info(`Startup Check: Neuer Mod ${file} gefunden. Lese modDesc.xml aus.`);
+            let name = file.replace(/\.(zip|ms2)$/i, '');
+            let version = '';
+            let author = '';
+            let modDescData: any = {};
+            
+            try {
+              const info = await this.modInfoExtractor.extractModInfo(filePath);
+              if (info) {
+                name = info.name || name;
+                version = info.version || '';
+                author = info.author || '';
+                modDescData = {
+                  author: info.author,
+                  version: info.version,
+                  title: { de: info.name, en: info.name },
+                  description: { de: info.description, en: info.description },
+                  iconFilename: info.iconFilename,
+                  multiplayerSupported: info.multiplayer,
+                  category: info.category || 'Unknown'
+                };
+              }
+            } catch (err) {
+              logger.error(`Fehler beim Extrahieren der modDesc für ${file}:`, err);
+            }
+            
+            let fileSizeStr = '';
+            try {
+              const stats = fs.statSync(filePath);
+              const fileSizeMB = stats.size / (1024 * 1024);
+              fileSizeStr = fileSizeMB >= 1 ? `${fileSizeMB.toFixed(2)} MB` : `${(stats.size / 1024).toFixed(2)} KB`;
+            } catch (e) {}
+            
+            existingMod = {
+              name,
+              version,
+              author,
               fileName: file,
-              fileSize: '',
+              fileSize: fileSizeStr,
               modHub: '',
               isActive: true,
               downloadUrl: '',
               detailUrl: '',
-              modDescData: {}
-            });
+              modDescData
+            };
+            profileData.mods.push(existingMod);
+            profileChanged = true;
+          } else {
+            // Mod existiert bereits. Falls wichtige Daten (wie version, author, name) fehlen oder die Dateigröße abweicht, extrahieren wir sie neu.
+            let needsUpdate = false;
+
+            let fileSizeStr = '';
+            try {
+              const stats = fs.statSync(filePath);
+              const fileSizeMB = stats.size / (1024 * 1024);
+              fileSizeStr = fileSizeMB >= 1 ? `${fileSizeMB.toFixed(2)} MB` : `${(stats.size / 1024).toFixed(2)} KB`;
+            } catch (e) {}
+
+            const isSizeDifferent = fileSizeStr && existingMod.fileSize && existingMod.fileSize !== fileSizeStr;
+
+            if (!existingMod.version || !existingMod.author || !existingMod.name || 
+                (existingMod.name === file.replace(/\.(zip|ms2)$/i, '') && !existingMod.modDescData) ||
+                isSizeDifferent) {
+              logger.info(`Startup Check: Kern-Daten auslesen oder Dateigrößen-Änderung erkannt für ${file}.`);
+              try {
+                const info = await this.modInfoExtractor.extractModInfo(filePath);
+                if (info) {
+                  existingMod.name = info.name || existingMod.name;
+                  existingMod.version = info.version || existingMod.version;
+                  existingMod.author = info.author || existingMod.author;
+                  existingMod.modDescData = {
+                    author: info.author,
+                    version: info.version,
+                    title: { de: info.name, en: info.name },
+                    description: { de: info.description, en: info.description },
+                    iconFilename: info.iconFilename,
+                    multiplayerSupported: info.multiplayer,
+                    category: info.category || 'Unknown'
+                  };
+                  if (fileSizeStr) {
+                    existingMod.fileSize = fileSizeStr;
+                  }
+                  needsUpdate = true;
+                }
+              } catch (err) {
+                logger.error(`Fehler beim Nachextrahieren der modDesc für ${file}:`, err);
+              }
+            }
+            
+            if (!existingMod.fileSize && fileSizeStr) {
+              existingMod.fileSize = fileSizeStr;
+              needsUpdate = true;
+            }
+            
+            if (needsUpdate) {
+              profileChanged = true;
+            }
+          }
+          
+          // ModHub Mapping prüfen und modHubId im profile.json Mod-Objekt hinterlegen
+          const mappingData = modHubService.getMapping(file);
+          if (mappingData && !mappingData.failed && mappingData.modId !== '!') {
+            if (existingMod.modHubId !== mappingData.modId) {
+              existingMod.modHubId = mappingData.modId;
+              profileChanged = true;
+            }
           }
         }
       } else {
-        profileData.mods = [];
+        if ((profileData.mods || []).length > 0) {
+          profileData.mods = [];
+          profileChanged = true;
+        }
       }
+      
+      if (profileChanged) {
+        fs.writeFileSync(profilePath, JSON.stringify(profileData, null, 2), 'utf8');
+        logger.info(`profile.json erfolgreich repariert und gespeichert für Profil ${profileData.name}`);
+      }
+      
       return this.injectModHubData(profileData);
     } catch (error) {
       logger.error(`Fehler beim Laden des Profils ${profileId}:`, error);
       return null;
+    }
+  }
+
+  /**
+   * Rescans the mods folder, forces metadata reload, updates versions/metadata on all mods, and saves profile.json
+   */
+  async rescanProfileMods(profileId: string): Promise<any> {
+    try {
+      const profilePath = path.join(this.appDataPath, 'profiles', profileId, 'profile.json');
+      if (!fs.existsSync(profilePath)) {
+        throw new Error(`Profil mit ID ${profileId} nicht gefunden`);
+      }
+      const profile = JSON.parse(fs.readFileSync(profilePath, 'utf8'));
+
+      const modsDir = profile.modFolderPath || path.join(this.appDataPath, 'profiles', profileId, 'mods');
+      if (!fs.existsSync(modsDir)) {
+        throw new Error(`Mod-Ordner existiert nicht: ${modsDir}`);
+      }
+
+      logger.info(`ReScan: Starte erzwungenen Mod-ReScan für Profil ${profile.name}`);
+      const modFiles = fs.readdirSync(modsDir).filter(f => f.endsWith('.zip') || f.endsWith('.ms2'));
+
+      // 1. Bereinige verwaiste Mods (außer DLCs)
+      profile.mods = (profile.mods || []).filter((mod: any) => 
+        modFiles.includes(mod.fileName) || 
+        mod.isDLC === true || 
+        mod.fileName.toLowerCase().startsWith('pdlc_')
+      );
+
+      // 2. Lese alle Dateien komplett neu ein und überschreibe Daten
+      for (const file of modFiles) {
+        const filePath = path.join(modsDir, file);
+        let existingMod = profile.mods.find((mod: any) => mod.fileName === file);
+
+        let name = file.replace(/\.(zip|ms2)$/i, '');
+        let version = '';
+        let author = '';
+        let modDescData: any = {};
+
+        try {
+          const info = await this.modInfoExtractor.extractModInfo(filePath);
+          if (info) {
+            name = info.name || name;
+            version = info.version || '';
+            author = info.author || '';
+            modDescData = {
+              author: info.author,
+              version: info.version,
+              title: { de: info.name, en: info.name },
+              description: { de: info.description, en: info.description },
+              iconFilename: info.iconFilename,
+              multiplayerSupported: info.multiplayer,
+              category: info.category || 'Unknown'
+            };
+          }
+        } catch (err) {
+          logger.error(`Fehler beim Extrahieren der modDesc während ReScan für ${file}:`, err);
+        }
+
+        let fileSizeStr = '';
+        try {
+          const stats = fs.statSync(filePath);
+          const fileSizeMB = stats.size / (1024 * 1024);
+          fileSizeStr = fileSizeMB >= 1 ? `${fileSizeMB.toFixed(2)} MB` : `${(stats.size / 1024).toFixed(2)} KB`;
+        } catch (e) {}
+
+        if (existingMod) {
+          existingMod.name = name;
+          existingMod.version = version;
+          existingMod.author = author;
+          existingMod.fileSize = fileSizeStr;
+          existingMod.modDescData = modDescData;
+        } else {
+          existingMod = {
+            name,
+            version,
+            author,
+            fileName: file,
+            fileSize: fileSizeStr,
+            modHub: '',
+            isActive: true,
+            downloadUrl: '',
+            detailUrl: '',
+            modDescData
+          };
+          profile.mods.push(existingMod);
+        }
+
+        // ModHub Mapping zuweisen falls vorhanden
+        const mappingData = modHubService.getMapping(file);
+        if (mappingData && !mappingData.failed && mappingData.modId !== '!') {
+          existingMod.modHubId = mappingData.modId;
+          existingMod.modHubVersion = mappingData.version;
+        }
+      }
+
+      await this.saveProfile(profile);
+      logger.info(`ReScan für Profil ${profile.name} erfolgreich gespeichert.`);
+      return this.injectModHubData(profile);
+    } catch (error) {
+      logger.error(`Fehler beim erzwungenen ReScan für Profil ${profileId}:`, error);
+      throw error;
     }
   }
   /**

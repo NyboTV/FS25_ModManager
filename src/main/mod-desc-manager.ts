@@ -96,7 +96,7 @@ export class ModDescManager {
   /**
    * Gibt den lokalisierten Titel zurück
    */
-  getLocalizedTitle(modDescData: ModDescData, language: 'en' | 'de'): string {
+  getLocalizedTitle(modDescData: ModDescData, language: 'en' | 'de' | 'fr'): string {
     if (modDescData?.title && modDescData.title[language]) {
       return modDescData.title[language];
     }
@@ -115,7 +115,7 @@ export class ModDescManager {
   /**
    * Gibt die lokalisierte Beschreibung zurück
    */
-  getLocalizedDescription(modDescData: ModDescData, language: 'en' | 'de'): string {
+  getLocalizedDescription(modDescData: ModDescData, language: 'en' | 'de' | 'fr'): string {
     if (modDescData?.description && modDescData.description[language]) {
       return modDescData.description[language];
     }

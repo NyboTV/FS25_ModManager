@@ -198,13 +198,13 @@ const ModBrowserView: React.FC<ModBrowserViewProps> = ({ settings }) => {
               ×
             </button>
 
-            <h2 style={{ margin: '0 0 15px 0', color: '#cba6f7' }}>Mod Download</h2>
+            <h2 style={{ margin: '0 0 15px 0', color: '#cba6f7' }}>{t('browser.downloadTitle')}</h2>
             <p style={{ color: '#bac2de', marginBottom: '20px' }}>
-              Du lädst den Mod (ID: <strong style={{color: '#f9e2af'}}>{downloadPending.modId}</strong>) herunter. In welches Profil soll er installiert werden?
+              {t('browser.downloadText').replace('{modId}', downloadPending.modId)}
             </p>
 
             <div style={{ background: '#11111b', padding: '15px', borderRadius: '8px', marginBottom: '20px', border: '1px solid #313244' }}>
-              <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: '#bac2de' }}>Ziel-Profil:</label>
+              <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: '#bac2de' }}>{t('browser.targetProfile')}</label>
               <select 
                 value={selectedProfileId} 
                 onChange={e => setSelectedProfileId(e.target.value)}
@@ -222,7 +222,7 @@ const ModBrowserView: React.FC<ModBrowserViewProps> = ({ settings }) => {
                 onClick={() => setDownloadPending(null)}
                 style={{ background: '#313244', border: 'none', color: '#cdd6f4', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer' }}
               >
-                Abbrechen
+                {t('common.cancel')}
               </button>
               <button 
                 className="btn btn-success" 
@@ -230,7 +230,7 @@ const ModBrowserView: React.FC<ModBrowserViewProps> = ({ settings }) => {
                 disabled={isDownloading || !selectedProfileId}
                 style={{ background: '#a6e3a1', border: 'none', color: '#11111b', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', opacity: (isDownloading || !selectedProfileId) ? 0.5 : 1 }}
               >
-                {isDownloading ? 'Starte Download...' : 'Herunterladen & Installieren'}
+                {isDownloading ? t('browser.downloadingText') : t('browser.downloadBtn')}
               </button>
             </div>
           </div>

@@ -1,6 +1,6 @@
 {
   "name": "fs25_modmanager",
-  "version": "1.1.2",
+  "version": "1.2.2",
   "description": "Ein Mod-Manager für Farming Simulator",
   "main": "dist/main.js",
   "scripts": {

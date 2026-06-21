@@ -13,6 +13,7 @@ export class UpdateManager {
     // Konfiguration für GitHub Releases
     autoUpdater.logger = logger;
     autoUpdater.autoDownload = false; // Wir fragen den User erst
+    autoUpdater.allowPrerelease = false; // Standardmäßig keine Betas
     
     // Events
     autoUpdater.on('checking-for-update', () => {
@@ -26,7 +27,8 @@ export class UpdateManager {
           hasUpdate: true,
           currentVersion: this.currentVersion,
           latestVersion: info.version,
-          releaseNotes: info.releaseNotes as string || 'Bugfixes und Verbesserungen.'
+          releaseNotes: info.releaseNotes as string || 'Bugfixes und Verbesserungen.',
+          isPreRelease: info.version.includes('beta') || info.version.includes('alpha') || info.version.includes('rc')
         });
       }
     });
@@ -80,11 +82,35 @@ export class UpdateManager {
   /**
    * Prüft auf Updates
    */
-  async checkForUpdates(): Promise<void> {
+  async checkForUpdates(): Promise<any> {
     try {
-      await autoUpdater.checkForUpdates();
+      const result = await autoUpdater.checkForUpdates();
+      if (result && result.updateInfo) {
+        return {
+          hasUpdate: result.updateInfo.version !== this.currentVersion,
+          latestVersion: result.updateInfo.version,
+          currentVersion: this.currentVersion
+        };
+      }
+      return {
+        hasUpdate: false,
+        currentVersion: this.currentVersion
+      };
     } catch (error) {
-      logger.error('Fehler beim Prüfen auf Updates: ' + error);
+      // Wenn der Check fehlschlägt (z.B. weil latest.yml fehlt), fangen wir den Fehler ab und tun so, als gäbe es kein Update (Fallback)
+      logger.warn('Fehler beim Prüfen auf Updates (Fallback auf Up-to-date): ' + error);
+      return {
+        hasUpdate: false,
+        currentVersion: this.currentVersion
+      };
     }
+  }
+
+  /**
+   * Setzt, ob Pre-Release Versionen (Betas) geladen werden sollen
+   */
+  public setAllowPrerelease(allow: boolean) {
+    autoUpdater.allowPrerelease = allow;
+    logger.info(`Pre-Release Updates: ${allow ? 'aktiviert' : 'deaktiviert'}`);
   }
 }

@@ -2,11 +2,44 @@
 
 All notable changes to the FS25 ModManager will be documented in this file.
 
-## [Unreleased]
+### [Unreleased]
 
-## [1.1.2] - 2026-06-21
+## [1.2.2] - 2026-06-21
 
-## [1.1.1] - 2026-06-21
+- Well. Somehow broke the Auto Updater... AGAIN... 
+
+## [1.2.1] - 2026-06-21
+
+### Fixes
+- **Localization:** Fixed hardcoded German strings during the auto-start launch countdown and mod update error alerts to ensure complete support for all languages (German, English, French).
+
+## [1.2.0] - 2026-06-21
+
+### Features
+- **French Translation (`fr.ts`):** Added full localization support for the French language, including translation files, configuration interface settings, dropdown menus, and utility type integration.
+- **Auto-Start Profile:** Added option to designate a multiplayer profile to automatically sync and launch the game upon app startup.
+- **Auto-Launch Countdown:** Added a 5-second countdown banner with a "Cancel launch" button before automatically launching the game post-sync (closes popup instantly upon launch).
+- **Streamer Protection:** Masked sensitive connection inputs in Profile settings behind password toggles (only visible on focus) and obscured server URLs in the Start Page widget (replaced with "Configured ✅" status, tooltips removed).
+- **3-URL Dedicated Server Syncing:** Seamlessly integrates FastDL, Web HTML Mods Page, and Dedicated Server Stats XML with automatic download fallbacks and offline server detection.
+- **DLC (`pdlc_`) & Secure Mods Support:** DLCs are now properly registered, displayed in stats, excluded from sync downloads, and preserved from orphan cleanups.
+- **Bulk Actions:** Added mass activation, deactivation, force syncing, ModHub updating, and deletion directly on multiple selected mods.
+- **Real-Time Mods Folder Watcher:** File changes on disk are immediately reflected in the UI, debounced at 1000ms, and safely ignored during active syncs or downloads.
+- **GIANTS Server XML Parser:** Custom parser to extract mod versions and hashes, ensuring accurate server synchronization.
+- **Beta Updates Toggle:** Added settings option to receive pre-release/beta versions of the app.
+
+### UI & UX Enhancements
+- **Start Page (Dashboard) Redesign:** Replaced dropdown selector with a sleek scrollable sidebar, a glassmorphic hero banner, active/inactive glow borders, HSL dark-theme styling, and live stats pulse animations.
+- **Splash Screen Preloading:** Syncs settings and preloads profile data during application startup, preventing visual delays or empty loading states during navigation.
+- **Profiles View Refactor:** Split the monolithic `ProfilesView.tsx` into reusable components (`ProfileSelector`, `ProfileSettingsForm`, `ProfileModsList`).
+- **Cleaned Redundant UI:** Removed duplicated buttons and widget boxes.
+
+### Fixes & Improvements
+- **Startup Auto-Health Check:** Automatically validates `profile.json` with physical files on launch, cleaning up orphaned entries and extracting missing mod metadata from `modDesc.xml`.
+- **Sync Safeguards:** Added checks to prevent profile cleanup or local deletion if connection to the Dedicated Server fails.
+- **Metadata parsing:** Prioritized actual mod version over the schema descriptor version in the XML parser, fixing false out-of-date sync notifications.
+- **Stream Robustness:** Optimized network streams to only open write files on HTTP 200, preventing empty files from triggering watchers, and properly closing streams on abort/error.
+- **Metadata Sync:** Triggers instant re-extraction of ZIP metadata after ModHub downloads, resolving sticky "Update Available" badges.
+- **i18n:** Completed full translations across all UI components (English default, German optional).
 
 ## [1.1.0] - 2026-06-21
 - **Feature:** Implemented a full in-app browser for the official ModHub (including a custom Dark Mode).
