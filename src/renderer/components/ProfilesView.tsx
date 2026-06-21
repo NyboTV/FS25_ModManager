@@ -666,6 +666,21 @@ const ProfilesView: React.FC<ProfilesViewProps> = ({
                                   🌐 ModHub
                                 </span>
                               )}
+                              {mod.modHubId && mod.modHubId !== '!' && mod.modHubVersion && mod.version && mod.version !== mod.modHubVersion && (
+                                <span title={`Update auf Version ${mod.modHubVersion} verfügbar!`} style={{ 
+                                  background: 'rgba(239, 68, 68, 0.2)', 
+                                  color: '#ef4444', 
+                                  padding: '2px 6px', 
+                                  borderRadius: '4px', 
+                                  fontSize: '0.7rem',
+                                  fontWeight: 'bold',
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '4px'
+                                }}>
+                                  ⚠️ Update
+                                </span>
+                              )}
                               {mod.tags && mod.tags.length > 0 && (
                                 <div className="mod-tags" style={{ display: 'inline-flex', gap: '4px' }}>
                                   {mod.tags.map(t => (
@@ -676,6 +691,18 @@ const ProfilesView: React.FC<ProfilesViewProps> = ({
                             </div>
                           </div>
                           <div className="mod-actions">
+                            
+                            {mod.modHubId && mod.modHubId !== '!' && mod.modHubVersion && mod.version && mod.version !== mod.modHubVersion && (
+                              <button
+                                className="btn btn-sm"
+                                style={{ backgroundColor: '#ef4444', color: 'white' }}
+                                onClick={() => {
+                                  ipcRenderer.send('download-modhub-mod', selectedProfile.id, mod.fileName, mod.modHubId);
+                                }}
+                              >
+                                ⬇️ Update ({mod.modHubVersion})
+                              </button>
+                            )}
 
                             <button
                               className={`btn btn-sm ${mod.isActive ? 'btn-warning' : 'btn-success'}`}
