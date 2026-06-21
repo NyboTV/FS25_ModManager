@@ -21,8 +21,6 @@ const ProfilesView: React.FC<ProfilesViewProps> = ({
   const [selectedProfileId, setSelectedProfileId] = useState<string>('');
   
   const [isSyncing, setIsSyncing] = useState<{[profileId: string]: boolean}>({});
-  const [showUrlInput, setShowUrlInput] = useState<string | null>(null);
-  const [urlInput, setUrlInput] = useState('');
   const [isDownloading, setIsDownloading] = useState(false);
   const [categoryFilters, setCategoryFilters] = useState<{[profileId: string]: string}>({});
   const [searchQueries, setSearchQueries] = useState<{[profileId: string]: string}>({});
@@ -241,26 +239,7 @@ const ProfilesView: React.FC<ProfilesViewProps> = ({
     }
   };
 
-  const handleAddModFromUrl = async (profileId: string) => {
-    if (!urlInput) return;
-    setIsDownloading(true);
-    try {
-      const result = await ipcRenderer.invoke('add-mod-from-url', profileId, urlInput);
-      if (result.success) {
-        alert(result.message);
-        await loadProfiles();
-        setShowUrlInput(null);
-        setUrlInput('');
-      } else {
-        alert(`${t('error.prefix')} ${result.error}`);
-      }
-    } catch (error) {
-      console.error(t('mods.downloadError'), error);
-      alert(`${t('error.prefix')} ${error instanceof Error ? error.message : String(error)}`);
-    } finally {
-      setIsDownloading(false);
-    }
-  };
+
 
   const getModTitle = (mod: ModInfo): string => {
     if (mod.modDescData?.title) {
@@ -322,20 +301,109 @@ const ProfilesView: React.FC<ProfilesViewProps> = ({
       <div className="card profile-selection-card">
         <h2>{t('profiles.title')}</h2>
         <p>{t('profiles.selectionDesc')}</p>
-        <div className="profile-selector" style={{ display: 'flex', gap: '10px', alignItems: 'center', marginTop: '15px' }}>
-          <select 
-            value={selectedProfileId} 
-            onChange={(e) => setSelectedProfileId(e.target.value)}
-            style={{ padding: '8px', flex: 1, borderRadius: '4px', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)' }}
+        <div 
+          className="profile-selector-grid" 
+          style={{ 
+            display: 'flex', 
+            gap: '20px', 
+            marginTop: '15px', 
+            overflowX: 'auto', 
+            padding: '10px 5px 20px 5px',
+            scrollSnapType: 'x mandatory'
+          }}
+        >
+          {profiles.map(p => {
+            const isActive = p.id === selectedProfileId;
+            const activeModsCount = p.mods.filter(m => m.isActive).length;
+            return (
+              <div 
+                key={p.id}
+                onClick={() => setSelectedProfileId(p.id)}
+                style={{
+                  minWidth: '200px',
+                  height: '150px',
+                  borderRadius: '12px',
+                  background: isActive ? 'linear-gradient(145deg, rgba(59, 130, 246, 0.15), rgba(30, 64, 175, 0.3))' : 'rgba(255, 255, 255, 0.05)',
+                  border: isActive ? '2px solid var(--primary-color)' : '1px solid var(--border-color)',
+                  boxShadow: isActive ? '0 0 15px rgba(59, 130, 246, 0.4)' : '0 4px 6px rgba(0,0,0,0.2)',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  padding: '15px',
+                  transition: 'all 0.2s ease',
+                  scrollSnapAlign: 'start',
+                  position: 'relative'
+                }}
+                className="profile-tile"
+                onMouseEnter={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }
+                }}
+              >
+                <div>
+                  <h3 style={{ margin: '0 0 8px 0', fontSize: '1.1em', color: isActive ? '#fff' : 'var(--text-primary)', wordBreak: 'break-word', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{p.name}</h3>
+                  <span style={{ fontSize: '0.75em', color: 'var(--text-secondary)', background: 'rgba(0,0,0,0.3)', padding: '3px 8px', borderRadius: '12px' }}>
+                    {p.gameVersion?.toUpperCase() || 'FS25'}
+                  </span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85em', color: '#aaa', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '4px' }}>
+                    <span>Gesamt</span>
+                    <span style={{ fontWeight: 'bold', color: '#fff' }}>{p.mods.length}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85em', color: '#aaa' }}>
+                    <span>Aktiv</span>
+                    <span style={{ fontWeight: 'bold', color: 'var(--success-color)' }}>{activeModsCount}</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+          
+          <div 
+            onClick={handleCreateProfile}
+            style={{
+              minWidth: '200px',
+              height: '150px',
+              borderRadius: '12px',
+              background: 'rgba(255, 255, 255, 0.02)',
+              border: '2px dashed var(--border-color)',
+              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: '15px',
+              transition: 'all 0.2s ease',
+              scrollSnapAlign: 'start',
+              gap: '15px'
+            }}
+            className="profile-tile-add"
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+              e.currentTarget.style.borderColor = 'var(--primary-color)';
+              e.currentTarget.style.color = 'var(--primary-color)';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)';
+              e.currentTarget.style.borderColor = 'var(--border-color)';
+              e.currentTarget.style.color = 'var(--text-primary)';
+              e.currentTarget.style.transform = 'translateY(0)';
+            }}
           >
-            {profiles.length === 0 && <option value="">{t('profiles.noProfiles')}</option>}
-            {profiles.map(p => (
-              <option key={p.id} value={p.id}>{p.name}</option>
-            ))}
-          </select>
-          <button className="btn btn-primary" onClick={handleCreateProfile}>
-            {t('profiles.createNew')}
-          </button>
+            <div style={{ fontSize: '2.5em', color: 'inherit', fontWeight: '300' }}>+</div>
+            <div style={{ fontSize: '0.9em', color: 'inherit', textAlign: 'center', fontWeight: '500' }}>{t('profiles.createNew') || 'Neues Profil'}</div>
+          </div>
         </div>
       </div>
 
@@ -493,39 +561,15 @@ const ProfilesView: React.FC<ProfilesViewProps> = ({
                     ➕ {t('profiles.addFile') || 'Datei'}
                   </button>
                 </div>
-                <button 
-                  className="btn btn-info btn-sm"
-                  onClick={() => setShowUrlInput(selectedProfile.id === showUrlInput ? null : selectedProfile.id)}
-                  title="Mod hinzufügen (URL)"
-                >
-                  🌐 {t('profiles.addUrl') || 'URL'}
-                </button>
               </div>
             </div>
-            
-            {showUrlInput === selectedProfile.id && (
-              <div className="url-input-container" style={{ margin: '10px 0', padding: '10px', background: 'rgba(0,0,0,0.1)', borderRadius: '4px', display: 'flex', gap: '10px' }}>
-                <input 
-                  type="text" 
-                  placeholder="z.B. https://www.farming-simulator.com/mod.php?mod_id=..." 
-                  value={urlInput}
-                  onChange={(e) => setUrlInput(e.target.value)}
-                  style={{ flex: 1, padding: '8px', borderRadius: '4px', border: '1px solid var(--border-color, #444)', background: 'var(--bg-secondary, #2a2a2a)', color: 'var(--text-primary, #fff)' }}
-                  disabled={isDownloading}
-                />
-                <button 
-                  className="btn btn-success" 
-                  onClick={() => handleAddModFromUrl(selectedProfile.id)}
-                  disabled={isDownloading || !urlInput}
-                >
-                  {isDownloading ? (t('profiles.downloading') || 'Lädt herunter...') : (t('profiles.add') || 'Hinzufügen')}
-                </button>
-              </div>
-            )}
-            
             {(() => {
               const { activeMaps, missingDeps } = checkConflicts(selectedProfile);
-              const categories = Array.from(new Set(selectedProfile.mods.map(m => m.modHubCategory || m.modDescData?.category || 'Unknown').filter(c => c !== 'Unknown'))).sort();
+              const categories = Array.from(new Set(selectedProfile.mods.flatMap(m => {
+                const c = m.modHubCategory || m.modDescData?.category || 'Unknown';
+                if (c === 'Unknown') return [];
+                return c.split('-').map(x => x.trim()).filter(Boolean);
+              }))).sort();
               const tags = Array.from(new Set(selectedProfile.mods.flatMap(m => m.tags || []))).sort();
               const currentCategory = categoryFilters[selectedProfile.id] || 'All';
               const currentSearch = (searchQueries[selectedProfile.id] || '').toLowerCase();
@@ -535,7 +579,11 @@ const ProfilesView: React.FC<ProfilesViewProps> = ({
 
               // 1. Kategoriefilter
               if (currentCategory !== 'All') {
-                filteredMods = filteredMods.filter(m => (m.modHubCategory || m.modDescData?.category || 'Unknown') === currentCategory || (m.tags || []).includes(currentCategory));
+                filteredMods = filteredMods.filter(m => {
+                  const c = m.modHubCategory || m.modDescData?.category || 'Unknown';
+                  const cats = c !== 'Unknown' ? c.split('-').map(x => x.trim()).filter(Boolean) : [];
+                  return cats.includes(currentCategory) || (m.tags || []).includes(currentCategory);
+                });
               }
 
               // 2. Suchfilter
@@ -601,7 +649,11 @@ const ProfilesView: React.FC<ProfilesViewProps> = ({
                         <option value="All">{t("profiles.allMods") || "Alle Kategorien"} ({selectedProfile.mods.length})</option>
                         {categories.length > 0 && <optgroup label={t("profiles.categories") || "Categories"}>
                           {categories.map(cat => (
-                            <option key={`cat_${cat}`} value={cat}>{cat} ({selectedProfile.mods.filter(m => (m.modHubCategory || m.modDescData?.category) === cat).length})</option>
+                            <option key={`cat_${cat}`} value={cat}>{cat} ({selectedProfile.mods.filter(m => {
+                              const c = m.modHubCategory || m.modDescData?.category || 'Unknown';
+                              const cats = c !== 'Unknown' ? c.split('-').map(x => x.trim()).filter(Boolean) : [];
+                              return cats.includes(cat);
+                            }).length})</option>
                           ))}
                         </optgroup>}
                         {tags.length > 0 && <optgroup label={t("profiles.customTags") || "Custom Tags"}>
@@ -617,7 +669,9 @@ const ProfilesView: React.FC<ProfilesViewProps> = ({
                           onClick={() => {
                             const newProfile = { ...selectedProfile };
                             newProfile.mods.forEach(m => {
-                              if ((m.modHubCategory || m.modDescData?.category || 'Unknown') === currentCategory || (m.tags || []).includes(currentCategory)) {
+                              const c = m.modHubCategory || m.modDescData?.category || 'Unknown';
+                              const cats = c !== 'Unknown' ? c.split('-').map(x => x.trim()).filter(Boolean) : [];
+                              if (cats.includes(currentCategory) || (m.tags || []).includes(currentCategory)) {
                                 m.isActive = !m.isActive;
                               }
                             });
