@@ -7,6 +7,10 @@ export interface Profile {
   modFolderPath: string;
   gameVersion: 'fs19' | 'fs22' | 'fs25'; // Neue Property für Spielversion
   lastSyncDate?: string;
+  serverWebStatsUrl?: string;
+  autoBackupSavegame?: boolean;
+  savegameIndex?: number;
+  launchParameters?: string;
   mods: ModInfo[];
 }
 
@@ -22,6 +26,9 @@ export interface ModInfo {
   downloadUrl?: string;
   detailUrl?: string;
   iconPath?: string;
+  tags?: string[];
+  modHubId?: string;
+  modHubCategory?: string;
   modDescData?: ModDescData;
 }
 

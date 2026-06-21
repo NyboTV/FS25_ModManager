@@ -21,7 +21,7 @@ export class SettingsManager {
         gamePath: '',
         theme: 'light',
         autoCheckUpdates: true,
-        language: 'de',
+        language: 'en',
         debugLogging: false
       });
       // Aktuelle Version über Electron App-Instanz abrufen

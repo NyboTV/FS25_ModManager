@@ -2019,7 +2019,128 @@ select:focus, .dark-select:focus {
   100% {
     transform: rotate(360deg);
   }
-}`, "",{"version":3,"sources":["webpack://./src/renderer/styles/main.scss"],"names":[],"mappings":"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","sourcesContent":["@use \"sass:color\";\r\n@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap');\r\n\r\n// Farming Simulator inspirierte Farbpalette - Dunklere Version\r\n$primary-color: #1ed760;       // Vibrant Neon Green for action\r\n$secondary-color: #ff6b00;     // Vibrant Orange\r\n$accent-color: #00d2ff;        // Vibrant Blue\r\n$background-color: #0d1117;    // Deep sleek dark\r\n$card-background: rgba(30, 35, 45, 0.4); // Glassmorphism base\r\n$input-background: rgba(20, 25, 35, 0.6); // Darker glass\r\n$text-color: #f0f6fc;          // Bright crisp text\r\n$muted-text-color: #8b949e;    // Professional muted text\r\n$error-color: #ff4d4f;         // Crisp red\r\n$success-color: #1ed760;       // Matches primary\r\n$border-color: rgba(255, 255, 255, 0.08); // Glass borders\r\n\r\n// Glassmorphism specific\r\n$glass-blur: blur(16px);\r\n$glass-border: 1px solid rgba(255, 255, 255, 0.08);\r\n$glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);\r\n\r\n// Schattierungen\r\n$primary-light: color.adjust($primary-color, $lightness: 35%);\r\n$primary-dark: color.adjust($primary-color, $lightness: -10%);\r\n$secondary-light: color.adjust($secondary-color, $lightness: 20%);\r\n$secondary-dark: color.adjust($secondary-color, $lightness: -10%);\r\n\r\n// FS25 Farbschema\r\n$fs-green: #167b29;       // Hauptgrün\r\n$fs-dark-green: #0e5e1d;  // Dunkelgrün\r\n$fs-orange: #eb7a00;      // Orange\r\n$fs-yellow: #f7c027;      // Gelb\r\n$fs-brown: #9e671a;       // Braun\r\n$fs-light-brown: #be955a; // Hellbraun\r\n\r\n// Abstandswerte\r\n$spacing-xs: 2px;\r\n$spacing-sm: 6px;\r\n$spacing-md: 12px;\r\n$spacing-lg: 18px;\r\n$spacing-xl: 24px;\r\n\r\n// Schriftgrößen\r\n$font-size-xs: 0.7rem;\r\n$font-size-sm: 0.8rem;\r\n$font-size-md: 0.9rem;\r\n$font-size-lg: 1.1rem;\r\n$font-size-xl: 1.3rem;\r\n$font-size-xxl: 1.6rem;\r\n\r\n// Eckenradien\r\n$border-radius-sm: 4px;\r\n$border-radius-md: 8px;\r\n$border-radius-lg: 12px;\r\n\r\n// Schatten\r\n$box-shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.05);\r\n$box-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);\r\n$box-shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.15);\r\n$shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5);\r\n$shadow-md: 0 4px 8px rgba(0, 0, 0, 0.5);\r\n$shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.6);\r\n$shadow-xl: 0 16px 32px rgba(0, 0, 0, 0.7);\r\n\r\n// Übergänge\r\n$transition-fast: all 0.2s ease;\r\n$transition-normal: all 0.3s ease;\r\n$transition-slow: all 0.5s ease;\r\n\r\n// Grundlegende Stile\r\n* {\r\n  box-sizing: border-box;\r\n}\r\n\r\nbody {\r\n  margin: 0;\r\n  padding: 0;\r\n  background-color: $background-color;\r\n  color: $text-color;\r\n  font-family: 'Inter', -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Arial, sans-serif;\r\n  line-height: 1.4;\r\n  font-weight: 400;\r\n  letter-spacing: 0.01em;\r\n  -webkit-font-smoothing: antialiased;\r\n  -moz-osx-font-smoothing: grayscale;\r\n}\r\n\r\n// Custom Scrollbar Design\r\n::-webkit-scrollbar {\r\n  width: 10px;\r\n  height: 10px;\r\n}\r\n\r\n::-webkit-scrollbar-track {\r\n  background: rgba(13, 17, 23, 0.4);\r\n  border-radius: 5px;\r\n}\r\n\r\n::-webkit-scrollbar-thumb {\r\n  background: rgba(255, 255, 255, 0.15);\r\n  border-radius: 5px;\r\n  border: 2px solid rgba(13, 17, 23, 0.4);\r\n  transition: $transition-fast;\r\n}\r\n\r\n::-webkit-scrollbar-thumb:hover {\r\n  background: rgba(30, 215, 96, 0.5); // Primary color (Neon Green) with opacity\r\n}\r\n\r\n::-webkit-scrollbar-corner {\r\n  background: transparent;\r\n}\r\n\r\n// Container\r\n.container {\r\n  width: 100%;  min-height: 100vh;  display: flex;  flex-direction: column;\r\n  background-color: $background-color;\r\n  background-image: \r\n    radial-gradient(circle at 15% 50%, rgba($primary-color, 0.08) 0%, transparent 50%),\r\n    radial-gradient(circle at 85% 30%, rgba($accent-color, 0.08) 0%, transparent 50%);\r\n  background-attachment: fixed;\r\n}\r\n\r\n// Header\r\n.header {\r\n  background: rgba(13, 17, 23, 0.8);\r\n  backdrop-filter: $glass-blur;\r\n  -webkit-backdrop-filter: $glass-blur;\r\n  border-bottom: $glass-border;\r\n  color: white;\r\n  padding: 0 $spacing-xl;\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  box-shadow: $box-shadow-md;\r\n  -webkit-app-region: drag;\r\n  position: sticky;\r\n  top: 0;\r\n  z-index: 1000;\r\n  height: 54px;\r\n  min-height: 54px;\r\n  \r\n  h1 {\r\n    margin: 0;\r\n    font-size: $font-size-lg;\r\n    font-weight: 700;\r\n    font-family: 'Outfit', sans-serif;\r\n    letter-spacing: 1px;\r\n    background: linear-gradient(to right, $primary-color, $accent-color);\r\n    -webkit-background-clip: text;\r\n    -webkit-text-fill-color: transparent;\r\n    display: flex;\r\n    align-items: center;\r\n    \r\n    &::before {\r\n      content: '';\r\n      display: inline-block;\r\n      width: 32px;\r\n      height: 32px;\r\n      margin-right: $spacing-sm;\r\n      background-image: url('https://farming-simulator.com/favicon.ico');\r\n      background-size: contain;\r\n      background-repeat: no-repeat;\r\n    }\r\n  }\r\n  \r\n  // Buttons innerhalb des Headers sollen nicht zum Ziehen verwendet werden\r\n  button, .window-controls {\r\n    -webkit-app-region: no-drag;\r\n  }\r\n}\r\n\r\n// Tab Navigation\r\n.tabs {\r\n  display: flex;\r\n  background: rgba(20, 25, 35, 0.6);\r\n  backdrop-filter: $glass-blur;\r\n  -webkit-backdrop-filter: $glass-blur;\r\n  border-bottom: $glass-border;\r\n  padding: 0 $spacing-xl;\r\n  box-shadow: $box-shadow-sm;\r\n  position: sticky;\r\n  top: 54px;\r\n  z-index: 999;\r\n  -webkit-app-region: no-drag;\r\n  min-height: 48px;\r\n  align-items: center;\r\n    .tab {\r\n    padding: $spacing-md $spacing-lg; // Dünner: reduziert von $spacing-lg zu $spacing-md\r\n    cursor: pointer;\r\n    font-weight: 500;\r\n    color: $text-color;\r\n    position: relative;\r\n    transition: color 0.3s, background-color 0.3s;\r\n    \r\n    &:hover {\r\n      color: $secondary-color;\r\n      background-color: rgba($secondary-color, 0.05);\r\n    }\r\n    \r\n    &.active {\r\n      color: $primary-color;\r\n      font-weight: 600;\r\n      \r\n      &::after {\r\n        content: '';\r\n        position: absolute;\r\n        bottom: 0;\r\n        left: 0;\r\n        width: 100%;\r\n        height: 3px;\r\n        background-color: $primary-color;\r\n        border-top-left-radius: $border-radius-sm;\r\n        border-top-right-radius: $border-radius-sm;\r\n      }\r\n    }\r\n  }\r\n}\r\n\r\n// Main Content\r\n.content {\r\n  flex-grow: 1;\r\n  padding: $spacing-xl;\r\n  overflow-y: visible;\r\n  max-width: 1200px;\r\n  margin-left: auto;\r\n  margin-right: auto;\r\n  width: 100%;\r\n}\r\n\r\n// Karten/Panels\r\n.card {\r\n  background: $card-background;\r\n  backdrop-filter: $glass-blur;\r\n  -webkit-backdrop-filter: $glass-blur;\r\n  border: $glass-border;\r\n  border-radius: $border-radius-lg;\r\n  box-shadow: $glass-shadow;\r\n  padding: $spacing-xl;\r\n  margin-bottom: $spacing-xl;\r\n  transition: $transition-normal;\r\n  \r\n  &:hover {\r\n    box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.4);\r\n    transform: translateY(-4px);\r\n    border-color: rgba(255, 255, 255, 0.15);\r\n  }\r\n  \r\n  h2 {\r\n    margin-top: 0;\r\n    color: $text-color;\r\n    font-size: $font-size-lg;\r\n    font-weight: 600;\r\n    margin-bottom: $spacing-lg;\r\n    padding-bottom: $spacing-sm;\r\n    border-bottom: $glass-border;\r\n  }\r\n}\r\n\r\n// Formulare\r\n.form-group {\r\n  margin-bottom: $spacing-md;\r\n  \r\n  label {\r\n    display: block;\r\n    margin-bottom: $spacing-xs;\r\n    font-weight: 500;\r\n  }    input, select, textarea {\r\n    width: 100%;\r\n    padding: $spacing-md $spacing-lg;\r\n    border: $glass-border;\r\n    border-radius: $border-radius-md;\r\n    font-size: $font-size-md;\r\n    background: $input-background;\r\n    backdrop-filter: $glass-blur;\r\n    -webkit-backdrop-filter: $glass-blur;\r\n    color: $text-color; \r\n    transition: $transition-fast;\r\n    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\r\n    \r\n    &:focus {\r\n      border-color: $primary-color;\r\n      outline: none;\r\n      box-shadow: 0 0 12px rgba($primary-color, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.2);\r\n      background: rgba(20, 25, 35, 0.8);\r\n    }\r\n    \r\n    &:disabled {\r\n      background: rgba(255, 255, 255, 0.05);\r\n      cursor: not-allowed;\r\n      border-color: rgba(255,255,255,0.02);\r\n    }\r\n    \r\n    &::placeholder {\r\n      color: $muted-text-color;\r\n    }\r\n  }\r\n  \r\n  textarea {\r\n    min-height: 120px;\r\n    resize: vertical;\r\n    line-height: 1.6;\r\n  }\r\n  \r\n  .checkbox-label {\r\n    display: flex;\r\n    align-items: center;\r\n    cursor: pointer;\r\n    \r\n    input[type=\"checkbox\"] {\r\n      appearance: none;\r\n      -webkit-appearance: none;\r\n      background-color: rgba(20, 25, 35, 0.6);\r\n      border: 2px solid $border-color;\r\n      border-radius: 4px;\r\n      width: 20px;\r\n      height: 20px;\r\n      display: inline-block;\r\n      position: relative;\r\n      cursor: pointer;\r\n      transition: all 0.2s ease;\r\n      margin-right: $spacing-sm;\r\n\r\n      &:checked {\r\n        background-color: $primary-color;\r\n        border-color: $primary-color;\r\n\r\n        &::after {\r\n          content: '';\r\n          position: absolute;\r\n          left: 5px;\r\n          top: 2px;\r\n          width: 5px;\r\n          height: 10px;\r\n          border: solid white;\r\n          border-width: 0 2px 2px 0;\r\n          transform: rotate(45deg);\r\n        }\r\n      }\r\n\r\n      &:focus {\r\n        outline: none;\r\n        box-shadow: 0 0 0 3px rgba($primary-color, 0.3);\r\n      }\r\n    }\r\n  }\r\n  \r\n  small {\r\n    display: block;\r\n    color: rgba($text-color, 0.7);\r\n    margin-top: $spacing-xs;\r\n    font-size: $font-size-sm;\r\n  }\r\n}\r\n\r\n// Buttons\r\n.btn {\r\n  padding: $spacing-md $spacing-lg;\r\n  border: none;\r\n  border-radius: $border-radius-md;\r\n  cursor: pointer;\r\n  font-weight: 600;\r\n  transition: $transition-normal;\r\n  display: inline-flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  text-transform: uppercase;\r\n  letter-spacing: 0.5px;\r\n  font-size: $font-size-sm;\r\n  height: 44px;\r\n  margin: 0 $spacing-sm;\r\n  min-width: 120px;\r\n  \r\n  &:disabled {\r\n    opacity: 0.6;\r\n    cursor: not-allowed;\r\n  }\r\n  \r\n  &-primary {\r\n    background: linear-gradient(135deg, $primary-color, darken($primary-color, 15%));\r\n    color: white;\r\n    border: none;\r\n    box-shadow: 0 4px 15px rgba($primary-color, 0.4);\r\n    \r\n    &:hover, &:focus {\r\n      background: linear-gradient(135deg, lighten($primary-color, 5%), darken($primary-color, 10%));\r\n      box-shadow: 0 6px 20px rgba($primary-color, 0.6);\r\n      transform: translateY(-2px);\r\n    }\r\n    \r\n    &:active {\r\n      transform: translateY(1px);\r\n      box-shadow: 0 2px 8px rgba($primary-color, 0.4);\r\n    }\r\n  }\r\n    &-secondary {\r\n    background: rgba(255, 255, 255, 0.1);\r\n    backdrop-filter: $glass-blur;\r\n    -webkit-backdrop-filter: $glass-blur;\r\n    border: $glass-border;\r\n    color: white;\r\n    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);\r\n    \r\n    &:hover, &:focus {\r\n      background: rgba(255, 255, 255, 0.15);\r\n      border-color: rgba(255, 255, 255, 0.3);\r\n      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);\r\n      transform: translateY(-2px);\r\n    }\r\n    \r\n    &:active {\r\n      transform: translateY(1px);\r\n      background: rgba(255, 255, 255, 0.05);\r\n    }\r\n  }\r\n  \r\n  &-danger {\r\n    background-color: $error-color;\r\n    color: white;\r\n    box-shadow: 0 2px 5px rgba($error-color, 0.3);\r\n    \r\n    &:hover, &:focus {\r\n      background-color: color.adjust($error-color, $lightness: -10%);\r\n      box-shadow: 0 4px 8px rgba($error-color, 0.4);\r\n      transform: translateY(-1px);\r\n    }\r\n    \r\n    &:active {\r\n      transform: translateY(1px);\r\n      box-shadow: 0 1px 3px rgba($error-color, 0.4);\r\n    }\r\n  }\r\n  \r\n  &-large {\r\n    height: 56px;\r\n    font-size: $font-size-md;\r\n    padding: $spacing-md $spacing-xl;\r\n  }\r\n  \r\n  &-sm {\r\n    padding: $spacing-xs $spacing-sm;\r\n    font-size: $font-size-sm;\r\n  }\r\n}\r\n\r\n// Listen\r\n.list {\r\n  list-style: none;\r\n  padding: 0;\r\n  margin: 0;\r\n  \r\n  &-item {\r\n    padding: $spacing-lg;\r\n    border-bottom: 1px solid $border-color;\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n    transition: $transition-fast;\r\n    border-radius: $border-radius-sm;\r\n    \r\n    &:hover {\r\n      background-color: rgba($primary-color, 0.05);\r\n    }\r\n    \r\n  &:last-child {\r\n      border-bottom: none;\r\n    }\r\n    \r\n    .item-title {\r\n      font-weight: 500;\r\n      font-size: $font-size-md;\r\n      color: $text-color;\r\n    }\r\n    \r\n    .item-subtitle {\r\n      font-size: $font-size-sm;\r\n      color: rgba($text-color, 0.7);\r\n      margin-top: $spacing-xs;\r\n    }\r\n  }\r\n}\r\n\r\n// Tabellen\r\ntable {\r\n  width: 100%;\r\n  border-collapse: separate;\r\n  border-spacing: 0;\r\n  border-radius: $border-radius-md;\r\n  overflow: hidden;\r\n  box-shadow: $box-shadow-sm;\r\n  margin: $spacing-lg 0;\r\n  \r\n  th, td {\r\n    padding: $spacing-md $spacing-lg;\r\n    text-align: left;\r\n    border-bottom: 1px solid $border-color;\r\n  }\r\n  \r\n  th {\r\n    font-weight: 600;\r\n    background-color: $primary-light;\r\n    color: $primary-dark;\r\n    text-transform: uppercase;\r\n    font-size: $font-size-sm;\r\n    letter-spacing: 0.5px;\r\n  }\r\n  \r\n  tr:last-child td {\r\n    border-bottom: none;\r\n  }\r\n  \r\n  tr:hover td {\r\n    background-color: rgba($primary-color, 0.03);\r\n  }\r\n}\r\n\r\n// Badges\r\n.badge {\r\n  display: inline-flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  padding: $spacing-xs $spacing-md;\r\n  border-radius: 16px;\r\n  font-size: $font-size-xs;\r\n  font-weight: 600;\r\n  line-height: 1.2;\r\n  text-transform: uppercase;\r\n  letter-spacing: 0.5px;\r\n  height: 24px;\r\n  \r\n  &-primary {\r\n    background-color: rgba($primary-color, 0.15);\r\n    color: $primary-dark;\r\n  }\r\n  \r\n  &-secondary {\r\n    background-color: rgba($secondary-color, 0.15);\r\n    color: $secondary-dark;\r\n  }\r\n  \r\n  &-accent {\r\n    background-color: rgba($accent-color, 0.15);\r\n    color: $accent-color;\r\n  }\r\n}\r\n\r\n// Alerts\r\n.alert {\r\n  padding: $spacing-md $spacing-lg;\r\n  border-radius: $border-radius-md;\r\n  margin: $spacing-md 0 $spacing-lg;\r\n  font-weight: 500;\r\n  display: flex;\r\n  align-items: center;\r\n  position: relative;\r\n  border-left: 4px solid transparent;\r\n  box-shadow: $box-shadow-sm;\r\n  \r\n  &::before {\r\n    margin-right: $spacing-md;\r\n    font-family: 'Segoe UI', sans-serif;\r\n    font-size: $font-size-xl;\r\n    line-height: 1;\r\n  }\r\n  \r\n  &-success {\r\n    background-color: rgba($success-color, 0.1);\r\n    color: $success-color;\r\n    border-left-color: $success-color;\r\n    \r\n    &::before {\r\n      content: \"✓\";\r\n    }\r\n  }\r\n  \r\n  &-error {\r\n    background-color: rgba($error-color, 0.1);\r\n    color: $error-color;\r\n    border-left-color: $error-color;\r\n    \r\n    &::before {\r\n      content: \"⚠\";\r\n    }\r\n  }\r\n  \r\n  &-warning {\r\n    background-color: rgba($fs-yellow, 0.1);\r\n    color: $fs-orange;\r\n    border-left-color: $fs-yellow;\r\n    \r\n    &::before {\r\n      content: \"ℹ\";\r\n    }\r\n  }\r\n}\r\n\r\n// Dark Mode (now the default, just remove overrides or keep them transparent)\r\n.theme-dark {\r\n  background-color: transparent;\r\n  color: $text-color;\r\n}\r\n\r\n// Startseite\r\n.start-page {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: $spacing-xl;\r\n  \r\n  .welcome-card {\r\n    background-color: transparent;\r\n    background-image: linear-gradient(135deg, rgba($primary-color, 0.8) 0%, rgba($fs-dark-green, 0.9) 100%),\r\n                      url('https://farming-simulator.com/assets/img/feature-bg-1.jpg');\r\n    background-size: cover;\r\n    background-position: center;\r\n    color: white;\r\n    border: none;\r\n    border-radius: $border-radius-lg;\r\n    padding: $spacing-xl * 1.5;\r\n    position: relative;\r\n    overflow: hidden;\r\n    box-shadow: 0 10px 20px rgba($primary-color, 0.3);\r\n    \r\n    &::before {\r\n      content: '';\r\n      position: absolute;\r\n      right: -10%;\r\n      bottom: -15%;\r\n      width: 300px;\r\n      height: 300px;\r\n      background-image: url('https://farming-simulator.com/assets/img/logo.png');\r\n      background-size: contain;\r\n      background-repeat: no-repeat;\r\n      background-position: center;\r\n      opacity: 0.1;\r\n    }\r\n    \r\n    h2 {\r\n      color: white;\r\n      font-size: $font-size-xxl;\r\n      margin-bottom: $spacing-md;\r\n      border: none;\r\n      text-shadow: 0 2px 4px rgba(0,0,0,0.3);\r\n    }\r\n    \r\n    p {\r\n      font-size: $font-size-lg;\r\n      max-width: 80%;\r\n      margin-bottom: 0;\r\n      text-shadow: 0 1px 2px rgba(0,0,0,0.3);\r\n    }\r\n  }\r\n  .start-game-card {\r\n    position: relative;\r\n    \r\n    .form-group {\r\n      margin-bottom: $spacing-lg;\r\n        select {\r\n        font-size: $font-size-lg;\r\n        padding: $spacing-lg;\r\n        background-color: $input-background;\r\n        color: $text-color;\r\n        border-width: 2px;\r\n        font-weight: 500;\r\n        height: 60px;\r\n        appearance: none;\r\n        background-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23167b29' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E\");\r\n        background-repeat: no-repeat;\r\n        background-position: right 1rem center;\r\n        background-size: 1rem;\r\n      }\r\n    }\r\n    \r\n    .profile-info {\r\n      margin: $spacing-lg 0;\r\n      padding: $spacing-lg;\r\n      background-color: rgba($primary-color, 0.05);\r\n      border-radius: $border-radius-md;\r\n      border-left: 4px solid $primary-color;\r\n      \r\n      h3 {\r\n        margin-top: 0;\r\n        color: $primary-dark;\r\n        font-weight: 600;\r\n      }\r\n      \r\n      p {\r\n        margin-bottom: $spacing-sm;\r\n        \r\n        &:last-child {\r\n          margin-bottom: 0;\r\n        }\r\n        \r\n        strong {\r\n          font-weight: 600;\r\n          margin-right: $spacing-sm;\r\n          color: $primary-color;\r\n        }\r\n      }\r\n    }\r\n    \r\n    .launch-actions {\r\n      margin: $spacing-xl 0;\r\n      display: flex;\r\n      justify-content: center;\r\n      \r\n      .btn-large {\r\n        padding: $spacing-lg $spacing-xl * 1.5;\r\n        font-size: $font-size-lg;\r\n        font-weight: 600;\r\n        min-width: 350px;\r\n        height: 64px;\r\n        background-image: linear-gradient(to right, $primary-color, $fs-dark-green);\r\n        box-shadow: 0 8px 16px rgba($primary-color, 0.4);\r\n        position: relative;\r\n        overflow: hidden;\r\n        \r\n        &:hover {\r\n          transform: translateY(-3px);\r\n          box-shadow: 0 12px 20px rgba($primary-color, 0.5);\r\n        }\r\n        \r\n        &:before {\r\n          content: '';\r\n          position: absolute;\r\n          top: 0;\r\n          left: 0;\r\n          width: 100%;\r\n          height: 100%;\r\n          background-image: url('data:image/svg+xml,%3Csvg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cpath d=\"M20 33.5l-1.8-2.1c-6.4-5.8-10.7-9.6-10.7-14.3 0-3.8 3-6.8 6.8-6.8 2.1 0 4.2 1 5.5 2.6h0.4c1.3-1.6 3.4-2.6 5.5-2.6 3.8 0 6.8 3 6.8 6.8 0 4.7-4.3 8.5-10.7 14.3L20 33.5z\" fill=\"rgba(255,255,255,0.1)\"%3E%3C/path%3E%3C/svg%3E');\r\n          background-size: contain;\r\n          background-repeat: no-repeat;\r\n          background-position: center;\r\n          opacity: 0.5;\r\n          transform: rotate(10deg);\r\n        }\r\n      }\r\n    }\r\n    \r\n    .secondary-actions {\r\n      text-align: center;\r\n      margin-bottom: $spacing-lg;\r\n      \r\n      .btn {\r\n        text-transform: none;\r\n        font-weight: 500;\r\n        letter-spacing: normal;\r\n      }\r\n    }\r\n  }\r\n  \r\n  // Die Startseite im Dark Mode\r\n  .theme-dark & {\r\n    .welcome-card {\r\n      box-shadow: 0 10px 20px rgba(0,0,0,0.5);\r\n    }\r\n    \r\n    .profile-info {\r\n      background-color: rgba($primary-color, 0.1);\r\n    }\r\n  }\r\n}\r\n\r\n// Profile-Karten\r\n.profiles-list {\r\n  display: grid;\r\n  grid-template-columns: 1fr;\r\n  gap: $spacing-lg;\r\n  margin-bottom: $spacing-xl;\r\n}\r\n\r\n.profile-card {\r\n  background-color: $card-background;\r\n  border-radius: $border-radius-md;\r\n  box-shadow: $box-shadow-md;\r\n  padding: $spacing-lg;\r\n  transition: $transition-normal;\r\n  border: 2px solid $border-color;\r\n  display: flex;\r\n  flex-direction: column;\r\n  \r\n  &:hover {\r\n    border-color: $primary-color;\r\n    transform: translateY(-2px);\r\n    box-shadow: $box-shadow-lg;\r\n  }\r\n  \r\n  .profile-info {\r\n    flex: 1;\r\n    \r\n    h3 {\r\n      color: $primary-color;\r\n      margin-top: 0;\r\n      font-size: $font-size-lg;\r\n      padding-bottom: $spacing-sm;\r\n      border-bottom: 1px solid $border-color;\r\n      margin-bottom: $spacing-md;\r\n    }\r\n    \r\n    p {\r\n      margin: $spacing-xs 0;\r\n      color: $text-color;\r\n    }\r\n  }\r\n  \r\n  .profile-actions {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    margin-top: $spacing-md;\r\n    padding-top: $spacing-md;\r\n    border-top: 1px solid $border-color;\r\n    \r\n    button {\r\n      flex: 1;\r\n      margin: 0 $spacing-xs;\r\n    }\r\n  }\r\n}\r\n\r\n// Form Layout Verbesserungen\r\n.folder-select {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: $spacing-md;\r\n  \r\n  input {\r\n    flex: 1;\r\n  }\r\n  \r\n  button {\r\n    flex-shrink: 0;\r\n    min-width: 120px;\r\n    white-space: nowrap;\r\n  }\r\n}\r\n\r\n.form-actions {\r\n  display: flex;\r\n  justify-content: flex-end;\r\n  gap: $spacing-md;\r\n  margin-top: $spacing-xl;\r\n  \r\n  button {\r\n    min-width: 140px;\r\n  }\r\n}\r\n\r\n// Copyright und Programmsteuerelemente\r\n.window-controls {\r\n  position: absolute;\r\n  top: $spacing-md;\r\n  right: $spacing-md;\r\n  display: flex;\r\n  gap: $spacing-sm;\r\n  \r\n  button {\r\n    width: 30px;\r\n    height: 30px;\r\n    border-radius: 50%;\r\n    background-color: rgba(255, 255, 255, 0.2);\r\n    color: white;\r\n    font-size: $font-size-md;\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\r\n    transition: $transition-fast;\r\n    padding: 0;\r\n    \r\n    &:hover {\r\n      background-color: rgba(255, 255, 255, 0.3);\r\n    }\r\n    \r\n    &.close:hover {\r\n      background-color: $error-color;\r\n    }\r\n  }\r\n}\r\n\r\n// Footer\r\n.footer {\r\n  background-color: $fs-dark-green;\r\n  color: rgba(white, 0.8);\r\n  padding: $spacing-md $spacing-xl;\r\n  font-size: $font-size-sm;\r\n  text-align: center;\r\n  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);\r\n  \r\n  .footer-content {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n    max-width: 1200px;\r\n    margin: 0 auto;\r\n    padding-bottom: $spacing-sm;\r\n    \r\n    a {\r\n      color: white;\r\n      text-decoration: none;\r\n      \r\n      &:hover {\r\n        text-decoration: underline;\r\n      }\r\n    }\r\n  }\r\n  \r\n  .legal {\r\n    font-size: $font-size-xs;\r\n    color: rgba(white, 0.6);\r\n    margin-top: $spacing-sm;\r\n    max-width: 1200px;\r\n    margin: $spacing-sm auto 0;\r\n  }\r\n}\r\n\r\n// Responsive Designs und Layout-Anpassungen\r\n@media (min-width: 1024px) {\r\n  .container {\r\n    padding: 0;\r\n  }\r\n  \r\n  .content {\r\n    padding: $spacing-xl $spacing-xl;\r\n  }\r\n  \r\n  .card {\r\n    padding: $spacing-xl;\r\n  }\r\n  \r\n  .tabs {\r\n    padding: 0 $spacing-xl;\r\n  }\r\n}\r\n\r\n// Anpassungen für verschiedene Auflösungen\r\n@media (min-width: 1280px) {\r\n  .content {\r\n    max-width: 1200px;\r\n  }\r\n}\r\n\r\n// Anpassungen für Startseite Layout\r\n.start-page {\r\n  display: grid;\r\n  grid-template-columns: 1fr;\r\n  grid-gap: $spacing-xl;\r\n  \r\n  @media (min-width: 1024px) {\r\n    grid-template-columns: 1fr 2fr;\r\n    align-items: start;\r\n    \r\n    .welcome-card {\r\n      grid-column: 1 / -1;\r\n    }\r\n  }\r\n}\r\n\r\n// Startseite mit FS25-Thema\r\n.start-page {\r\n  .welcome-card {\r\n    background-image: linear-gradient(to bottom, rgba($card-background, 0.95), rgba($card-background, 0.9)), \r\n                      url('https://farming-simulator.com/img/3.png');\r\n    background-size: cover;\r\n    background-position: center;\r\n    border-top: 4px solid $primary-color;\r\n    padding: $spacing-xl;\r\n    position: relative;\r\n    overflow: hidden;\r\n    \r\n    &::after {\r\n      content: '';\r\n      position: absolute;\r\n      bottom: -30px;\r\n      right: -30px;\r\n      width: 160px;\r\n      height: 160px;\r\n      background-image: url('https://farming-simulator.com/img/logo.png');\r\n      background-size: contain;\r\n      background-repeat: no-repeat;\r\n      opacity: 0.2;\r\n    }\r\n    \r\n    h2 {\r\n      color: $primary-color;\r\n      font-size: $font-size-xl;\r\n      margin-bottom: $spacing-md;\r\n      border: none;\r\n    }\r\n  }\r\n  \r\n  .start-game-card {\r\n    border-top: 4px solid $secondary-color;\r\n      #profile-select {\r\n      background-color: $input-background;\r\n      color: $text-color;\r\n      font-weight: 500;\r\n      height: 52px;\r\n      padding: $spacing-md;\r\n      padding-top: $spacing-xs;\r\n      padding-bottom: $spacing-xs;\r\n      line-height: 36px; /* Wichtig: verhindert abgeschnittenen Text */\r\n      appearance: none;\r\n      background-image: url(\"data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e\");\r\n      background-repeat: no-repeat;\r\n      background-position: right $spacing-md center;\r\n      background-size: 16px 12px;\r\n        option {\r\n        color: $text-color;\r\n        padding: $spacing-md;\r\n        height: 40px;\r\n        line-height: 40px;\r\n      }\r\n      \r\n      &:focus {\r\n        border-color: $primary-color;\r\n        box-shadow: 0 0 0 0.25rem rgba($primary-color, 0.25);\r\n      }\r\n    }\r\n  }\r\n  \r\n  .btn-large {\r\n    height: 60px;\r\n    min-width: 300px;\r\n    font-size: $font-size-lg;\r\n    background: linear-gradient(to right, $primary-color, $fs-dark-green);\r\n    border: none;\r\n    color: white;\r\n    position: relative;\r\n    overflow: hidden;\r\n    transition: all 0.3s ease;\r\n    box-shadow: 0 4px 15px rgba($primary-color, 0.4);\r\n    \r\n    &::after {\r\n      content: '';\r\n      position: absolute;\r\n      top: 0;\r\n      left: -100%;\r\n      width: 100%;\r\n      height: 100%;\r\n      background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent);\r\n      transition: all 0.4s ease;\r\n    }\r\n    \r\n    &:hover {\r\n      transform: translateY(-3px);\r\n      box-shadow: 0 6px 20px rgba($primary-color, 0.5);\r\n      \r\n      &::after {\r\n        left: 100%;\r\n      }\r\n    }\r\n  }\r\n}\r\n\r\n// Profilseite Verbesserungen\r\n.create-profile-section {\r\n  margin-top: $spacing-xl * 2;\r\n  padding-top: $spacing-xl;\r\n  border-top: 1px solid $border-color;\r\n}\r\n\r\n// Dunklere Designanpassungen\r\nbody {\r\n  background-color: $background-color;\r\n  color: $text-color;\r\n}\r\n\r\nh1, h2, h3, h4, h5, h6 {\r\n  color: $text-color;\r\n}\r\n\r\nsmall, .text-muted {\r\n  color: $muted-text-color;\r\n}\r\n\r\n.card {\r\n  border-color: $border-color;\r\n  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);\r\n  \r\n  h2, h3 {\r\n    border-color: $border-color;\r\n  }\r\n}\r\n\r\n// Verbesserte Lesbarkeit für Text auf dunkelgrauem Hintergrund\r\np {\r\n  color: $text-color;\r\n}\r\n\r\na {\r\n  color: lighten($primary-color, 20%);\r\n  \r\n  &:hover {\r\n    color: lighten($primary-color, 30%);\r\n  }\r\n}\r\n\r\n.badge {\r\n  border: 1px solid rgba(255, 255, 255, 0.1);\r\n}\r\n\r\n// Kontrastoptimierung für Eingabefelder\r\ninput, select, textarea {\r\n  color: $text-color;\r\n  border-color: $border-color;\r\n  \r\n  &::placeholder {\r\n    color: $muted-text-color;\r\n  }\r\n}\r\n\r\n// Hellere Tabellenelemente\r\ntable th {\r\n  background-color: rgba($primary-color, 0.2);\r\n}\r\n\r\n// Anpassung der Profilkarten\r\n.profile-card {\r\n  border-color: $border-color;\r\n  \r\n  p {\r\n    color: $text-color;\r\n  }\r\n}\r\n\r\n// Schatten\r\n$shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5);\r\n$shadow-md: 0 4px 8px rgba(0, 0, 0, 0.5);\r\n$shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.6);\r\n$shadow-xl: 0 16px 32px rgba(0, 0, 0, 0.7);\r\n\r\n// Popup-Stile\r\n.popup-overlay {\r\n  position: fixed;\r\n  top: 0;\r\n  left: 0;\r\n  right: 0;\r\n  bottom: 0;\r\n  background-color: rgba(0, 0, 0, 0.85);\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  z-index: 2000;\r\n}\r\n\r\n.popup-content {\r\n  background-color: rgba(20, 25, 35, 1); // Solider Hintergrund, da Blur entfernt wurde\r\n  border: 1px solid rgba(255, 255, 255, 0.1);\r\n  border-radius: $border-radius-lg;\r\n  box-shadow: $shadow-xl;\r\n  max-width: 90vw;\r\n  max-height: 90vh;\r\n  overflow: hidden;\r\n  display: flex;\r\n  flex-direction: column;\r\n  animation: popup-fade-in 0.2s ease-out;\r\n  position: relative;\r\n  z-index: 2001; // Höher als Overlay\r\n}\r\n\r\n@keyframes popup-fade-in {\r\n  from {\r\n    opacity: 0;\r\n    transform: scale(0.9) translateY(-20px);\r\n  }\r\n  to {\r\n    opacity: 1;\r\n    transform: scale(1) translateY(0);\r\n  }\r\n}\r\n\r\n.popup-header {\r\n  padding: $spacing-lg;\r\n  border-bottom: 1px solid $border-color;\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  background-color: $primary-color;\r\n\r\n  h2 {\r\n    margin: 0;\r\n    color: white;\r\n    font-size: $font-size-lg;\r\n    font-weight: 600;\r\n  }\r\n\r\n  .popup-close {\r\n    background: none;\r\n    border: none;\r\n    color: white;\r\n    font-size: $font-size-xl;\r\n    cursor: pointer;\r\n    padding: $spacing-xs;\r\n    line-height: 1;\r\n    border-radius: $border-radius-sm;\r\n    transition: background-color 0.2s;\r\n\r\n    &:hover {\r\n      background-color: rgba(255, 255, 255, 0.1);\r\n    }\r\n  }\r\n}\r\n\r\n.popup-body {\r\n  padding: $spacing-lg;\r\n  flex: 1;\r\n  overflow-y: auto;\r\n}\r\n\r\n.popup-footer {\r\n  padding: $spacing-lg;\r\n  border-top: 1px solid $border-color;\r\n  display: flex;\r\n  justify-content: flex-end;\r\n  gap: $spacing-md;\r\n\r\n  .button {\r\n    padding: $spacing-sm $spacing-lg;\r\n    border: none;\r\n    border-radius: $border-radius-md;\r\n    cursor: pointer;\r\n    font-size: $font-size-md;\r\n    font-weight: 500;\r\n    transition: all 0.2s;\r\n\r\n    &.primary {\r\n      background-color: $primary-color;\r\n      color: white;\r\n\r\n      &:hover {\r\n        background-color: $primary-dark;\r\n      }\r\n    }\r\n\r\n    &.secondary {\r\n      background-color: $input-background;\r\n      color: $text-color;\r\n\r\n      &:hover {\r\n        background-color: lighten($input-background, 10%);\r\n      }\r\n    }\r\n  }\r\n}\r\n\r\n// Profil-Edit-Popup spezifische Stile\r\n.profile-edit-popup {\r\n  width: 500px;\r\n\r\n  .form-group {\r\n    margin-bottom: $spacing-lg;\r\n\r\n    label {\r\n      display: block;\r\n      margin-bottom: $spacing-xs;\r\n      color: $text-color;\r\n      font-weight: 500;\r\n    }\r\n\r\n    input, textarea {\r\n      width: 100%;\r\n      padding: $spacing-sm;\r\n      background-color: $input-background;\r\n      border: 1px solid $border-color;\r\n      border-radius: $border-radius-sm;\r\n      color: $text-color;\r\n      font-size: $font-size-md;\r\n      box-sizing: border-box;\r\n\r\n      &:focus {\r\n        outline: none;\r\n        border-color: $primary-color;\r\n        box-shadow: 0 0 0 2px rgba(22, 123, 41, 0.2);\r\n      }\r\n\r\n      &.error {\r\n        border-color: $error-color;\r\n      }\r\n    }\r\n\r\n    textarea {\r\n      resize: vertical;\r\n      min-height: 80px;\r\n    }\r\n\r\n    .input-group {\r\n      display: flex;\r\n      gap: $spacing-sm;\r\n\r\n      input {\r\n        flex: 1;\r\n      }\r\n\r\n      .browse-button {\r\n        padding: $spacing-sm $spacing-md;\r\n        background-color: $secondary-color;\r\n        color: white;\r\n        border: none;\r\n        border-radius: $border-radius-sm;\r\n        cursor: pointer;\r\n        font-size: $font-size-sm;\r\n        white-space: nowrap;\r\n\r\n        &:hover {\r\n          background-color: $secondary-dark;\r\n        }\r\n      }\r\n    }\r\n\r\n    .error-message {\r\n      color: $error-color;\r\n      font-size: $font-size-sm;\r\n      margin-top: $spacing-xs;\r\n      display: block;\r\n    }\r\n  }\r\n}\r\n\r\n// Sync-Progress-Popup spezifische Stile\r\n.sync-progress-popup {\r\n  width: 450px;\r\n\r\n  .sync-status {\r\n    margin-bottom: $spacing-lg;\r\n\r\n    .status-info {\r\n      display: flex;\r\n      flex-direction: column;\r\n      gap: $spacing-sm;\r\n\r\n      .status-text {\r\n        font-size: $font-size-lg;\r\n        font-weight: 600;\r\n      }\r\n\r\n      .current-mod {\r\n        color: $muted-text-color;\r\n      }\r\n    }\r\n  }\r\n\r\n  .progress-section {\r\n    margin-bottom: $spacing-lg;\r\n\r\n    .progress-label {\r\n      margin-bottom: $spacing-xs;\r\n      color: $text-color;\r\n      font-size: $font-size-sm;\r\n    }\r\n\r\n    .progress-bar {\r\n      width: 100%;\r\n      height: 20px;\r\n      background-color: $input-background;\r\n      border-radius: $border-radius-md;\r\n      overflow: hidden;\r\n      margin-bottom: $spacing-xs;\r\n\r\n      .progress-fill {\r\n        height: 100%;\r\n        background-color: $primary-color;\r\n        transition: width 0.3s ease;\r\n        border-radius: $border-radius-md;\r\n      }\r\n    }\r\n\r\n    .progress-percentage {\r\n      text-align: right;\r\n      font-size: $font-size-sm;\r\n      color: $muted-text-color;\r\n    }\r\n  }\r\n\r\n  .sync-details {\r\n    background-color: $input-background;\r\n    padding: $spacing-md;\r\n    border-radius: $border-radius-md;\r\n    margin-bottom: $spacing-lg;\r\n\r\n    .detail-item {\r\n      display: flex;\r\n      justify-content: space-between;\r\n      margin-bottom: $spacing-xs;\r\n\r\n      &:last-child {\r\n        margin-bottom: 0;\r\n      }\r\n\r\n      .detail-label {\r\n        color: $muted-text-color;\r\n      }\r\n\r\n      .detail-value {\r\n        font-weight: 500;\r\n      }\r\n    }\r\n  }\r\n}\r\n\r\n// Mod-Info-Popup spezifische Stile\r\n.mod-info-popup {\r\n  width: 600px;\r\n  max-height: 80vh;\r\n\r\n  .mod-info-content {\r\n    display: flex;\r\n    flex-direction: column;\r\n    gap: $spacing-lg;\r\n\r\n    .mod-icon {\r\n      text-align: center;\r\n\r\n      img {\r\n        max-width: 128px;\r\n        max-height: 128px;\r\n        border-radius: $border-radius-md;\r\n        box-shadow: $shadow-md;\r\n      }\r\n    }\r\n\r\n    .mod-details {\r\n      .detail-group {\r\n        margin-bottom: $spacing-lg;\r\n\r\n        h3 {\r\n          margin: 0 0 $spacing-md 0;\r\n          color: $primary-color;\r\n          font-size: $font-size-lg;\r\n          border-bottom: 1px solid $border-color;\r\n          padding-bottom: $spacing-xs;\r\n        }\r\n\r\n        .detail-item {\r\n          display: flex;\r\n          margin-bottom: $spacing-sm;\r\n\r\n          .detail-label {\r\n            min-width: 140px;\r\n            color: $muted-text-color;\r\n            font-weight: 500;\r\n          }\r\n\r\n          .detail-value {\r\n            flex: 1;\r\n            color: $text-color;\r\n\r\n            &.file-name {\r\n              font-family: monospace;\r\n              font-size: $font-size-sm;\r\n              word-break: break-all;\r\n            }\r\n\r\n            &.status {\r\n              font-weight: 600;\r\n\r\n              &.active {\r\n                color: $success-color;\r\n              }\r\n\r\n              &.inactive {\r\n                color: $muted-text-color;\r\n              }\r\n            }\r\n          }\r\n        }\r\n\r\n        .mod-description {\r\n          background-color: $input-background;\r\n          padding: $spacing-md;\r\n          border-radius: $border-radius-md;\r\n          line-height: 1.5;\r\n          white-space: pre-wrap;\r\n          max-height: 200px;\r\n          overflow-y: auto;\r\n        }\r\n      }\r\n    }\r\n  }\r\n}\r\n\r\n// Update-Dialog spezifische Stile\r\n.update-dialog {\r\n  width: 450px;\r\n\r\n  .version-info {\r\n    margin: $spacing-lg 0;\r\n    padding: $spacing-md;\r\n    background-color: $input-background;\r\n    border-radius: $border-radius-md;\r\n\r\n    div {\r\n      margin-bottom: $spacing-xs;\r\n\r\n      &:last-child {\r\n        margin-bottom: 0;\r\n      }\r\n    }\r\n  }\r\n\r\n  .release-notes {\r\n    margin-top: $spacing-lg;\r\n\r\n    h4 {\r\n      margin: 0 0 $spacing-sm 0;\r\n      color: $primary-color;\r\n    }\r\n\r\n    .notes-content {\r\n      background-color: $input-background;\r\n      padding: $spacing-md;\r\n      border-radius: $border-radius-md;\r\n      max-height: 200px;\r\n      overflow-y: auto;\r\n      font-size: $font-size-sm;\r\n      line-height: 1.4;\r\n      white-space: pre-wrap;\r\n    }\r\n  }\r\n\r\n  .update-progress {\r\n    margin-top: $spacing-lg;\r\n\r\n    p {\r\n      margin: 0 0 $spacing-sm 0;\r\n      color: $text-color;\r\n      font-weight: 500;\r\n    }\r\n\r\n    .progress-bar {\r\n      width: 100%;\r\n      height: 12px;\r\n      background-color: rgba($primary-color, 0.2);\r\n      border-radius: $border-radius-sm;\r\n      overflow: hidden;\r\n      margin-bottom: $spacing-xs;\r\n\r\n      .progress-fill {\r\n        height: 100%;\r\n        background-color: $primary-color;\r\n        transition: width 0.3s ease;\r\n      }\r\n    }\r\n\r\n    .progress-stats {\r\n      display: flex;\r\n      justify-content: space-between;\r\n      font-size: $font-size-sm;\r\n      color: $muted-text-color;\r\n      font-weight: 500;\r\n    }\r\n  }\r\n\r\n  .update-ready {\r\n    margin-top: $spacing-lg;\r\n    padding: $spacing-md;\r\n    background-color: rgba(#28a745, 0.1);\r\n    border: 1px solid rgba(#28a745, 0.3);\r\n    border-radius: $border-radius-md;\r\n\r\n    p {\r\n      margin: 0 0 $spacing-xs 0;\r\n      color: #2ed573;\r\n      font-weight: 500;\r\n      \r\n      &:last-child {\r\n        margin-bottom: 0;\r\n      }\r\n    }\r\n  }\r\n}\r\n\r\n// Dark Select Styling\r\nselect, .dark-select {\r\n  background-color: $input-background !important;\r\n  color: $text-color !important;\r\n  border: 1px solid $border-color !important;\r\n  border-radius: $border-radius-sm;\r\n  padding: $spacing-sm;\r\n  font-size: $font-size-md;\r\n  \r\n  option {\r\n    background-color: $input-background !important;\r\n    color: $text-color !important;\r\n  }\r\n\r\n  &:focus {\r\n    outline: none;\r\n    border-color: $primary-color !important;\r\n    box-shadow: 0 0 0 2px rgba(22, 123, 41, 0.2) !important;\r\n  }\r\n}\r\n\r\n// Update Section Styling\r\n.update-section {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: $spacing-md;\r\n  \r\n  .form-group {\r\n    margin-bottom: 0;\r\n  }\r\n  \r\n  button {\r\n    align-self: flex-start;\r\n  }\r\n  \r\n  small {\r\n    color: $muted-text-color;\r\n    font-style: italic;\r\n  }\r\n}\r\n\r\n// Profile Stats Spacing Fix\r\n.profile-stats {\r\n  display: flex;\r\n  gap: $spacing-md;\r\n  flex-wrap: wrap;\r\n  \r\n  span {\r\n    background-color: rgba(255, 255, 255, 0.1);\r\n    padding: $spacing-xs $spacing-sm;\r\n    border-radius: $border-radius-sm;\r\n    font-size: $font-size-sm;\r\n    white-space: nowrap;\r\n  }\r\n}\r\n\r\n// Game Settings Collapsibles\r\n.game-settings-section {\r\n  margin-top: $spacing-lg;\r\n}\r\n\r\n.game-collapsible {\r\n  border: 1px solid $border-color;\r\n  border-radius: $border-radius-md;\r\n  margin-bottom: $spacing-sm;\r\n  background-color: $card-background;\r\n\r\n  &[open] {\r\n    border-color: $primary-color;\r\n  }\r\n}\r\n\r\n.game-header {\r\n  background-color: $input-background;\r\n  padding: $spacing-md;\r\n  cursor: pointer;\r\n  border-radius: $border-radius-md;\r\n  user-select: none;\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n\r\n  &:hover {\r\n    background-color: lighten($input-background, 10%);\r\n  }\r\n\r\n  strong {\r\n    color: $text-color;\r\n  }\r\n\r\n  .active-badge {\r\n    background-color: $success-color;\r\n    color: white;\r\n    padding: $spacing-xs $spacing-sm;\r\n    border-radius: $border-radius-sm;\r\n    font-size: $font-size-xs;\r\n    font-weight: bold;\r\n  }\r\n}\r\n\r\n.game-content {\r\n  padding: $spacing-md;\r\n  border-top: 1px solid $border-color;\r\n\r\n  .form-group:last-child {\r\n    margin-bottom: 0;\r\n  }\r\n}\r\n\r\n// Mod Info Popup Better Spacing\r\n.mod-info-popup {\r\n  .mod-details {\r\n    .detail-group {\r\n      margin-bottom: $spacing-xl;\r\n      \r\n      h3 {\r\n        margin-bottom: $spacing-md;\r\n        color: $primary-color;\r\n        border-bottom: 2px solid $primary-color;\r\n        padding-bottom: $spacing-xs;\r\n      }\r\n    }\r\n    \r\n    .detail-item {\r\n      margin-bottom: $spacing-md;\r\n      display: flex;\r\n      justify-content: space-between;\r\n      align-items: flex-start;\r\n      gap: $spacing-md;\r\n      \r\n      .detail-label {\r\n        font-weight: 600;\r\n        color: $muted-text-color;\r\n        min-width: 120px;\r\n        flex-shrink: 0;\r\n      }\r\n      \r\n      .detail-value {\r\n        color: $text-color;\r\n        word-break: break-all;\r\n        text-align: right;\r\n        flex: 1;\r\n        \r\n        &.status {\r\n          &.active {\r\n            color: $success-color;\r\n            font-weight: 600;\r\n          }\r\n          &.inactive {\r\n            color: $error-color;\r\n            font-weight: 600;\r\n          }\r\n        }\r\n        \r\n        &.file-name {\r\n          font-family: monospace;\r\n          font-size: $font-size-sm;\r\n          max-width: 300px;\r\n          overflow: hidden;\r\n          text-overflow: ellipsis;\r\n        }\r\n      }\r\n    }\r\n  }\r\n  \r\n  .mod-description {\r\n    background-color: $input-background;\r\n    padding: $spacing-md;\r\n    border-radius: $border-radius-md;\r\n    border-left: 4px solid $primary-color;\r\n    line-height: 1.6;\r\n    color: $text-color;\r\n  }\r\n}\r\n\r\n// ===== NEW START PAGE DESIGN =====\r\n.start-page-new {\r\n  display: flex;\r\n  flex-direction: column;\r\n  padding: $spacing-md;\r\n  gap: $spacing-md;\r\n\r\n  .loading-section {\r\n    display: flex;\r\n    flex-direction: column;\r\n    align-items: center;\r\n    justify-content: center;\r\n    height: 50vh;\r\n    \r\n    .loading-spinner {\r\n      width: 50px;\r\n      height: 50px;\r\n      border: 4px solid $border-color;\r\n      border-top: 4px solid $primary-color;\r\n      border-radius: 50%;\r\n      animation: spin-new 1s linear infinite;\r\n      margin-bottom: $spacing-md;\r\n    }\r\n  }\r\n\r\n  .no-profiles-section {\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\r\n    height: 60vh;\r\n\r\n    .welcome-card {\r\n      text-align: center;\r\n      padding: 48px; // $spacing-xxl equivalent\r\n      background-color: $card-background;\r\n      border-radius: $border-radius-lg;\r\n      border: 1px solid $border-color;\r\n      box-shadow: $box-shadow-lg;\r\n      max-width: 600px;\r\n\r\n      h1 {\r\n        font-size: 2.5rem;\r\n        margin-bottom: $spacing-lg;\r\n        color: $primary-color;\r\n      }\r\n\r\n      p {\r\n        font-size: $font-size-lg;\r\n        margin-bottom: $spacing-md;\r\n        color: $text-color;\r\n      }\r\n\r\n      .btn-large {\r\n        font-size: $font-size-lg;\r\n        padding: $spacing-lg 48px; // xxl equivalent\r\n        margin-top: $spacing-lg;\r\n      }\r\n    }\r\n  }\r\n\r\n  .main-content-area {\r\n    display: flex;\r\n    flex-direction: column;\r\n    gap: $spacing-md;\r\n\r\n    .profile-selection-card {\r\n      background-color: $card-background;\r\n      border-radius: $border-radius-lg;\r\n      border: 1px solid $border-color;\r\n      box-shadow: $box-shadow-sm;\r\n      padding: $spacing-md;\r\n      text-align: center;\r\n\r\n      h2 {\r\n        margin-bottom: $spacing-md;\r\n        color: $primary-color;\r\n        font-size: 1.8rem;\r\n      }\r\n\r\n      .profile-selector .profile-select {\r\n        width: 100%;\r\n        max-width: 500px;\r\n        padding: $spacing-md $spacing-lg;\r\n        font-size: $font-size-lg;\r\n        background-color: $input-background;\r\n        border: 2px solid $border-color;\r\n        border-radius: $border-radius-md;\r\n        color: $text-color;\r\n        cursor: pointer;\r\n\r\n        &:focus {\r\n          outline: none;\r\n          border-color: $primary-color;\r\n          box-shadow: 0 0 0 3px rgba(22, 123, 41, 0.2);\r\n        }\r\n\r\n        &:disabled {\r\n          opacity: 0.6;\r\n          cursor: not-allowed;\r\n        }\r\n      }\r\n    }\r\n\r\n    .profile-details-grid {\r\n      display: grid;\r\n      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));\r\n      gap: $spacing-lg;\r\n\r\n      .info-card {\r\n        background-color: $card-background;\r\n        border-radius: $border-radius-lg;\r\n        border: 1px solid $border-color;\r\n        box-shadow: $box-shadow-sm;\r\n        padding: $spacing-md;\r\n        transition: transform 0.2s ease, box-shadow 0.2s ease;\r\n\r\n        &:hover {\r\n          transform: translateY(-2px);\r\n          box-shadow: $box-shadow-md;\r\n        }\r\n\r\n        h3 {\r\n          margin-bottom: $spacing-md;\r\n          color: $primary-color;\r\n          font-size: 1.3rem;\r\n          border-bottom: 2px solid $primary-color;\r\n          padding-bottom: $spacing-xs;\r\n        }\r\n\r\n        .info-item {\r\n          display: flex;\r\n          justify-content: space-between;\r\n          align-items: flex-start;\r\n          margin-bottom: $spacing-sm;\r\n          padding: $spacing-xs 0;\r\n\r\n          .label {\r\n            font-weight: 600;\r\n            color: $muted-text-color;\r\n            min-width: 100px;\r\n          }\r\n\r\n          .value {\r\n            color: $text-color;\r\n            text-align: right;\r\n            word-break: break-word;\r\n            flex: 1;\r\n            margin-left: $spacing-sm;\r\n          }\r\n        }\r\n\r\n        .mod-stats {\r\n          display: grid;\r\n          grid-template-columns: repeat(3, 1fr);\r\n          gap: $spacing-md;\r\n\r\n          .stat-item {\r\n            text-align: center;\r\n            padding: $spacing-md;\r\n            background-color: $input-background;\r\n            border-radius: $border-radius-md;\r\n            border: 2px solid transparent;\r\n\r\n            &.active {\r\n              border-color: $success-color;\r\n              background-color: rgba($success-color, 0.1);\r\n            }\r\n\r\n            &.inactive {\r\n              border-color: $error-color;\r\n              background-color: rgba($error-color, 0.1);\r\n            }\r\n\r\n            .stat-number {\r\n              display: block;\r\n              font-size: 2rem;\r\n              font-weight: bold;\r\n              color: $primary-color;\r\n            }\r\n\r\n            .stat-label {\r\n              display: block;\r\n              font-size: $font-size-sm;\r\n              color: $muted-text-color;\r\n              margin-top: $spacing-xs;\r\n            }\r\n          }\r\n        }\r\n\r\n        &.quick-actions .action-buttons {\r\n          display: grid;\r\n          grid-template-columns: 1fr 1fr;\r\n          gap: $spacing-md;\r\n\r\n          .action-btn {\r\n            padding: $spacing-md;\r\n            background-color: $secondary-color;\r\n            color: white;\r\n            border: none;\r\n            border-radius: $border-radius-md;\r\n            font-weight: 600;\r\n            cursor: pointer;\r\n            transition: background-color 0.2s ease, transform 0.1s ease;\r\n\r\n            &:hover {\r\n              background-color: darken($secondary-color, 10%);\r\n              transform: translateY(-1px);\r\n            }\r\n\r\n            &:active {\r\n              transform: translateY(0);\r\n            }\r\n          }\r\n        }\r\n      }\r\n    }\r\n  }\r\n\r\n  .launch-section {\r\n    display: flex;\r\n    flex-direction: column;\r\n    align-items: center;\r\n    justify-content: center;\r\n    padding: $spacing-md 0;\r\n    margin-top: $spacing-xs;\r\n    gap: $spacing-md;\r\n\r\n    .status-message {\r\n      display: flex;\r\n      align-items: center;\r\n      gap: $spacing-sm;\r\n      padding: $spacing-md $spacing-lg;\r\n      border-radius: $border-radius-md;\r\n      font-weight: 600;\r\n      max-width: 500px;\r\n      text-align: center;\r\n\r\n      .status-icon {\r\n        font-size: 1.2rem;\r\n      }\r\n\r\n      &.success {\r\n        background-color: rgba($success-color, 0.1);\r\n        border: 1px solid $success-color;\r\n        color: $success-color;\r\n      }\r\n\r\n      &.error {\r\n        background-color: rgba($error-color, 0.1);\r\n        border: 1px solid $error-color;\r\n        color: $error-color;\r\n      }\r\n    }\r\n\r\n    .launch-button {\r\n      font-size: 1.5rem;\r\n      font-weight: bold;\r\n      padding: $spacing-lg 48px; // xxl equivalent\r\n      background: linear-gradient(135deg, $primary-color, $secondary-color);\r\n      color: white;\r\n      border: none;\r\n      border-radius: $border-radius-lg;\r\n      cursor: pointer;\r\n      transition: all 0.3s ease;\r\n      box-shadow: $box-shadow-lg;\r\n      display: flex;\r\n      align-items: center;\r\n      gap: $spacing-md;\r\n      min-width: 250px;\r\n      justify-content: center;\r\n\r\n      &:hover {\r\n        transform: translateY(-3px);\r\n        box-shadow: 0 10px 25px rgba(22, 123, 41, 0.3);\r\n      }\r\n\r\n      &:active {\r\n        transform: translateY(-1px);\r\n      }\r\n\r\n      &:disabled {\r\n        opacity: 0.6;\r\n        cursor: not-allowed;\r\n        transform: none;\r\n        box-shadow: $box-shadow-sm;\r\n      }\r\n\r\n      .loading-spinner.small {\r\n        width: 20px;\r\n        height: 20px;\r\n        border: 2px solid rgba(255, 255, 255, 0.3);\r\n        border-top: 2px solid white;\r\n        border-radius: 50%;\r\n        animation: spin-new 1s linear infinite;\r\n      }\r\n    }\r\n  }\r\n\r\n  @media (max-width: 768px) {\r\n    padding: $spacing-md;\r\n\r\n    .profile-details-grid {\r\n      grid-template-columns: 1fr;\r\n    }\r\n\r\n    .main-content-area .info-card .action-buttons {\r\n      grid-template-columns: 1fr;\r\n    }\r\n\r\n    .launch-button {\r\n      font-size: 1.2rem;\r\n      padding: $spacing-md $spacing-lg;\r\n      min-width: 200px;\r\n    }\r\n  }\r\n}\r\n\r\n// Mods Header mit Actions\r\n.mods-header {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  margin-top: $spacing-lg; // Abstand nach oben hinzugefügt\r\n  margin-bottom: $spacing-md;\r\n  \r\n  h4 {\r\n    margin: 0;\r\n    color: $primary-color;\r\n  }\r\n  \r\n  .mods-actions {\r\n    display: flex;\r\n    gap: $spacing-sm;\r\n    \r\n    .btn-sm {\r\n      padding: $spacing-xs $spacing-sm;\r\n      font-size: $font-size-sm;\r\n      white-space: nowrap;\r\n    }\r\n  }\r\n}\r\n\r\n@keyframes spin-new {\r\n  0% { transform: rotate(0deg); }\r\n  100% { transform: rotate(360deg); }\r\n}"],"sourceRoot":""}]);
+}
+.mods-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.mod-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: rgba(20, 25, 35, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+.mod-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  background: transparent;
+  transition: all 0.3s ease;
+}
+.mod-item:hover {
+  transform: translateY(-3px) scale(1.005);
+  background: rgba(30, 40, 55, 0.85);
+  border-color: rgba(96, 165, 250, 0.4);
+  box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.4), 0 0 20px rgba(96, 165, 250, 0.1);
+}
+.mod-item.active {
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.08) 0%, rgba(20, 25, 35, 0.65) 20%);
+  border-left: 1px solid rgba(16, 185, 129, 0.3);
+}
+.mod-item.active::before {
+  background: #10b981;
+  box-shadow: 0 0 10px #10b981;
+}
+.mod-item.active:hover {
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.12) 0%, rgba(30, 40, 55, 0.85) 30%);
+}
+.mod-item.inactive {
+  opacity: 0.65;
+  filter: grayscale(30%);
+  background: linear-gradient(90deg, rgba(239, 68, 68, 0.05) 0%, rgba(20, 25, 35, 0.65) 20%);
+}
+.mod-item.inactive::before {
+  background: #ef4444;
+}
+.mod-item.inactive:hover {
+  opacity: 1;
+  filter: grayscale(0%);
+  background: linear-gradient(90deg, rgba(239, 68, 68, 0.1) 0%, rgba(30, 40, 55, 0.85) 30%);
+}
+.mod-item .mod-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-left: 10px;
+}
+.mod-item .mod-info .mod-name {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #f8fafc;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  letter-spacing: 0.3px;
+}
+.mod-item .mod-info .mod-tags {
+  display: inline-flex;
+  gap: 8px;
+  margin-top: 2px;
+}
+.mod-item .mod-info .mod-tags span {
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.2), rgba(59, 130, 246, 0.1));
+  border: 1px solid rgba(96, 165, 250, 0.2);
+  color: #93c5fd;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.mod-item .mod-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  opacity: 0.8;
+  transition: opacity 0.3s;
+}
+.mod-item .mod-actions .btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  text-transform: none;
+  font-size: 0.85rem;
+}
+.mod-item .mod-actions .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+.mod-item .mod-actions .btn:active {
+  transform: translateY(0);
+}
+.mod-item:hover .mod-actions {
+  opacity: 1;
+}`, "",{"version":3,"sources":["webpack://./src/renderer/styles/main.scss"],"names":[],"mappings":"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","sourcesContent":["@use \"sass:color\";\r\n@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap');\r\n\r\n// Farming Simulator inspirierte Farbpalette - Dunklere Version\r\n$primary-color: #1ed760;       // Vibrant Neon Green for action\r\n$secondary-color: #ff6b00;     // Vibrant Orange\r\n$accent-color: #00d2ff;        // Vibrant Blue\r\n$background-color: #0d1117;    // Deep sleek dark\r\n$card-background: rgba(30, 35, 45, 0.4); // Glassmorphism base\r\n$input-background: rgba(20, 25, 35, 0.6); // Darker glass\r\n$text-color: #f0f6fc;          // Bright crisp text\r\n$muted-text-color: #8b949e;    // Professional muted text\r\n$error-color: #ff4d4f;         // Crisp red\r\n$success-color: #1ed760;       // Matches primary\r\n$border-color: rgba(255, 255, 255, 0.08); // Glass borders\r\n\r\n// Glassmorphism specific\r\n$glass-blur: blur(16px);\r\n$glass-border: 1px solid rgba(255, 255, 255, 0.08);\r\n$glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);\r\n\r\n// Schattierungen\r\n$primary-light: color.adjust($primary-color, $lightness: 35%);\r\n$primary-dark: color.adjust($primary-color, $lightness: -10%);\r\n$secondary-light: color.adjust($secondary-color, $lightness: 20%);\r\n$secondary-dark: color.adjust($secondary-color, $lightness: -10%);\r\n\r\n// FS25 Farbschema\r\n$fs-green: #167b29;       // Hauptgrün\r\n$fs-dark-green: #0e5e1d;  // Dunkelgrün\r\n$fs-orange: #eb7a00;      // Orange\r\n$fs-yellow: #f7c027;      // Gelb\r\n$fs-brown: #9e671a;       // Braun\r\n$fs-light-brown: #be955a; // Hellbraun\r\n\r\n// Abstandswerte\r\n$spacing-xs: 2px;\r\n$spacing-sm: 6px;\r\n$spacing-md: 12px;\r\n$spacing-lg: 18px;\r\n$spacing-xl: 24px;\r\n\r\n// Schriftgrößen\r\n$font-size-xs: 0.7rem;\r\n$font-size-sm: 0.8rem;\r\n$font-size-md: 0.9rem;\r\n$font-size-lg: 1.1rem;\r\n$font-size-xl: 1.3rem;\r\n$font-size-xxl: 1.6rem;\r\n\r\n// Eckenradien\r\n$border-radius-sm: 4px;\r\n$border-radius-md: 8px;\r\n$border-radius-lg: 12px;\r\n\r\n// Schatten\r\n$box-shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.05);\r\n$box-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);\r\n$box-shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.15);\r\n$shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5);\r\n$shadow-md: 0 4px 8px rgba(0, 0, 0, 0.5);\r\n$shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.6);\r\n$shadow-xl: 0 16px 32px rgba(0, 0, 0, 0.7);\r\n\r\n// Übergänge\r\n$transition-fast: all 0.2s ease;\r\n$transition-normal: all 0.3s ease;\r\n$transition-slow: all 0.5s ease;\r\n\r\n// Grundlegende Stile\r\n* {\r\n  box-sizing: border-box;\r\n}\r\n\r\nbody {\r\n  margin: 0;\r\n  padding: 0;\r\n  background-color: $background-color;\r\n  color: $text-color;\r\n  font-family: 'Inter', -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Arial, sans-serif;\r\n  line-height: 1.4;\r\n  font-weight: 400;\r\n  letter-spacing: 0.01em;\r\n  -webkit-font-smoothing: antialiased;\r\n  -moz-osx-font-smoothing: grayscale;\r\n}\r\n\r\n// Custom Scrollbar Design\r\n::-webkit-scrollbar {\r\n  width: 10px;\r\n  height: 10px;\r\n}\r\n\r\n::-webkit-scrollbar-track {\r\n  background: rgba(13, 17, 23, 0.4);\r\n  border-radius: 5px;\r\n}\r\n\r\n::-webkit-scrollbar-thumb {\r\n  background: rgba(255, 255, 255, 0.15);\r\n  border-radius: 5px;\r\n  border: 2px solid rgba(13, 17, 23, 0.4);\r\n  transition: $transition-fast;\r\n}\r\n\r\n::-webkit-scrollbar-thumb:hover {\r\n  background: rgba(30, 215, 96, 0.5); // Primary color (Neon Green) with opacity\r\n}\r\n\r\n::-webkit-scrollbar-corner {\r\n  background: transparent;\r\n}\r\n\r\n// Container\r\n.container {\r\n  width: 100%;  min-height: 100vh;  display: flex;  flex-direction: column;\r\n  background-color: $background-color;\r\n  background-image: \r\n    radial-gradient(circle at 15% 50%, rgba($primary-color, 0.08) 0%, transparent 50%),\r\n    radial-gradient(circle at 85% 30%, rgba($accent-color, 0.08) 0%, transparent 50%);\r\n  background-attachment: fixed;\r\n}\r\n\r\n// Header\r\n.header {\r\n  background: rgba(13, 17, 23, 0.8);\r\n  backdrop-filter: $glass-blur;\r\n  -webkit-backdrop-filter: $glass-blur;\r\n  border-bottom: $glass-border;\r\n  color: white;\r\n  padding: 0 $spacing-xl;\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  box-shadow: $box-shadow-md;\r\n  -webkit-app-region: drag;\r\n  position: sticky;\r\n  top: 0;\r\n  z-index: 1000;\r\n  height: 54px;\r\n  min-height: 54px;\r\n  \r\n  h1 {\r\n    margin: 0;\r\n    font-size: $font-size-lg;\r\n    font-weight: 700;\r\n    font-family: 'Outfit', sans-serif;\r\n    letter-spacing: 1px;\r\n    background: linear-gradient(to right, $primary-color, $accent-color);\r\n    -webkit-background-clip: text;\r\n    -webkit-text-fill-color: transparent;\r\n    display: flex;\r\n    align-items: center;\r\n    \r\n    &::before {\r\n      content: '';\r\n      display: inline-block;\r\n      width: 32px;\r\n      height: 32px;\r\n      margin-right: $spacing-sm;\r\n      background-image: url('https://farming-simulator.com/favicon.ico');\r\n      background-size: contain;\r\n      background-repeat: no-repeat;\r\n    }\r\n  }\r\n  \r\n  // Buttons innerhalb des Headers sollen nicht zum Ziehen verwendet werden\r\n  button, .window-controls {\r\n    -webkit-app-region: no-drag;\r\n  }\r\n}\r\n\r\n// Tab Navigation\r\n.tabs {\r\n  display: flex;\r\n  background: rgba(20, 25, 35, 0.6);\r\n  backdrop-filter: $glass-blur;\r\n  -webkit-backdrop-filter: $glass-blur;\r\n  border-bottom: $glass-border;\r\n  padding: 0 $spacing-xl;\r\n  box-shadow: $box-shadow-sm;\r\n  position: sticky;\r\n  top: 54px;\r\n  z-index: 999;\r\n  -webkit-app-region: no-drag;\r\n  min-height: 48px;\r\n  align-items: center;\r\n    .tab {\r\n    padding: $spacing-md $spacing-lg; // Dünner: reduziert von $spacing-lg zu $spacing-md\r\n    cursor: pointer;\r\n    font-weight: 500;\r\n    color: $text-color;\r\n    position: relative;\r\n    transition: color 0.3s, background-color 0.3s;\r\n    \r\n    &:hover {\r\n      color: $secondary-color;\r\n      background-color: rgba($secondary-color, 0.05);\r\n    }\r\n    \r\n    &.active {\r\n      color: $primary-color;\r\n      font-weight: 600;\r\n      \r\n      &::after {\r\n        content: '';\r\n        position: absolute;\r\n        bottom: 0;\r\n        left: 0;\r\n        width: 100%;\r\n        height: 3px;\r\n        background-color: $primary-color;\r\n        border-top-left-radius: $border-radius-sm;\r\n        border-top-right-radius: $border-radius-sm;\r\n      }\r\n    }\r\n  }\r\n}\r\n\r\n// Main Content\r\n.content {\r\n  flex-grow: 1;\r\n  padding: $spacing-xl;\r\n  overflow-y: visible;\r\n  max-width: 1200px;\r\n  margin-left: auto;\r\n  margin-right: auto;\r\n  width: 100%;\r\n}\r\n\r\n// Karten/Panels\r\n.card {\r\n  background: $card-background;\r\n  backdrop-filter: $glass-blur;\r\n  -webkit-backdrop-filter: $glass-blur;\r\n  border: $glass-border;\r\n  border-radius: $border-radius-lg;\r\n  box-shadow: $glass-shadow;\r\n  padding: $spacing-xl;\r\n  margin-bottom: $spacing-xl;\r\n  transition: $transition-normal;\r\n  \r\n  &:hover {\r\n    box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.4);\r\n    transform: translateY(-4px);\r\n    border-color: rgba(255, 255, 255, 0.15);\r\n  }\r\n  \r\n  h2 {\r\n    margin-top: 0;\r\n    color: $text-color;\r\n    font-size: $font-size-lg;\r\n    font-weight: 600;\r\n    margin-bottom: $spacing-lg;\r\n    padding-bottom: $spacing-sm;\r\n    border-bottom: $glass-border;\r\n  }\r\n}\r\n\r\n// Formulare\r\n.form-group {\r\n  margin-bottom: $spacing-md;\r\n  \r\n  label {\r\n    display: block;\r\n    margin-bottom: $spacing-xs;\r\n    font-weight: 500;\r\n  }    input, select, textarea {\r\n    width: 100%;\r\n    padding: $spacing-md $spacing-lg;\r\n    border: $glass-border;\r\n    border-radius: $border-radius-md;\r\n    font-size: $font-size-md;\r\n    background: $input-background;\r\n    backdrop-filter: $glass-blur;\r\n    -webkit-backdrop-filter: $glass-blur;\r\n    color: $text-color; \r\n    transition: $transition-fast;\r\n    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);\r\n    \r\n    &:focus {\r\n      border-color: $primary-color;\r\n      outline: none;\r\n      box-shadow: 0 0 12px rgba($primary-color, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.2);\r\n      background: rgba(20, 25, 35, 0.8);\r\n    }\r\n    \r\n    &:disabled {\r\n      background: rgba(255, 255, 255, 0.05);\r\n      cursor: not-allowed;\r\n      border-color: rgba(255,255,255,0.02);\r\n    }\r\n    \r\n    &::placeholder {\r\n      color: $muted-text-color;\r\n    }\r\n  }\r\n  \r\n  textarea {\r\n    min-height: 120px;\r\n    resize: vertical;\r\n    line-height: 1.6;\r\n  }\r\n  \r\n  .checkbox-label {\r\n    display: flex;\r\n    align-items: center;\r\n    cursor: pointer;\r\n    \r\n    input[type=\"checkbox\"] {\r\n      appearance: none;\r\n      -webkit-appearance: none;\r\n      background-color: rgba(20, 25, 35, 0.6);\r\n      border: 2px solid $border-color;\r\n      border-radius: 4px;\r\n      width: 20px;\r\n      height: 20px;\r\n      display: inline-block;\r\n      position: relative;\r\n      cursor: pointer;\r\n      transition: all 0.2s ease;\r\n      margin-right: $spacing-sm;\r\n\r\n      &:checked {\r\n        background-color: $primary-color;\r\n        border-color: $primary-color;\r\n\r\n        &::after {\r\n          content: '';\r\n          position: absolute;\r\n          left: 5px;\r\n          top: 2px;\r\n          width: 5px;\r\n          height: 10px;\r\n          border: solid white;\r\n          border-width: 0 2px 2px 0;\r\n          transform: rotate(45deg);\r\n        }\r\n      }\r\n\r\n      &:focus {\r\n        outline: none;\r\n        box-shadow: 0 0 0 3px rgba($primary-color, 0.3);\r\n      }\r\n    }\r\n  }\r\n  \r\n  small {\r\n    display: block;\r\n    color: rgba($text-color, 0.7);\r\n    margin-top: $spacing-xs;\r\n    font-size: $font-size-sm;\r\n  }\r\n}\r\n\r\n// Buttons\r\n.btn {\r\n  padding: $spacing-md $spacing-lg;\r\n  border: none;\r\n  border-radius: $border-radius-md;\r\n  cursor: pointer;\r\n  font-weight: 600;\r\n  transition: $transition-normal;\r\n  display: inline-flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  text-transform: uppercase;\r\n  letter-spacing: 0.5px;\r\n  font-size: $font-size-sm;\r\n  height: 44px;\r\n  margin: 0 $spacing-sm;\r\n  min-width: 120px;\r\n  \r\n  &:disabled {\r\n    opacity: 0.6;\r\n    cursor: not-allowed;\r\n  }\r\n  \r\n  &-primary {\r\n    background: linear-gradient(135deg, $primary-color, color.adjust($primary-color, $lightness: -15%));\r\n    color: white;\r\n    border: none;\r\n    box-shadow: 0 4px 15px rgba($primary-color, 0.4);\r\n    \r\n    &:hover, &:focus {\r\n      background: linear-gradient(135deg, color.adjust($primary-color, $lightness: 5%), color.adjust($primary-color, $lightness: -10%));\r\n      box-shadow: 0 6px 20px rgba($primary-color, 0.6);\r\n      transform: translateY(-2px);\r\n    }\r\n    \r\n    &:active {\r\n      transform: translateY(1px);\r\n      box-shadow: 0 2px 8px rgba($primary-color, 0.4);\r\n    }\r\n  }\r\n    &-secondary {\r\n    background: rgba(255, 255, 255, 0.1);\r\n    backdrop-filter: $glass-blur;\r\n    -webkit-backdrop-filter: $glass-blur;\r\n    border: $glass-border;\r\n    color: white;\r\n    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);\r\n    \r\n    &:hover, &:focus {\r\n      background: rgba(255, 255, 255, 0.15);\r\n      border-color: rgba(255, 255, 255, 0.3);\r\n      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);\r\n      transform: translateY(-2px);\r\n    }\r\n    \r\n    &:active {\r\n      transform: translateY(1px);\r\n      background: rgba(255, 255, 255, 0.05);\r\n    }\r\n  }\r\n  \r\n  &-danger {\r\n    background-color: $error-color;\r\n    color: white;\r\n    box-shadow: 0 2px 5px rgba($error-color, 0.3);\r\n    \r\n    &:hover, &:focus {\r\n      background-color: color.adjust($error-color, $lightness: -10%);\r\n      box-shadow: 0 4px 8px rgba($error-color, 0.4);\r\n      transform: translateY(-1px);\r\n    }\r\n    \r\n    &:active {\r\n      transform: translateY(1px);\r\n      box-shadow: 0 1px 3px rgba($error-color, 0.4);\r\n    }\r\n  }\r\n  \r\n  &-large {\r\n    height: 56px;\r\n    font-size: $font-size-md;\r\n    padding: $spacing-md $spacing-xl;\r\n  }\r\n  \r\n  &-sm {\r\n    padding: $spacing-xs $spacing-sm;\r\n    font-size: $font-size-sm;\r\n  }\r\n}\r\n\r\n// Listen\r\n.list {\r\n  list-style: none;\r\n  padding: 0;\r\n  margin: 0;\r\n  \r\n  &-item {\r\n    padding: $spacing-lg;\r\n    border-bottom: 1px solid $border-color;\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n    transition: $transition-fast;\r\n    border-radius: $border-radius-sm;\r\n    \r\n    &:hover {\r\n      background-color: rgba($primary-color, 0.05);\r\n    }\r\n    \r\n  &:last-child {\r\n      border-bottom: none;\r\n    }\r\n    \r\n    .item-title {\r\n      font-weight: 500;\r\n      font-size: $font-size-md;\r\n      color: $text-color;\r\n    }\r\n    \r\n    .item-subtitle {\r\n      font-size: $font-size-sm;\r\n      color: rgba($text-color, 0.7);\r\n      margin-top: $spacing-xs;\r\n    }\r\n  }\r\n}\r\n\r\n// Tabellen\r\ntable {\r\n  width: 100%;\r\n  border-collapse: separate;\r\n  border-spacing: 0;\r\n  border-radius: $border-radius-md;\r\n  overflow: hidden;\r\n  box-shadow: $box-shadow-sm;\r\n  margin: $spacing-lg 0;\r\n  \r\n  th, td {\r\n    padding: $spacing-md $spacing-lg;\r\n    text-align: left;\r\n    border-bottom: 1px solid $border-color;\r\n  }\r\n  \r\n  th {\r\n    font-weight: 600;\r\n    background-color: $primary-light;\r\n    color: $primary-dark;\r\n    text-transform: uppercase;\r\n    font-size: $font-size-sm;\r\n    letter-spacing: 0.5px;\r\n  }\r\n  \r\n  tr:last-child td {\r\n    border-bottom: none;\r\n  }\r\n  \r\n  tr:hover td {\r\n    background-color: rgba($primary-color, 0.03);\r\n  }\r\n}\r\n\r\n// Badges\r\n.badge {\r\n  display: inline-flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  padding: $spacing-xs $spacing-md;\r\n  border-radius: 16px;\r\n  font-size: $font-size-xs;\r\n  font-weight: 600;\r\n  line-height: 1.2;\r\n  text-transform: uppercase;\r\n  letter-spacing: 0.5px;\r\n  height: 24px;\r\n  \r\n  &-primary {\r\n    background-color: rgba($primary-color, 0.15);\r\n    color: $primary-dark;\r\n  }\r\n  \r\n  &-secondary {\r\n    background-color: rgba($secondary-color, 0.15);\r\n    color: $secondary-dark;\r\n  }\r\n  \r\n  &-accent {\r\n    background-color: rgba($accent-color, 0.15);\r\n    color: $accent-color;\r\n  }\r\n}\r\n\r\n// Alerts\r\n.alert {\r\n  padding: $spacing-md $spacing-lg;\r\n  border-radius: $border-radius-md;\r\n  margin: $spacing-md 0 $spacing-lg;\r\n  font-weight: 500;\r\n  display: flex;\r\n  align-items: center;\r\n  position: relative;\r\n  border-left: 4px solid transparent;\r\n  box-shadow: $box-shadow-sm;\r\n  \r\n  &::before {\r\n    margin-right: $spacing-md;\r\n    font-family: 'Segoe UI', sans-serif;\r\n    font-size: $font-size-xl;\r\n    line-height: 1;\r\n  }\r\n  \r\n  &-success {\r\n    background-color: rgba($success-color, 0.1);\r\n    color: $success-color;\r\n    border-left-color: $success-color;\r\n    \r\n    &::before {\r\n      content: \"✓\";\r\n    }\r\n  }\r\n  \r\n  &-error {\r\n    background-color: rgba($error-color, 0.1);\r\n    color: $error-color;\r\n    border-left-color: $error-color;\r\n    \r\n    &::before {\r\n      content: \"⚠\";\r\n    }\r\n  }\r\n  \r\n  &-warning {\r\n    background-color: rgba($fs-yellow, 0.1);\r\n    color: $fs-orange;\r\n    border-left-color: $fs-yellow;\r\n    \r\n    &::before {\r\n      content: \"ℹ\";\r\n    }\r\n  }\r\n}\r\n\r\n// Dark Mode (now the default, just remove overrides or keep them transparent)\r\n.theme-dark {\r\n  background-color: transparent;\r\n  color: $text-color;\r\n}\r\n\r\n// Startseite\r\n.start-page {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: $spacing-xl;\r\n  \r\n  .welcome-card {\r\n    background-color: transparent;\r\n    background-image: linear-gradient(135deg, rgba($primary-color, 0.8) 0%, rgba($fs-dark-green, 0.9) 100%),\r\n                      url('https://farming-simulator.com/assets/img/feature-bg-1.jpg');\r\n    background-size: cover;\r\n    background-position: center;\r\n    color: white;\r\n    border: none;\r\n    border-radius: $border-radius-lg;\r\n    padding: $spacing-xl * 1.5;\r\n    position: relative;\r\n    overflow: hidden;\r\n    box-shadow: 0 10px 20px rgba($primary-color, 0.3);\r\n    \r\n    &::before {\r\n      content: '';\r\n      position: absolute;\r\n      right: -10%;\r\n      bottom: -15%;\r\n      width: 300px;\r\n      height: 300px;\r\n      background-image: url('https://farming-simulator.com/assets/img/logo.png');\r\n      background-size: contain;\r\n      background-repeat: no-repeat;\r\n      background-position: center;\r\n      opacity: 0.1;\r\n    }\r\n    \r\n    h2 {\r\n      color: white;\r\n      font-size: $font-size-xxl;\r\n      margin-bottom: $spacing-md;\r\n      border: none;\r\n      text-shadow: 0 2px 4px rgba(0,0,0,0.3);\r\n    }\r\n    \r\n    p {\r\n      font-size: $font-size-lg;\r\n      max-width: 80%;\r\n      margin-bottom: 0;\r\n      text-shadow: 0 1px 2px rgba(0,0,0,0.3);\r\n    }\r\n  }\r\n  .start-game-card {\r\n    position: relative;\r\n    \r\n    .form-group {\r\n      margin-bottom: $spacing-lg;\r\n        select {\r\n        font-size: $font-size-lg;\r\n        padding: $spacing-lg;\r\n        background-color: $input-background;\r\n        color: $text-color;\r\n        border-width: 2px;\r\n        font-weight: 500;\r\n        height: 60px;\r\n        appearance: none;\r\n        background-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23167b29' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E\");\r\n        background-repeat: no-repeat;\r\n        background-position: right 1rem center;\r\n        background-size: 1rem;\r\n      }\r\n    }\r\n    \r\n    .profile-info {\r\n      margin: $spacing-lg 0;\r\n      padding: $spacing-lg;\r\n      background-color: rgba($primary-color, 0.05);\r\n      border-radius: $border-radius-md;\r\n      border-left: 4px solid $primary-color;\r\n      \r\n      h3 {\r\n        margin-top: 0;\r\n        color: $primary-dark;\r\n        font-weight: 600;\r\n      }\r\n      \r\n      p {\r\n        margin-bottom: $spacing-sm;\r\n        \r\n        &:last-child {\r\n          margin-bottom: 0;\r\n        }\r\n        \r\n        strong {\r\n          font-weight: 600;\r\n          margin-right: $spacing-sm;\r\n          color: $primary-color;\r\n        }\r\n      }\r\n    }\r\n    \r\n    .launch-actions {\r\n      margin: $spacing-xl 0;\r\n      display: flex;\r\n      justify-content: center;\r\n      \r\n      .btn-large {\r\n        padding: $spacing-lg $spacing-xl * 1.5;\r\n        font-size: $font-size-lg;\r\n        font-weight: 600;\r\n        min-width: 350px;\r\n        height: 64px;\r\n        background-image: linear-gradient(to right, $primary-color, $fs-dark-green);\r\n        box-shadow: 0 8px 16px rgba($primary-color, 0.4);\r\n        position: relative;\r\n        overflow: hidden;\r\n        \r\n        &:hover {\r\n          transform: translateY(-3px);\r\n          box-shadow: 0 12px 20px rgba($primary-color, 0.5);\r\n        }\r\n        \r\n        &:before {\r\n          content: '';\r\n          position: absolute;\r\n          top: 0;\r\n          left: 0;\r\n          width: 100%;\r\n          height: 100%;\r\n          background-image: url('data:image/svg+xml,%3Csvg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cpath d=\"M20 33.5l-1.8-2.1c-6.4-5.8-10.7-9.6-10.7-14.3 0-3.8 3-6.8 6.8-6.8 2.1 0 4.2 1 5.5 2.6h0.4c1.3-1.6 3.4-2.6 5.5-2.6 3.8 0 6.8 3 6.8 6.8 0 4.7-4.3 8.5-10.7 14.3L20 33.5z\" fill=\"rgba(255,255,255,0.1)\"%3E%3C/path%3E%3C/svg%3E');\r\n          background-size: contain;\r\n          background-repeat: no-repeat;\r\n          background-position: center;\r\n          opacity: 0.5;\r\n          transform: rotate(10deg);\r\n        }\r\n      }\r\n    }\r\n    \r\n    .secondary-actions {\r\n      text-align: center;\r\n      margin-bottom: $spacing-lg;\r\n      \r\n      .btn {\r\n        text-transform: none;\r\n        font-weight: 500;\r\n        letter-spacing: normal;\r\n      }\r\n    }\r\n  }\r\n  \r\n  // Die Startseite im Dark Mode\r\n  .theme-dark & {\r\n    .welcome-card {\r\n      box-shadow: 0 10px 20px rgba(0,0,0,0.5);\r\n    }\r\n    \r\n    .profile-info {\r\n      background-color: rgba($primary-color, 0.1);\r\n    }\r\n  }\r\n}\r\n\r\n// Profile-Karten\r\n.profiles-list {\r\n  display: grid;\r\n  grid-template-columns: 1fr;\r\n  gap: $spacing-lg;\r\n  margin-bottom: $spacing-xl;\r\n}\r\n\r\n.profile-card {\r\n  background-color: $card-background;\r\n  border-radius: $border-radius-md;\r\n  box-shadow: $box-shadow-md;\r\n  padding: $spacing-lg;\r\n  transition: $transition-normal;\r\n  border: 2px solid $border-color;\r\n  display: flex;\r\n  flex-direction: column;\r\n  \r\n  &:hover {\r\n    border-color: $primary-color;\r\n    transform: translateY(-2px);\r\n    box-shadow: $box-shadow-lg;\r\n  }\r\n  \r\n  .profile-info {\r\n    flex: 1;\r\n    \r\n    h3 {\r\n      color: $primary-color;\r\n      margin-top: 0;\r\n      font-size: $font-size-lg;\r\n      padding-bottom: $spacing-sm;\r\n      border-bottom: 1px solid $border-color;\r\n      margin-bottom: $spacing-md;\r\n    }\r\n    \r\n    p {\r\n      margin: $spacing-xs 0;\r\n      color: $text-color;\r\n    }\r\n  }\r\n  \r\n  .profile-actions {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    margin-top: $spacing-md;\r\n    padding-top: $spacing-md;\r\n    border-top: 1px solid $border-color;\r\n    \r\n    button {\r\n      flex: 1;\r\n      margin: 0 $spacing-xs;\r\n    }\r\n  }\r\n}\r\n\r\n// Form Layout Verbesserungen\r\n.folder-select {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: $spacing-md;\r\n  \r\n  input {\r\n    flex: 1;\r\n  }\r\n  \r\n  button {\r\n    flex-shrink: 0;\r\n    min-width: 120px;\r\n    white-space: nowrap;\r\n  }\r\n}\r\n\r\n.form-actions {\r\n  display: flex;\r\n  justify-content: flex-end;\r\n  gap: $spacing-md;\r\n  margin-top: $spacing-xl;\r\n  \r\n  button {\r\n    min-width: 140px;\r\n  }\r\n}\r\n\r\n// Copyright und Programmsteuerelemente\r\n.window-controls {\r\n  position: absolute;\r\n  top: $spacing-md;\r\n  right: $spacing-md;\r\n  display: flex;\r\n  gap: $spacing-sm;\r\n  \r\n  button {\r\n    width: 30px;\r\n    height: 30px;\r\n    border-radius: 50%;\r\n    background-color: rgba(255, 255, 255, 0.2);\r\n    color: white;\r\n    font-size: $font-size-md;\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\r\n    transition: $transition-fast;\r\n    padding: 0;\r\n    \r\n    &:hover {\r\n      background-color: rgba(255, 255, 255, 0.3);\r\n    }\r\n    \r\n    &.close:hover {\r\n      background-color: $error-color;\r\n    }\r\n  }\r\n}\r\n\r\n// Footer\r\n.footer {\r\n  background-color: $fs-dark-green;\r\n  color: rgba(white, 0.8);\r\n  padding: $spacing-md $spacing-xl;\r\n  font-size: $font-size-sm;\r\n  text-align: center;\r\n  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);\r\n  \r\n  .footer-content {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n    max-width: 1200px;\r\n    margin: 0 auto;\r\n    padding-bottom: $spacing-sm;\r\n    \r\n    a {\r\n      color: white;\r\n      text-decoration: none;\r\n      \r\n      &:hover {\r\n        text-decoration: underline;\r\n      }\r\n    }\r\n  }\r\n  \r\n  .legal {\r\n    font-size: $font-size-xs;\r\n    color: rgba(white, 0.6);\r\n    margin-top: $spacing-sm;\r\n    max-width: 1200px;\r\n    margin: $spacing-sm auto 0;\r\n  }\r\n}\r\n\r\n// Responsive Designs und Layout-Anpassungen\r\n@media (min-width: 1024px) {\r\n  .container {\r\n    padding: 0;\r\n  }\r\n  \r\n  .content {\r\n    padding: $spacing-xl $spacing-xl;\r\n  }\r\n  \r\n  .card {\r\n    padding: $spacing-xl;\r\n  }\r\n  \r\n  .tabs {\r\n    padding: 0 $spacing-xl;\r\n  }\r\n}\r\n\r\n// Anpassungen für verschiedene Auflösungen\r\n@media (min-width: 1280px) {\r\n  .content {\r\n    max-width: 1200px;\r\n  }\r\n}\r\n\r\n// Anpassungen für Startseite Layout\r\n.start-page {\r\n  display: grid;\r\n  grid-template-columns: 1fr;\r\n  grid-gap: $spacing-xl;\r\n  \r\n  @media (min-width: 1024px) {\r\n    grid-template-columns: 1fr 2fr;\r\n    align-items: start;\r\n    \r\n    .welcome-card {\r\n      grid-column: 1 / -1;\r\n    }\r\n  }\r\n}\r\n\r\n// Startseite mit FS25-Thema\r\n.start-page {\r\n  .welcome-card {\r\n    background-image: linear-gradient(to bottom, rgba($card-background, 0.95), rgba($card-background, 0.9)), \r\n                      url('https://farming-simulator.com/img/3.png');\r\n    background-size: cover;\r\n    background-position: center;\r\n    border-top: 4px solid $primary-color;\r\n    padding: $spacing-xl;\r\n    position: relative;\r\n    overflow: hidden;\r\n    \r\n    &::after {\r\n      content: '';\r\n      position: absolute;\r\n      bottom: -30px;\r\n      right: -30px;\r\n      width: 160px;\r\n      height: 160px;\r\n      background-image: url('https://farming-simulator.com/img/logo.png');\r\n      background-size: contain;\r\n      background-repeat: no-repeat;\r\n      opacity: 0.2;\r\n    }\r\n    \r\n    h2 {\r\n      color: $primary-color;\r\n      font-size: $font-size-xl;\r\n      margin-bottom: $spacing-md;\r\n      border: none;\r\n    }\r\n  }\r\n  \r\n  .start-game-card {\r\n    border-top: 4px solid $secondary-color;\r\n      #profile-select {\r\n      background-color: $input-background;\r\n      color: $text-color;\r\n      font-weight: 500;\r\n      height: 52px;\r\n      padding: $spacing-md;\r\n      padding-top: $spacing-xs;\r\n      padding-bottom: $spacing-xs;\r\n      line-height: 36px; /* Wichtig: verhindert abgeschnittenen Text */\r\n      appearance: none;\r\n      background-image: url(\"data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e\");\r\n      background-repeat: no-repeat;\r\n      background-position: right $spacing-md center;\r\n      background-size: 16px 12px;\r\n        option {\r\n        color: $text-color;\r\n        padding: $spacing-md;\r\n        height: 40px;\r\n        line-height: 40px;\r\n      }\r\n      \r\n      &:focus {\r\n        border-color: $primary-color;\r\n        box-shadow: 0 0 0 0.25rem rgba($primary-color, 0.25);\r\n      }\r\n    }\r\n  }\r\n  \r\n  .btn-large {\r\n    height: 60px;\r\n    min-width: 300px;\r\n    font-size: $font-size-lg;\r\n    background: linear-gradient(to right, $primary-color, $fs-dark-green);\r\n    border: none;\r\n    color: white;\r\n    position: relative;\r\n    overflow: hidden;\r\n    transition: all 0.3s ease;\r\n    box-shadow: 0 4px 15px rgba($primary-color, 0.4);\r\n    \r\n    &::after {\r\n      content: '';\r\n      position: absolute;\r\n      top: 0;\r\n      left: -100%;\r\n      width: 100%;\r\n      height: 100%;\r\n      background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent);\r\n      transition: all 0.4s ease;\r\n    }\r\n    \r\n    &:hover {\r\n      transform: translateY(-3px);\r\n      box-shadow: 0 6px 20px rgba($primary-color, 0.5);\r\n      \r\n      &::after {\r\n        left: 100%;\r\n      }\r\n    }\r\n  }\r\n}\r\n\r\n// Profilseite Verbesserungen\r\n.create-profile-section {\r\n  margin-top: $spacing-xl * 2;\r\n  padding-top: $spacing-xl;\r\n  border-top: 1px solid $border-color;\r\n}\r\n\r\n// Dunklere Designanpassungen\r\nbody {\r\n  background-color: $background-color;\r\n  color: $text-color;\r\n}\r\n\r\nh1, h2, h3, h4, h5, h6 {\r\n  color: $text-color;\r\n}\r\n\r\nsmall, .text-muted {\r\n  color: $muted-text-color;\r\n}\r\n\r\n.card {\r\n  border-color: $border-color;\r\n  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);\r\n  \r\n  h2, h3 {\r\n    border-color: $border-color;\r\n  }\r\n}\r\n\r\n// Verbesserte Lesbarkeit für Text auf dunkelgrauem Hintergrund\r\np {\r\n  color: $text-color;\r\n}\r\n\r\na {\r\n  color: color.adjust($primary-color, $lightness: 20%);\r\n  \r\n  &:hover {\r\n    color: color.adjust($primary-color, $lightness: 30%);\r\n  }\r\n}\r\n\r\n.badge {\r\n  border: 1px solid rgba(255, 255, 255, 0.1);\r\n}\r\n\r\n// Kontrastoptimierung für Eingabefelder\r\ninput, select, textarea {\r\n  color: $text-color;\r\n  border-color: $border-color;\r\n  \r\n  &::placeholder {\r\n    color: $muted-text-color;\r\n  }\r\n}\r\n\r\n// Hellere Tabellenelemente\r\ntable th {\r\n  background-color: rgba($primary-color, 0.2);\r\n}\r\n\r\n// Anpassung der Profilkarten\r\n.profile-card {\r\n  border-color: $border-color;\r\n  \r\n  p {\r\n    color: $text-color;\r\n  }\r\n}\r\n\r\n// Schatten\r\n$shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5);\r\n$shadow-md: 0 4px 8px rgba(0, 0, 0, 0.5);\r\n$shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.6);\r\n$shadow-xl: 0 16px 32px rgba(0, 0, 0, 0.7);\r\n\r\n// Popup-Stile\r\n.popup-overlay {\r\n  position: fixed;\r\n  top: 0;\r\n  left: 0;\r\n  right: 0;\r\n  bottom: 0;\r\n  background-color: rgba(0, 0, 0, 0.85);\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  z-index: 2000;\r\n}\r\n\r\n.popup-content {\r\n  background-color: rgba(20, 25, 35, 1); // Solider Hintergrund, da Blur entfernt wurde\r\n  border: 1px solid rgba(255, 255, 255, 0.1);\r\n  border-radius: $border-radius-lg;\r\n  box-shadow: $shadow-xl;\r\n  max-width: 90vw;\r\n  max-height: 90vh;\r\n  overflow: hidden;\r\n  display: flex;\r\n  flex-direction: column;\r\n  animation: popup-fade-in 0.2s ease-out;\r\n  position: relative;\r\n  z-index: 2001; // Höher als Overlay\r\n}\r\n\r\n@keyframes popup-fade-in {\r\n  from {\r\n    opacity: 0;\r\n    transform: scale(0.9) translateY(-20px);\r\n  }\r\n  to {\r\n    opacity: 1;\r\n    transform: scale(1) translateY(0);\r\n  }\r\n}\r\n\r\n.popup-header {\r\n  padding: $spacing-lg;\r\n  border-bottom: 1px solid $border-color;\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  background-color: $primary-color;\r\n\r\n  h2 {\r\n    margin: 0;\r\n    color: white;\r\n    font-size: $font-size-lg;\r\n    font-weight: 600;\r\n  }\r\n\r\n  .popup-close {\r\n    background: none;\r\n    border: none;\r\n    color: white;\r\n    font-size: $font-size-xl;\r\n    cursor: pointer;\r\n    padding: $spacing-xs;\r\n    line-height: 1;\r\n    border-radius: $border-radius-sm;\r\n    transition: background-color 0.2s;\r\n\r\n    &:hover {\r\n      background-color: rgba(255, 255, 255, 0.1);\r\n    }\r\n  }\r\n}\r\n\r\n.popup-body {\r\n  padding: $spacing-lg;\r\n  flex: 1;\r\n  overflow-y: auto;\r\n}\r\n\r\n.popup-footer {\r\n  padding: $spacing-lg;\r\n  border-top: 1px solid $border-color;\r\n  display: flex;\r\n  justify-content: flex-end;\r\n  gap: $spacing-md;\r\n\r\n  .button {\r\n    padding: $spacing-sm $spacing-lg;\r\n    border: none;\r\n    border-radius: $border-radius-md;\r\n    cursor: pointer;\r\n    font-size: $font-size-md;\r\n    font-weight: 500;\r\n    transition: all 0.2s;\r\n\r\n    &.primary {\r\n      background-color: $primary-color;\r\n      color: white;\r\n\r\n      &:hover {\r\n        background-color: $primary-dark;\r\n      }\r\n    }\r\n\r\n    &.secondary {\r\n      background-color: $input-background;\r\n      color: $text-color;\r\n\r\n      &:hover {\r\n        background-color: color.adjust($input-background, $lightness: 10%);\r\n      }\r\n    }\r\n  }\r\n}\r\n\r\n// Profil-Edit-Popup spezifische Stile\r\n.profile-edit-popup {\r\n  width: 500px;\r\n\r\n  .form-group {\r\n    margin-bottom: $spacing-lg;\r\n\r\n    label {\r\n      display: block;\r\n      margin-bottom: $spacing-xs;\r\n      color: $text-color;\r\n      font-weight: 500;\r\n    }\r\n\r\n    input, textarea {\r\n      width: 100%;\r\n      padding: $spacing-sm;\r\n      background-color: $input-background;\r\n      border: 1px solid $border-color;\r\n      border-radius: $border-radius-sm;\r\n      color: $text-color;\r\n      font-size: $font-size-md;\r\n      box-sizing: border-box;\r\n\r\n      &:focus {\r\n        outline: none;\r\n        border-color: $primary-color;\r\n        box-shadow: 0 0 0 2px rgba(22, 123, 41, 0.2);\r\n      }\r\n\r\n      &.error {\r\n        border-color: $error-color;\r\n      }\r\n    }\r\n\r\n    textarea {\r\n      resize: vertical;\r\n      min-height: 80px;\r\n    }\r\n\r\n    .input-group {\r\n      display: flex;\r\n      gap: $spacing-sm;\r\n\r\n      input {\r\n        flex: 1;\r\n      }\r\n\r\n      .browse-button {\r\n        padding: $spacing-sm $spacing-md;\r\n        background-color: $secondary-color;\r\n        color: white;\r\n        border: none;\r\n        border-radius: $border-radius-sm;\r\n        cursor: pointer;\r\n        font-size: $font-size-sm;\r\n        white-space: nowrap;\r\n\r\n        &:hover {\r\n          background-color: $secondary-dark;\r\n        }\r\n      }\r\n    }\r\n\r\n    .error-message {\r\n      color: $error-color;\r\n      font-size: $font-size-sm;\r\n      margin-top: $spacing-xs;\r\n      display: block;\r\n    }\r\n  }\r\n}\r\n\r\n// Sync-Progress-Popup spezifische Stile\r\n.sync-progress-popup {\r\n  width: 450px;\r\n\r\n  .sync-status {\r\n    margin-bottom: $spacing-lg;\r\n\r\n    .status-info {\r\n      display: flex;\r\n      flex-direction: column;\r\n      gap: $spacing-sm;\r\n\r\n      .status-text {\r\n        font-size: $font-size-lg;\r\n        font-weight: 600;\r\n      }\r\n\r\n      .current-mod {\r\n        color: $muted-text-color;\r\n      }\r\n    }\r\n  }\r\n\r\n  .progress-section {\r\n    margin-bottom: $spacing-lg;\r\n\r\n    .progress-label {\r\n      margin-bottom: $spacing-xs;\r\n      color: $text-color;\r\n      font-size: $font-size-sm;\r\n    }\r\n\r\n    .progress-bar {\r\n      width: 100%;\r\n      height: 20px;\r\n      background-color: $input-background;\r\n      border-radius: $border-radius-md;\r\n      overflow: hidden;\r\n      margin-bottom: $spacing-xs;\r\n\r\n      .progress-fill {\r\n        height: 100%;\r\n        background-color: $primary-color;\r\n        transition: width 0.3s ease;\r\n        border-radius: $border-radius-md;\r\n      }\r\n    }\r\n\r\n    .progress-percentage {\r\n      text-align: right;\r\n      font-size: $font-size-sm;\r\n      color: $muted-text-color;\r\n    }\r\n  }\r\n\r\n  .sync-details {\r\n    background-color: $input-background;\r\n    padding: $spacing-md;\r\n    border-radius: $border-radius-md;\r\n    margin-bottom: $spacing-lg;\r\n\r\n    .detail-item {\r\n      display: flex;\r\n      justify-content: space-between;\r\n      margin-bottom: $spacing-xs;\r\n\r\n      &:last-child {\r\n        margin-bottom: 0;\r\n      }\r\n\r\n      .detail-label {\r\n        color: $muted-text-color;\r\n      }\r\n\r\n      .detail-value {\r\n        font-weight: 500;\r\n      }\r\n    }\r\n  }\r\n}\r\n\r\n// Mod-Info-Popup spezifische Stile\r\n.mod-info-popup {\r\n  width: 600px;\r\n  max-height: 80vh;\r\n\r\n  .mod-info-content {\r\n    display: flex;\r\n    flex-direction: column;\r\n    gap: $spacing-lg;\r\n\r\n    .mod-icon {\r\n      text-align: center;\r\n\r\n      img {\r\n        max-width: 128px;\r\n        max-height: 128px;\r\n        border-radius: $border-radius-md;\r\n        box-shadow: $shadow-md;\r\n      }\r\n    }\r\n\r\n    .mod-details {\r\n      .detail-group {\r\n        margin-bottom: $spacing-lg;\r\n\r\n        h3 {\r\n          margin: 0 0 $spacing-md 0;\r\n          color: $primary-color;\r\n          font-size: $font-size-lg;\r\n          border-bottom: 1px solid $border-color;\r\n          padding-bottom: $spacing-xs;\r\n        }\r\n\r\n        .detail-item {\r\n          display: flex;\r\n          margin-bottom: $spacing-sm;\r\n\r\n          .detail-label {\r\n            min-width: 140px;\r\n            color: $muted-text-color;\r\n            font-weight: 500;\r\n          }\r\n\r\n          .detail-value {\r\n            flex: 1;\r\n            color: $text-color;\r\n\r\n            &.file-name {\r\n              font-family: monospace;\r\n              font-size: $font-size-sm;\r\n              word-break: break-all;\r\n            }\r\n\r\n            &.status {\r\n              font-weight: 600;\r\n\r\n              &.active {\r\n                color: $success-color;\r\n              }\r\n\r\n              &.inactive {\r\n                color: $muted-text-color;\r\n              }\r\n            }\r\n          }\r\n        }\r\n\r\n        .mod-description {\r\n          background-color: $input-background;\r\n          padding: $spacing-md;\r\n          border-radius: $border-radius-md;\r\n          line-height: 1.5;\r\n          white-space: pre-wrap;\r\n          max-height: 200px;\r\n          overflow-y: auto;\r\n        }\r\n      }\r\n    }\r\n  }\r\n}\r\n\r\n// Update-Dialog spezifische Stile\r\n.update-dialog {\r\n  width: 450px;\r\n\r\n  .version-info {\r\n    margin: $spacing-lg 0;\r\n    padding: $spacing-md;\r\n    background-color: $input-background;\r\n    border-radius: $border-radius-md;\r\n\r\n    div {\r\n      margin-bottom: $spacing-xs;\r\n\r\n      &:last-child {\r\n        margin-bottom: 0;\r\n      }\r\n    }\r\n  }\r\n\r\n  .release-notes {\r\n    margin-top: $spacing-lg;\r\n\r\n    h4 {\r\n      margin: 0 0 $spacing-sm 0;\r\n      color: $primary-color;\r\n    }\r\n\r\n    .notes-content {\r\n      background-color: $input-background;\r\n      padding: $spacing-md;\r\n      border-radius: $border-radius-md;\r\n      max-height: 200px;\r\n      overflow-y: auto;\r\n      font-size: $font-size-sm;\r\n      line-height: 1.4;\r\n      white-space: pre-wrap;\r\n    }\r\n  }\r\n\r\n  .update-progress {\r\n    margin-top: $spacing-lg;\r\n\r\n    p {\r\n      margin: 0 0 $spacing-sm 0;\r\n      color: $text-color;\r\n      font-weight: 500;\r\n    }\r\n\r\n    .progress-bar {\r\n      width: 100%;\r\n      height: 12px;\r\n      background-color: rgba($primary-color, 0.2);\r\n      border-radius: $border-radius-sm;\r\n      overflow: hidden;\r\n      margin-bottom: $spacing-xs;\r\n\r\n      .progress-fill {\r\n        height: 100%;\r\n        background-color: $primary-color;\r\n        transition: width 0.3s ease;\r\n      }\r\n    }\r\n\r\n    .progress-stats {\r\n      display: flex;\r\n      justify-content: space-between;\r\n      font-size: $font-size-sm;\r\n      color: $muted-text-color;\r\n      font-weight: 500;\r\n    }\r\n  }\r\n\r\n  .update-ready {\r\n    margin-top: $spacing-lg;\r\n    padding: $spacing-md;\r\n    background-color: rgba(#28a745, 0.1);\r\n    border: 1px solid rgba(#28a745, 0.3);\r\n    border-radius: $border-radius-md;\r\n\r\n    p {\r\n      margin: 0 0 $spacing-xs 0;\r\n      color: #2ed573;\r\n      font-weight: 500;\r\n      \r\n      &:last-child {\r\n        margin-bottom: 0;\r\n      }\r\n    }\r\n  }\r\n}\r\n\r\n// Dark Select Styling\r\nselect, .dark-select {\r\n  background-color: $input-background !important;\r\n  color: $text-color !important;\r\n  border: 1px solid $border-color !important;\r\n  border-radius: $border-radius-sm;\r\n  padding: $spacing-sm;\r\n  font-size: $font-size-md;\r\n  \r\n  option {\r\n    background-color: $input-background !important;\r\n    color: $text-color !important;\r\n  }\r\n\r\n  &:focus {\r\n    outline: none;\r\n    border-color: $primary-color !important;\r\n    box-shadow: 0 0 0 2px rgba(22, 123, 41, 0.2) !important;\r\n  }\r\n}\r\n\r\n// Update Section Styling\r\n.update-section {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: $spacing-md;\r\n  \r\n  .form-group {\r\n    margin-bottom: 0;\r\n  }\r\n  \r\n  button {\r\n    align-self: flex-start;\r\n  }\r\n  \r\n  small {\r\n    color: $muted-text-color;\r\n    font-style: italic;\r\n  }\r\n}\r\n\r\n// Profile Stats Spacing Fix\r\n.profile-stats {\r\n  display: flex;\r\n  gap: $spacing-md;\r\n  flex-wrap: wrap;\r\n  \r\n  span {\r\n    background-color: rgba(255, 255, 255, 0.1);\r\n    padding: $spacing-xs $spacing-sm;\r\n    border-radius: $border-radius-sm;\r\n    font-size: $font-size-sm;\r\n    white-space: nowrap;\r\n  }\r\n}\r\n\r\n// Game Settings Collapsibles\r\n.game-settings-section {\r\n  margin-top: $spacing-lg;\r\n}\r\n\r\n.game-collapsible {\r\n  border: 1px solid $border-color;\r\n  border-radius: $border-radius-md;\r\n  margin-bottom: $spacing-sm;\r\n  background-color: $card-background;\r\n\r\n  &[open] {\r\n    border-color: $primary-color;\r\n  }\r\n}\r\n\r\n.game-header {\r\n  background-color: $input-background;\r\n  padding: $spacing-md;\r\n  cursor: pointer;\r\n  border-radius: $border-radius-md;\r\n  user-select: none;\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n\r\n  &:hover {\r\n    background-color: color.adjust($input-background, $lightness: 10%);\r\n  }\r\n\r\n  strong {\r\n    color: $text-color;\r\n  }\r\n\r\n  .active-badge {\r\n    background-color: $success-color;\r\n    color: white;\r\n    padding: $spacing-xs $spacing-sm;\r\n    border-radius: $border-radius-sm;\r\n    font-size: $font-size-xs;\r\n    font-weight: bold;\r\n  }\r\n}\r\n\r\n.game-content {\r\n  padding: $spacing-md;\r\n  border-top: 1px solid $border-color;\r\n\r\n  .form-group:last-child {\r\n    margin-bottom: 0;\r\n  }\r\n}\r\n\r\n// Mod Info Popup Better Spacing\r\n.mod-info-popup {\r\n  .mod-details {\r\n    .detail-group {\r\n      margin-bottom: $spacing-xl;\r\n      \r\n      h3 {\r\n        margin-bottom: $spacing-md;\r\n        color: $primary-color;\r\n        border-bottom: 2px solid $primary-color;\r\n        padding-bottom: $spacing-xs;\r\n      }\r\n    }\r\n    \r\n    .detail-item {\r\n      margin-bottom: $spacing-md;\r\n      display: flex;\r\n      justify-content: space-between;\r\n      align-items: flex-start;\r\n      gap: $spacing-md;\r\n      \r\n      .detail-label {\r\n        font-weight: 600;\r\n        color: $muted-text-color;\r\n        min-width: 120px;\r\n        flex-shrink: 0;\r\n      }\r\n      \r\n      .detail-value {\r\n        color: $text-color;\r\n        word-break: break-all;\r\n        text-align: right;\r\n        flex: 1;\r\n        \r\n        &.status {\r\n          &.active {\r\n            color: $success-color;\r\n            font-weight: 600;\r\n          }\r\n          &.inactive {\r\n            color: $error-color;\r\n            font-weight: 600;\r\n          }\r\n        }\r\n        \r\n        &.file-name {\r\n          font-family: monospace;\r\n          font-size: $font-size-sm;\r\n          max-width: 300px;\r\n          overflow: hidden;\r\n          text-overflow: ellipsis;\r\n        }\r\n      }\r\n    }\r\n  }\r\n  \r\n  .mod-description {\r\n    background-color: $input-background;\r\n    padding: $spacing-md;\r\n    border-radius: $border-radius-md;\r\n    border-left: 4px solid $primary-color;\r\n    line-height: 1.6;\r\n    color: $text-color;\r\n  }\r\n}\r\n\r\n// ===== NEW START PAGE DESIGN =====\r\n.start-page-new {\r\n  display: flex;\r\n  flex-direction: column;\r\n  padding: $spacing-md;\r\n  gap: $spacing-md;\r\n\r\n  .loading-section {\r\n    display: flex;\r\n    flex-direction: column;\r\n    align-items: center;\r\n    justify-content: center;\r\n    height: 50vh;\r\n    \r\n    .loading-spinner {\r\n      width: 50px;\r\n      height: 50px;\r\n      border: 4px solid $border-color;\r\n      border-top: 4px solid $primary-color;\r\n      border-radius: 50%;\r\n      animation: spin-new 1s linear infinite;\r\n      margin-bottom: $spacing-md;\r\n    }\r\n  }\r\n\r\n  .no-profiles-section {\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\r\n    height: 60vh;\r\n\r\n    .welcome-card {\r\n      text-align: center;\r\n      padding: 48px; // $spacing-xxl equivalent\r\n      background-color: $card-background;\r\n      border-radius: $border-radius-lg;\r\n      border: 1px solid $border-color;\r\n      box-shadow: $box-shadow-lg;\r\n      max-width: 600px;\r\n\r\n      h1 {\r\n        font-size: 2.5rem;\r\n        margin-bottom: $spacing-lg;\r\n        color: $primary-color;\r\n      }\r\n\r\n      p {\r\n        font-size: $font-size-lg;\r\n        margin-bottom: $spacing-md;\r\n        color: $text-color;\r\n      }\r\n\r\n      .btn-large {\r\n        font-size: $font-size-lg;\r\n        padding: $spacing-lg 48px; // xxl equivalent\r\n        margin-top: $spacing-lg;\r\n      }\r\n    }\r\n  }\r\n\r\n  .main-content-area {\r\n    display: flex;\r\n    flex-direction: column;\r\n    gap: $spacing-md;\r\n\r\n    .profile-selection-card {\r\n      background-color: $card-background;\r\n      border-radius: $border-radius-lg;\r\n      border: 1px solid $border-color;\r\n      box-shadow: $box-shadow-sm;\r\n      padding: $spacing-md;\r\n      text-align: center;\r\n\r\n      h2 {\r\n        margin-bottom: $spacing-md;\r\n        color: $primary-color;\r\n        font-size: 1.8rem;\r\n      }\r\n\r\n      .profile-selector .profile-select {\r\n        width: 100%;\r\n        max-width: 500px;\r\n        padding: $spacing-md $spacing-lg;\r\n        font-size: $font-size-lg;\r\n        background-color: $input-background;\r\n        border: 2px solid $border-color;\r\n        border-radius: $border-radius-md;\r\n        color: $text-color;\r\n        cursor: pointer;\r\n\r\n        &:focus {\r\n          outline: none;\r\n          border-color: $primary-color;\r\n          box-shadow: 0 0 0 3px rgba(22, 123, 41, 0.2);\r\n        }\r\n\r\n        &:disabled {\r\n          opacity: 0.6;\r\n          cursor: not-allowed;\r\n        }\r\n      }\r\n    }\r\n\r\n    .profile-details-grid {\r\n      display: grid;\r\n      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));\r\n      gap: $spacing-lg;\r\n\r\n      .info-card {\r\n        background-color: $card-background;\r\n        border-radius: $border-radius-lg;\r\n        border: 1px solid $border-color;\r\n        box-shadow: $box-shadow-sm;\r\n        padding: $spacing-md;\r\n        transition: transform 0.2s ease, box-shadow 0.2s ease;\r\n\r\n        &:hover {\r\n          transform: translateY(-2px);\r\n          box-shadow: $box-shadow-md;\r\n        }\r\n\r\n        h3 {\r\n          margin-bottom: $spacing-md;\r\n          color: $primary-color;\r\n          font-size: 1.3rem;\r\n          border-bottom: 2px solid $primary-color;\r\n          padding-bottom: $spacing-xs;\r\n        }\r\n\r\n        .info-item {\r\n          display: flex;\r\n          justify-content: space-between;\r\n          align-items: flex-start;\r\n          margin-bottom: $spacing-sm;\r\n          padding: $spacing-xs 0;\r\n\r\n          .label {\r\n            font-weight: 600;\r\n            color: $muted-text-color;\r\n            min-width: 100px;\r\n          }\r\n\r\n          .value {\r\n            color: $text-color;\r\n            text-align: right;\r\n            word-break: break-word;\r\n            flex: 1;\r\n            margin-left: $spacing-sm;\r\n          }\r\n        }\r\n\r\n        .mod-stats {\r\n          display: grid;\r\n          grid-template-columns: repeat(3, 1fr);\r\n          gap: $spacing-md;\r\n\r\n          .stat-item {\r\n            text-align: center;\r\n            padding: $spacing-md;\r\n            background-color: $input-background;\r\n            border-radius: $border-radius-md;\r\n            border: 2px solid transparent;\r\n\r\n            &.active {\r\n              border-color: $success-color;\r\n              background-color: rgba($success-color, 0.1);\r\n            }\r\n\r\n            &.inactive {\r\n              border-color: $error-color;\r\n              background-color: rgba($error-color, 0.1);\r\n            }\r\n\r\n            .stat-number {\r\n              display: block;\r\n              font-size: 2rem;\r\n              font-weight: bold;\r\n              color: $primary-color;\r\n            }\r\n\r\n            .stat-label {\r\n              display: block;\r\n              font-size: $font-size-sm;\r\n              color: $muted-text-color;\r\n              margin-top: $spacing-xs;\r\n            }\r\n          }\r\n        }\r\n\r\n        &.quick-actions .action-buttons {\r\n          display: grid;\r\n          grid-template-columns: 1fr 1fr;\r\n          gap: $spacing-md;\r\n\r\n          .action-btn {\r\n            padding: $spacing-md;\r\n            background-color: $secondary-color;\r\n            color: white;\r\n            border: none;\r\n            border-radius: $border-radius-md;\r\n            font-weight: 600;\r\n            cursor: pointer;\r\n            transition: background-color 0.2s ease, transform 0.1s ease;\r\n\r\n            &:hover {\r\n              background-color: color.adjust($secondary-color, $lightness: -10%);\r\n              transform: translateY(-1px);\r\n            }\r\n\r\n            &:active {\r\n              transform: translateY(0);\r\n            }\r\n          }\r\n        }\r\n      }\r\n    }\r\n  }\r\n\r\n  .launch-section {\r\n    display: flex;\r\n    flex-direction: column;\r\n    align-items: center;\r\n    justify-content: center;\r\n    padding: $spacing-md 0;\r\n    margin-top: $spacing-xs;\r\n    gap: $spacing-md;\r\n\r\n    .status-message {\r\n      display: flex;\r\n      align-items: center;\r\n      gap: $spacing-sm;\r\n      padding: $spacing-md $spacing-lg;\r\n      border-radius: $border-radius-md;\r\n      font-weight: 600;\r\n      max-width: 500px;\r\n      text-align: center;\r\n\r\n      .status-icon {\r\n        font-size: 1.2rem;\r\n      }\r\n\r\n      &.success {\r\n        background-color: rgba($success-color, 0.1);\r\n        border: 1px solid $success-color;\r\n        color: $success-color;\r\n      }\r\n\r\n      &.error {\r\n        background-color: rgba($error-color, 0.1);\r\n        border: 1px solid $error-color;\r\n        color: $error-color;\r\n      }\r\n    }\r\n\r\n    .launch-button {\r\n      font-size: 1.5rem;\r\n      font-weight: bold;\r\n      padding: $spacing-lg 48px; // xxl equivalent\r\n      background: linear-gradient(135deg, $primary-color, $secondary-color);\r\n      color: white;\r\n      border: none;\r\n      border-radius: $border-radius-lg;\r\n      cursor: pointer;\r\n      transition: all 0.3s ease;\r\n      box-shadow: $box-shadow-lg;\r\n      display: flex;\r\n      align-items: center;\r\n      gap: $spacing-md;\r\n      min-width: 250px;\r\n      justify-content: center;\r\n\r\n      &:hover {\r\n        transform: translateY(-3px);\r\n        box-shadow: 0 10px 25px rgba(22, 123, 41, 0.3);\r\n      }\r\n\r\n      &:active {\r\n        transform: translateY(-1px);\r\n      }\r\n\r\n      &:disabled {\r\n        opacity: 0.6;\r\n        cursor: not-allowed;\r\n        transform: none;\r\n        box-shadow: $box-shadow-sm;\r\n      }\r\n\r\n      .loading-spinner.small {\r\n        width: 20px;\r\n        height: 20px;\r\n        border: 2px solid rgba(255, 255, 255, 0.3);\r\n        border-top: 2px solid white;\r\n        border-radius: 50%;\r\n        animation: spin-new 1s linear infinite;\r\n      }\r\n    }\r\n  }\r\n\r\n  @media (max-width: 768px) {\r\n    padding: $spacing-md;\r\n\r\n    .profile-details-grid {\r\n      grid-template-columns: 1fr;\r\n    }\r\n\r\n    .main-content-area .info-card .action-buttons {\r\n      grid-template-columns: 1fr;\r\n    }\r\n\r\n    .launch-button {\r\n      font-size: 1.2rem;\r\n      padding: $spacing-md $spacing-lg;\r\n      min-width: 200px;\r\n    }\r\n  }\r\n}\r\n\r\n// Mods Header mit Actions\r\n.mods-header {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  margin-top: $spacing-lg; // Abstand nach oben hinzugefügt\r\n  margin-bottom: $spacing-md;\r\n  \r\n  h4 {\r\n    margin: 0;\r\n    color: $primary-color;\r\n  }\r\n  \r\n  .mods-actions {\r\n    display: flex;\r\n    gap: $spacing-sm;\r\n    \r\n    .btn-sm {\r\n      padding: $spacing-xs $spacing-sm;\r\n      font-size: $font-size-sm;\r\n      white-space: nowrap;\r\n    }\r\n  }\r\n}\r\n\r\n@keyframes spin-new {\r\n  0% { transform: rotate(0deg); }\r\n  100% { transform: rotate(360deg); }\r\n}\n\n.mods-list {\n  display: grid;\n  grid-template-columns: 1fr;\n  gap: 16px;\n  margin-top: 20px;\n}\n\n.mod-item {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  padding: 16px 24px;\n  background: rgba(20, 25, 35, 0.65);\n  backdrop-filter: blur(12px);\n  -webkit-backdrop-filter: blur(12px);\n  border: 1px solid rgba(255, 255, 255, 0.06);\n  border-radius: 14px;\n  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);\n  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);\n  position: relative;\n  overflow: hidden;\n\n  &::before {\n    content: '';\n    position: absolute;\n    top: 0; left: 0; bottom: 0;\n    width: 4px;\n    background: transparent;\n    transition: all 0.3s ease;\n  }\n\n  &:hover {\n    transform: translateY(-3px) scale(1.005);\n    background: rgba(30, 40, 55, 0.85);\n    border-color: rgba(96, 165, 250, 0.4);\n    box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.4), 0 0 20px rgba(96, 165, 250, 0.1);\n  }\n\n  &.active {\n    background: linear-gradient(90deg, rgba(16, 185, 129, 0.08) 0%, rgba(20, 25, 35, 0.65) 20%);\n    border-left: 1px solid rgba(16, 185, 129, 0.3);\n    \n    &::before {\n      background: #10b981;\n      box-shadow: 0 0 10px #10b981;\n    }\n    \n    &:hover {\n      background: linear-gradient(90deg, rgba(16, 185, 129, 0.12) 0%, rgba(30, 40, 55, 0.85) 30%);\n    }\n  }\n\n  &.inactive {\n    opacity: 0.65;\n    filter: grayscale(30%);\n    background: linear-gradient(90deg, rgba(239, 68, 68, 0.05) 0%, rgba(20, 25, 35, 0.65) 20%);\n    \n    &::before {\n      background: #ef4444;\n    }\n    \n    &:hover {\n      opacity: 1;\n      filter: grayscale(0%);\n      background: linear-gradient(90deg, rgba(239, 68, 68, 0.1) 0%, rgba(30, 40, 55, 0.85) 30%);\n    }\n  }\n\n  .mod-info {\n    flex: 1;\n    display: flex;\n    flex-direction: column;\n    gap: 6px;\n    padding-left: 10px;\n\n    .mod-name {\n      font-size: 1.15rem;\n      font-weight: 600;\n      color: #f8fafc;\n      display: flex;\n      align-items: center;\n      gap: 12px;\n      letter-spacing: 0.3px;\n    }\n    \n    .mod-tags {\n      display: inline-flex;\n      gap: 8px;\n      margin-top: 2px;\n      \n      span {\n        background: linear-gradient(135deg, rgba(96, 165, 250, 0.2), rgba(59, 130, 246, 0.1));\n        border: 1px solid rgba(96, 165, 250, 0.2);\n        color: #93c5fd;\n        padding: 4px 10px;\n        border-radius: 12px;\n        font-size: 0.7rem;\n        font-weight: 600;\n        letter-spacing: 0.5px;\n        text-transform: uppercase;\n        box-shadow: 0 2px 4px rgba(0,0,0,0.1);\n      }\n    }\n  }\n\n  .mod-actions {\n    display: flex;\n    gap: 10px;\n    align-items: center;\n    opacity: 0.8;\n    transition: opacity 0.3s;\n    \n    .btn {\n      padding: 8px 14px;\n      border-radius: 8px;\n      font-weight: 600;\n      letter-spacing: 0.5px;\n      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);\n      text-transform: none;\n      font-size: 0.85rem;\n      \n      &:hover {\n        transform: translateY(-2px);\n        box-shadow: 0 6px 12px rgba(0,0,0,0.2);\n      }\n      \n      &:active {\n        transform: translateY(0);\n      }\n    }\n  }\n  \n  &:hover .mod-actions {\n    opacity: 1;\n  }\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -41819,12 +41940,12 @@ const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_m
 const StartPage_1 = __importDefault(__webpack_require__(/*! ./StartPage */ "./src/renderer/components/StartPage.tsx"));
 const ProfilesView_1 = __importDefault(__webpack_require__(/*! ./ProfilesView */ "./src/renderer/components/ProfilesView.tsx"));
 const SettingsView_1 = __importDefault(__webpack_require__(/*! ./SettingsView */ "./src/renderer/components/SettingsView.tsx"));
-const ProfileSettingsView_1 = __importDefault(__webpack_require__(/*! ./ProfileSettingsView */ "./src/renderer/components/ProfileSettingsView.tsx"));
-const ProfileEditPopup_1 = __importDefault(__webpack_require__(/*! ./ProfileEditPopup */ "./src/renderer/components/ProfileEditPopup.tsx"));
 const SyncProgressPopup_1 = __importDefault(__webpack_require__(/*! ./SyncProgressPopup */ "./src/renderer/components/SyncProgressPopup.tsx"));
 const ModInfoPopup_1 = __importDefault(__webpack_require__(/*! ./ModInfoPopup */ "./src/renderer/components/ModInfoPopup.tsx"));
 const LogAnalyzerView_1 = __importDefault(__webpack_require__(/*! ./LogAnalyzerView */ "./src/renderer/components/LogAnalyzerView.tsx"));
+const StorageCleanerView_1 = __importDefault(__webpack_require__(/*! ./StorageCleanerView */ "./src/renderer/components/StorageCleanerView.tsx"));
 const InGameUpdatesPopup_1 = __importDefault(__webpack_require__(/*! ./InGameUpdatesPopup */ "./src/renderer/components/InGameUpdatesPopup.tsx"));
+const SplashScreen_1 = __importDefault(__webpack_require__(/*! ./SplashScreen */ "./src/renderer/components/SplashScreen.tsx"));
 const i18n_1 = __webpack_require__(/*! ../i18n */ "./src/renderer/i18n.ts");
 const { ipcRenderer } = window.require('electron');
 const App = () => {
@@ -41851,9 +41972,7 @@ const App = () => {
         currentVersion: '1.0.0'
     });
     // Popup-States
-    const [showProfileEditPopup, setShowProfileEditPopup] = (0, react_1.useState)(false);
-    const [editingProfile, setEditingProfile] = (0, react_1.useState)(null);
-    const [isCreatingProfile, setIsCreatingProfile] = (0, react_1.useState)(false);
+    const [appIsReady, setAppIsReady] = (0, react_1.useState)(false);
     const [showSyncProgress, setShowSyncProgress] = (0, react_1.useState)(false);
     const [syncProgress, setSyncProgress] = (0, react_1.useState)({
         currentMod: '',
@@ -42034,6 +42153,8 @@ const App = () => {
             return 'logs';
         if (path.startsWith('/profile-settings'))
             return 'profile-settings';
+        if (path.startsWith('/storage'))
+            return 'storage';
         return 'start';
     };
     const handleMinimize = () => {
@@ -42046,35 +42167,6 @@ const App = () => {
         ipcRenderer.invoke('close-window');
     };
     // Popup-Handler
-    const handleCreateProfile = () => {
-        setEditingProfile(null);
-        setIsCreatingProfile(true);
-        setShowProfileEditPopup(true);
-    };
-    const handleEditProfile = (profile) => {
-        setEditingProfile(profile);
-        setIsCreatingProfile(false);
-        setShowProfileEditPopup(true);
-    };
-    const handleSaveProfile = async (profile) => {
-        try {
-            if (isCreatingProfile) {
-                await ipcRenderer.invoke('create-profile', profile);
-            }
-            else {
-                await ipcRenderer.invoke('update-profile', profile);
-            }
-            setShowProfileEditPopup(false);
-            // Aktualisiere die Profile-Liste nach dem Speichern
-            if (location.pathname === '/profiles') {
-                // Trigger Reload der ProfilesView
-                window.location.reload();
-            }
-        }
-        catch (error) {
-            console.error('Fehler beim Speichern des Profils:', error);
-        }
-    };
     const handleShowModInfo = (mod) => {
         setSelectedMod(mod);
         setShowModInfo(true);
@@ -42087,6 +42179,7 @@ const App = () => {
         ipcRenderer.invoke('install-update');
     };
     return (react_1.default.createElement("div", { className: "container" },
+        !appIsReady && react_1.default.createElement(SplashScreen_1.default, { onComplete: () => setAppIsReady(true), language: settings?.language }),
         react_1.default.createElement("header", { className: "header" },
             react_1.default.createElement("h1", null, t('app.title')),
             react_1.default.createElement("div", { className: "window-controls" },
@@ -42097,16 +42190,15 @@ const App = () => {
             react_1.default.createElement("div", { className: `tab ${getCurrentTab() === 'start' ? 'active' : ''}`, onClick: () => navigate('/') }, t('nav.start')),
             react_1.default.createElement("div", { className: `tab ${getCurrentTab() === 'profiles' ? 'active' : ''}`, onClick: () => navigate('/profiles') }, t('nav.profiles')),
             react_1.default.createElement("div", { className: `tab ${getCurrentTab() === 'settings' ? 'active' : ''}`, onClick: () => navigate('/settings') }, t('nav.settings')),
-            react_1.default.createElement("div", { className: `tab ${getCurrentTab() === 'logs' ? 'active' : ''}`, onClick: () => navigate('/logs') }, "Log Analyzer"),
-            location.pathname.includes('/profile-settings/') && (react_1.default.createElement("div", { className: "tab active" }, t('nav.profileSettings')))),
-        "      ",
+            react_1.default.createElement("div", { className: `tab ${getCurrentTab() === 'logs' ? 'active' : ''}`, onClick: () => navigate('/logs') }, t('nav.logs')),
+            react_1.default.createElement("div", { className: `tab ${getCurrentTab() === 'storage' ? 'active' : ''}`, onClick: () => navigate('/storage') }, t('nav.storage'))),
         react_1.default.createElement("div", { className: "content" },
             react_1.default.createElement(react_router_dom_1.Routes, null,
                 react_1.default.createElement(react_router_dom_1.Route, { path: "/", element: react_1.default.createElement(StartPage_1.default, { settings: settings, modListReloadKey: modListReloadKey }) }),
-                react_1.default.createElement(react_router_dom_1.Route, { path: "/profiles", element: react_1.default.createElement(ProfilesView_1.default, { settings: settings, onCreateProfile: handleCreateProfile, onEditProfile: handleEditProfile, onShowModInfo: handleShowModInfo, modListReloadKey: modListReloadKey }) }),
+                react_1.default.createElement(react_router_dom_1.Route, { path: "/profiles", element: react_1.default.createElement(ProfilesView_1.default, { settings: settings, onShowModInfo: handleShowModInfo, modListReloadKey: modListReloadKey }) }),
                 react_1.default.createElement(react_router_dom_1.Route, { path: "/settings", element: react_1.default.createElement(SettingsView_1.default, { settings: settings, setSettings: setSettings }) }),
-                react_1.default.createElement(react_router_dom_1.Route, { path: "/profile-settings/:id", element: react_1.default.createElement(ProfileSettingsView_1.default, { settings: settings, modListReloadKey: modListReloadKey }) }),
-                react_1.default.createElement(react_router_dom_1.Route, { path: "/logs", element: react_1.default.createElement(LogAnalyzerView_1.default, { settings: settings }) }))),
+                react_1.default.createElement(react_router_dom_1.Route, { path: "/logs", element: react_1.default.createElement(LogAnalyzerView_1.default, { settings: settings }) }),
+                react_1.default.createElement(react_router_dom_1.Route, { path: "/storage", element: react_1.default.createElement(StorageCleanerView_1.default, { settings: settings }) }))),
         react_1.default.createElement("footer", { className: "footer" },
             react_1.default.createElement("div", { className: "footer-content" },
                 react_1.default.createElement("div", { className: "copyright" },
@@ -42116,9 +42208,6 @@ const App = () => {
                     "Version ",
                     settings.currentVersion)),
             react_1.default.createElement("div", { className: "legal" }, "Farming Simulator ist eine eingetragene Marke von GIANTS Software GmbH. Diese Anwendung steht in keiner Verbindung zu GIANTS Software.")),
-        "      ",
-        "      ",
-        react_1.default.createElement(ProfileEditPopup_1.default, { profile: editingProfile, isOpen: showProfileEditPopup, onClose: () => setShowProfileEditPopup(false), onSave: handleSaveProfile, isCreating: isCreatingProfile, language: settings.language, settings: settings }),
         "      ",
         react_1.default.createElement(SyncProgressPopup_1.default, { isOpen: showSyncProgress, progress: syncProgress, onCancel: handleCancelSync, onSkipCurrentMod: handleSkipCurrentMod, onProvideLocalMod: handleProvideLocalMod, autoLaunch: autoLaunchOnSyncComplete, onAutoLaunchChange: setAutoLaunchOnSyncComplete, language: settings.language }),
         react_1.default.createElement(ModInfoPopup_1.default, { mod: selectedMod, isOpen: showModInfo, onClose: () => setShowModInfo(false), language: settings.language }),
@@ -42130,7 +42219,7 @@ const App = () => {
                     react_1.default.createElement("button", { className: "popup-close", onClick: () => setShowUpdateDialog(false) }, "\u00D7")),
                 react_1.default.createElement("div", { className: "popup-body" },
                     updateStatus === 'available' && (react_1.default.createElement(react_1.default.Fragment, null,
-                        react_1.default.createElement("p", null, "Eine neue Version ist verf\u00FCgbar!"),
+                        react_1.default.createElement("p", null, t('update.available')),
                         react_1.default.createElement("div", { className: "version-info" },
                             react_1.default.createElement("div", null,
                                 t('update.current'),
@@ -42152,7 +42241,7 @@ const App = () => {
                                     })()
                                 } }))))),
                     updateStatus === 'downloading' && (react_1.default.createElement("div", { className: "update-progress" },
-                        react_1.default.createElement("p", null, "Update wird heruntergeladen..."),
+                        react_1.default.createElement("p", null, t('update.downloading')),
                         react_1.default.createElement("div", { className: "progress-bar" },
                             react_1.default.createElement("div", { className: "progress-fill", style: { width: `${updateProgress.percent || 0}%` } })),
                         react_1.default.createElement("div", { className: "progress-stats" },
@@ -42163,8 +42252,8 @@ const App = () => {
                                 updateProgress.speed ? (updateProgress.speed / (1024 * 1024)).toFixed(1) : '0.0',
                                 " MB/s")))),
                     updateStatus === 'ready' && (react_1.default.createElement("div", { className: "update-ready" },
-                        react_1.default.createElement("p", null, "Das Update wurde erfolgreich heruntergeladen und ist bereit zur Installation!"),
-                        react_1.default.createElement("p", null, "Die Anwendung wird neu gestartet.")))),
+                        react_1.default.createElement("p", null, t('update.ready')),
+                        react_1.default.createElement("p", null, t('update.restarting'))))),
                 react_1.default.createElement("div", { className: "popup-footer" },
                     updateStatus === 'available' && (react_1.default.createElement(react_1.default.Fragment, null,
                         react_1.default.createElement("button", { className: "button secondary", onClick: () => setShowUpdateDialog(false) }, t('update.later')),
@@ -42306,94 +42395,83 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const i18n_1 = __webpack_require__(/*! ../i18n */ "./src/renderer/i18n.ts");
 const { ipcRenderer } = window.require('electron');
+const i18n_1 = __webpack_require__(/*! ../i18n */ "./src/renderer/i18n.ts");
 const LogAnalyzerView = ({ settings }) => {
-    const t = (0, i18n_1.useTranslation)(settings.language);
-    const [logEntries, setLogEntries] = (0, react_1.useState)([]);
-    const [isAnalyzing, setIsAnalyzing] = (0, react_1.useState)(false);
+    const [issues, setIssues] = (0, react_1.useState)([]);
+    const [logPath, setLogPath] = (0, react_1.useState)('');
+    const [loading, setLoading] = (0, react_1.useState)(false);
     const [error, setError] = (0, react_1.useState)(null);
-    const [selectedGame, setSelectedGame] = (0, react_1.useState)('fs25');
-    const handleAnalyze = async (manualPath) => {
-        setIsAnalyzing(true);
+    const t = (0, i18n_1.useTranslation)(settings.language);
+    const analyzeLog = async () => {
+        setLoading(true);
         setError(null);
-        let logPath = manualPath || '';
-        if (!logPath) {
-            // Check if the user has a custom mod folder defined in settings for the selected game
-            const gameSettings = settings.games?.[selectedGame];
-            if (gameSettings && gameSettings.defaultModFolder) {
-                // Assuming defaultModFolder is like .../FarmingSimulator2025/mods
-                // The log.txt is in the parent directory
-                const pathModule = window.require('path');
-                logPath = pathModule.join(gameSettings.defaultModFolder, '..', 'log.txt');
-            }
-            else {
-                // Fallback to standard path
-                const year = selectedGame.replace('fs', '20');
-                logPath = `${process.env.USERPROFILE}\\Documents\\My Games\\FarmingSimulator${year}\\log.txt`;
-            }
-        }
         try {
-            const result = await ipcRenderer.invoke('analyze-log', logPath);
+            const result = await ipcRenderer.invoke('analyze-log');
             if (result.success) {
-                setLogEntries(result.entries || []);
+                setIssues(result.issues);
+                setLogPath(result.logPath);
             }
             else {
-                setError(`${result.error || 'Unbekannter Fehler'}\nVersuchter Pfad: ${logPath}`);
-            }
-        }
-        catch (e) {
-            setError(`Ein Fehler ist aufgetreten: ${String(e)}\nVersuchter Pfad: ${logPath}`);
-        }
-        finally {
-            setIsAnalyzing(false);
-        }
-    };
-    const handleBrowseLog = async () => {
-        try {
-            const filePath = await ipcRenderer.invoke('open-file-dialog');
-            if (filePath) {
-                handleAnalyze(filePath);
+                if (result.errorCode === 'NO_MOD_FOLDER') {
+                    setError(t("logs.errorNoModFolder") || "Kein Mod-Ordner konfiguriert.");
+                }
+                else if (result.errorCode === 'NO_LOG_FILE') {
+                    setError((t("logs.errorNoLog") || "log.txt nicht gefunden in {folder}").replace('{folder}', result.errorData));
+                }
+                else {
+                    setError(result.error);
+                }
             }
         }
         catch (err) {
-            setError(`Fehler beim Durchsuchen: ${String(err)}`);
+            setError(String(err));
+        }
+        finally {
+            setLoading(false);
         }
     };
-    return (react_1.default.createElement("div", { className: "log-analyzer-view", style: { padding: '20px' } },
+    (0, react_1.useEffect)(() => {
+        analyzeLog();
+    }, []);
+    const openLogFile = async () => {
+        if (!logPath)
+            return;
+        try {
+            const { shell } = window.require('electron');
+            await shell.openPath(logPath);
+        }
+        catch (err) {
+            alert(`${t("common.error")}: ${err}`);
+        }
+    };
+    return (react_1.default.createElement("div", { className: "log-analyzer-view", style: { padding: '20px', overflowY: 'auto', height: '100%' } },
         react_1.default.createElement("div", { className: "card" },
-            react_1.default.createElement("h2", null, "Game Log Analyzer"),
-            react_1.default.createElement("p", null, "Analysiere deine Farming Simulator `log.txt` auf Fehler, Warnungen und Mod-Konflikte."),
-            react_1.default.createElement("div", { style: { display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '20px' } },
-                react_1.default.createElement("select", { value: selectedGame, onChange: (e) => setSelectedGame(e.target.value), className: "input-select", style: { width: '200px' } },
-                    react_1.default.createElement("option", { value: "fs25" }, "Farming Simulator 25"),
-                    react_1.default.createElement("option", { value: "fs22" }, "Farming Simulator 22"),
-                    react_1.default.createElement("option", { value: "fs19" }, "Farming Simulator 19")),
-                react_1.default.createElement("button", { className: "btn btn-primary", onClick: () => handleAnalyze(), disabled: isAnalyzing }, isAnalyzing ? 'Analysiere...' : 'Log.txt analysieren'),
-                react_1.default.createElement("button", { className: "btn btn-secondary", onClick: handleBrowseLog, disabled: isAnalyzing }, "Durchsuchen...")),
-            error && (react_1.default.createElement("div", { className: "alert alert-error" }, error)),
-            react_1.default.createElement("div", { style: { marginTop: '20px' } },
-                logEntries.length === 0 && !isAnalyzing && !error && (react_1.default.createElement("p", null, "No errors or warnings found yet. Click analyze to start.")),
-                logEntries.length > 0 && (react_1.default.createElement("div", { style: { maxHeight: '500px', overflowY: 'auto', background: 'rgba(0,0,0,0.3)', padding: '10px', borderRadius: '8px' } }, logEntries.map((entry, index) => (react_1.default.createElement("div", { key: index, style: {
-                        padding: '8px',
-                        marginBottom: '4px',
-                        borderLeft: `4px solid ${entry.type === 'error' ? '#ff4d4f' : entry.type === 'warning' ? '#ff6b00' : '#1ed760'}`,
-                        backgroundColor: 'rgba(255,255,255,0.05)',
-                        fontFamily: 'monospace',
-                        fontSize: '12px'
-                    } },
-                    react_1.default.createElement("strong", { style: { color: entry.type === 'error' ? '#ff4d4f' : entry.type === 'warning' ? '#ff6b00' : '#1ed760', display: 'inline-block', width: '70px' } },
-                        "[",
-                        entry.type.toUpperCase(),
-                        "]"),
-                    entry.relatedMod && react_1.default.createElement("span", { style: { color: '#00d2ff', marginRight: '10px' } },
-                        "[",
-                        entry.relatedMod,
-                        "]"),
-                    entry.count && entry.count > 1 && react_1.default.createElement("span", { style: { color: '#eb7a00', marginRight: '10px', fontWeight: 'bold', backgroundColor: 'rgba(235, 122, 0, 0.2)', padding: '2px 6px', borderRadius: '4px' } },
-                        "x",
-                        entry.count),
-                    entry.message)))))))));
+            react_1.default.createElement("h2", null, t("logs.title") || "🛠️ Auto-Debugger (Log-Analyse)"),
+            react_1.default.createElement("p", null, t("logs.desc") || "Der Auto-Debugger scannt deine aktuelle FS25 log.txt nach Fehlern und zeigt dir an, welche Mods diese verursachen."),
+            react_1.default.createElement("div", { style: { marginBottom: '20px', display: 'flex', gap: '10px' } },
+                react_1.default.createElement("button", { className: "btn btn-primary", onClick: analyzeLog, disabled: loading }, loading ? (t("logs.analyzing") || 'Analysiere...') : (t("logs.rescan") || 'Log neu einlesen')),
+                logPath && (react_1.default.createElement("button", { className: "btn btn-secondary", onClick: openLogFile }, t("logs.openLog") || 'log.txt öffnen'))),
+            error && (react_1.default.createElement("div", { className: "error-message", style: { color: '#ef4444', marginBottom: '20px' } },
+                t("common.error") || "Fehler",
+                ": ",
+                error)),
+            !loading && !error && issues.length === 0 && (react_1.default.createElement("div", { className: "success-message", style: { color: '#4ade80', padding: '20px', background: 'rgba(74, 222, 128, 0.1)', borderRadius: '8px' } }, t("logs.noErrorsFound") || "🎉 Keine fehlerhaften Mods in der log.txt gefunden! Dein Spiel sollte stabil laufen.")),
+            !loading && issues.length > 0 && (react_1.default.createElement("div", { className: "issues-list", style: { display: 'flex', flexDirection: 'column', gap: '10px' } },
+                react_1.default.createElement("div", { style: { padding: '10px', background: 'rgba(239, 68, 68, 0.1)', borderLeft: '4px solid #ef4444', borderRadius: '4px' } }, (t("logs.errorsFound") || "⚠️ {count} Mods verursachen Fehler!").replace('{count}', issues.length.toString())),
+                issues.map((issue, idx) => (react_1.default.createElement("div", { key: idx, className: "issue-card", style: { background: 'var(--bg-secondary)', padding: '15px', borderRadius: '8px', border: '1px solid var(--border-color)' } },
+                    react_1.default.createElement("div", { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px' } },
+                        react_1.default.createElement("h3", { style: { margin: 0, color: '#fca5a5' } }, issue.modName),
+                        react_1.default.createElement("span", { style: { background: '#ef4444', color: '#fff', padding: '2px 8px', borderRadius: '12px', fontSize: '0.8rem' } },
+                            issue.count,
+                            " ",
+                            t("logs.errorCount") || "Fehler gefunden")),
+                    react_1.default.createElement("p", { style: { margin: 0, fontFamily: 'monospace', fontSize: '0.9rem', color: '#ccc', wordBreak: 'break-all' } },
+                        t("logs.example") || "Beispiel:",
+                        " ",
+                        issue.errorMessage),
+                    react_1.default.createElement("div", { style: { marginTop: '15px' } },
+                        react_1.default.createElement("p", { style: { margin: 0, fontSize: '0.85rem', color: '#888' } }, t("logs.tip") || "Tipp: Gehe in deine Profile und deaktiviere oder lösche diesen Mod, um Abstürze zu vermeiden."))))))))));
 };
 exports["default"] = LogAnalyzerView;
 
@@ -42445,9 +42523,9 @@ const ModInfoPopup = ({ mod, isOpen, onClose, language }) => {
     };
     const getLocalizedDescription = () => {
         if (mod.modDescData && mod.modDescData.description) {
-            return mod.modDescData.description[language] || mod.modDescData.description['en'] || Object.values(mod.modDescData.description)[0] || mod.description || 'Keine Beschreibung verfügbar';
+            return mod.modDescData.description[language] || mod.modDescData.description['en'] || Object.values(mod.modDescData.description)[0] || mod.description || t('mods.noDescription');
         }
-        return mod.description || 'Keine Beschreibung verfügbar';
+        return mod.description || t('mods.noDescription');
     };
     // Hilfsfunktion: fileSize-String (z.B. "40.37 MB") in Bytes umwandeln
     const parseFileSize = (size) => {
@@ -42481,28 +42559,44 @@ const ModInfoPopup = ({ mod, isOpen, onClose, language }) => {
                             } }))),
                     react_1.default.createElement("div", { className: "mod-details" },
                         react_1.default.createElement("div", { className: "detail-group" },
-                            react_1.default.createElement("h3", null, "Allgemeine Informationen"),
+                            react_1.default.createElement("h3", null, t('mods.generalInfo')),
                             react_1.default.createElement("div", { className: "detail-item" },
-                                react_1.default.createElement("span", { className: "detail-label" }, "Name:"),
+                                react_1.default.createElement("span", { className: "detail-label" },
+                                    t('mods.name'),
+                                    ":"),
                                 react_1.default.createElement("span", { className: "detail-value" }, getLocalizedTitle())),
                             react_1.default.createElement("div", { className: "detail-item" },
                                 react_1.default.createElement("span", { className: "detail-label" },
                                     t('mods.author'),
                                     ":"),
-                                react_1.default.createElement("span", { className: "detail-value" }, mod.author || (mod.modDescData?.author ?? 'Unbekannt'))),
+                                react_1.default.createElement("span", { className: "detail-value" }, mod.author || (mod.modDescData?.author ?? t('mods.unknown')))),
                             react_1.default.createElement("div", { className: "detail-item" },
                                 react_1.default.createElement("span", { className: "detail-label" },
                                     t('mods.version'),
                                     ":"),
-                                react_1.default.createElement("span", { className: "detail-value" }, mod.version || (mod.modDescData?.version ?? 'Unbekannt'))),
+                                react_1.default.createElement("span", { className: "detail-value" }, mod.version || (mod.modDescData?.version ?? t('mods.unknown')))),
                             react_1.default.createElement("div", { className: "detail-item" },
-                                react_1.default.createElement("span", { className: "detail-label" }, "Status:"),
+                                react_1.default.createElement("span", { className: "detail-label" },
+                                    t('mods.status'),
+                                    ":"),
                                 react_1.default.createElement("span", { className: `detail-value status ${mod.isActive ? 'active' : 'inactive'}` }, mod.isActive ? t('mods.active') : t('mods.inactive'))),
                             mod.modDescData?.multiplayerSupported !== undefined && (react_1.default.createElement("div", { className: "detail-item" },
-                                react_1.default.createElement("span", { className: "detail-label" }, "Multiplayer:"),
-                                react_1.default.createElement("span", { className: "detail-value" }, mod.modDescData.multiplayerSupported ? 'Unterstützt' : 'Nicht unterstützt')))),
+                                react_1.default.createElement("span", { className: "detail-label" },
+                                    t('mods.multiplayer'),
+                                    ":"),
+                                react_1.default.createElement("span", { className: "detail-value" }, mod.modDescData.multiplayerSupported ? t('mods.supported') : t('mods.notSupported')))),
+                            mod.modDescData?.category && (react_1.default.createElement("div", { className: "detail-item" },
+                                react_1.default.createElement("span", { className: "detail-label" },
+                                    t('mods.category'),
+                                    ":"),
+                                react_1.default.createElement("span", { className: "detail-value" }, mod.modDescData.category))),
+                            mod.modDescData?.dependencies && mod.modDescData.dependencies.length > 0 && (react_1.default.createElement("div", { className: "detail-item" },
+                                react_1.default.createElement("span", { className: "detail-label" },
+                                    t('mods.dependencies'),
+                                    ":"),
+                                react_1.default.createElement("span", { className: "detail-value", style: { color: '#fbbf24' } }, mod.modDescData.dependencies.join(', '))))),
                         react_1.default.createElement("div", { className: "detail-group" },
-                            react_1.default.createElement("h3", null, "Datei-Informationen"),
+                            react_1.default.createElement("h3", null, t('mods.fileInfo')),
                             react_1.default.createElement("div", { className: "detail-item" },
                                 react_1.default.createElement("span", { className: "detail-label" },
                                     t('mods.fileSize'),
@@ -42517,607 +42611,18 @@ const ModInfoPopup = ({ mod, isOpen, onClose, language }) => {
                                 react_1.default.createElement("span", { className: "detail-label" },
                                     t('mods.source'),
                                     ":"),
-                                react_1.default.createElement("span", { className: "detail-value" }, mod.downloadUrl ? 'Server Sync' : 'Lokal'))),
+                                react_1.default.createElement("span", { className: "detail-value" }, mod.downloadUrl ? t('mods.sourceServer') : t('mods.sourceLocal')))),
                         react_1.default.createElement("div", { className: "detail-group" },
                             react_1.default.createElement("h3", null, t('mods.description')),
                             react_1.default.createElement("div", { className: "mod-description" }, getLocalizedDescription()))))),
-            react_1.default.createElement("div", { className: "popup-footer" },
+            react_1.default.createElement("div", { className: "popup-footer", style: { display: 'flex', justifyContent: 'space-between' } },
+                react_1.default.createElement("button", { className: "btn-secondary", onClick: () => {
+                        const { shell } = window.require('electron');
+                        shell.openExternal(`https://www.farming-simulator.com/mods.php?title=fs2025&searchMod=${encodeURIComponent(mod.name)}`);
+                    } }, "\uD83D\uDD0D Auf ModHub suchen"),
                 react_1.default.createElement("button", { className: "button primary", onClick: onClose }, t('common.close'))))));
 };
 exports["default"] = ModInfoPopup;
-
-
-/***/ }),
-
-/***/ "./src/renderer/components/ProfileEditPopup.tsx":
-/*!******************************************************!*\
-  !*** ./src/renderer/components/ProfileEditPopup.tsx ***!
-  \******************************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const i18n_1 = __webpack_require__(/*! ../i18n */ "./src/renderer/i18n.ts");
-const ProfileEditPopup = ({ profile, isOpen, onClose, onSave, isCreating, language = 'de', settings }) => {
-    const [formData, setFormData] = (0, react_1.useState)({
-        name: '',
-        description: '',
-        serverSyncUrl: '',
-        gameVersion: 'fs25',
-        version: '1.0.0'
-        // modFolderPath wird automatisch generiert
-    });
-    const [errors, setErrors] = (0, react_1.useState)({});
-    const [copyCurrentMods, setCopyCurrentMods] = (0, react_1.useState)(false);
-    const [isCheckingUrl, setIsCheckingUrl] = (0, react_1.useState)(false);
-    const [urlCheckResult, setUrlCheckResult] = (0, react_1.useState)(null);
-    // Übersetzungsfunktion
-    const t = (0, i18n_1.useTranslation)(language);
-    (0, react_1.useEffect)(() => {
-        if (isOpen) {
-            if (profile && !isCreating) {
-                // Bearbeitung eines existierenden Profils
-                setFormData({
-                    name: profile.name,
-                    description: profile.description || '',
-                    serverSyncUrl: profile.serverSyncUrl || '',
-                    gameVersion: profile.gameVersion || 'fs25',
-                    version: profile.version || '1.0.0'
-                });
-            }
-            else {
-                // Neues Profil erstellen
-                setFormData({
-                    name: '',
-                    description: '',
-                    serverSyncUrl: '',
-                    gameVersion: 'fs25',
-                    version: '1.0.0'
-                });
-                setCopyCurrentMods(false);
-            }
-            setErrors({});
-        }
-    }, [isOpen, profile?.id, isCreating]);
-    const handleInputChange = (field, value) => {
-        setFormData(prev => ({
-            ...prev,
-            [field]: value
-        }));
-        // Bei Spielversions-Änderung automatisch Standard-Mod-Pfad setzen
-        if (field === 'gameVersion' && settings?.games?.[value]?.defaultModFolder) {
-            setFormData(prev => ({
-                ...prev,
-                [field]: value,
-                modFolderPath: settings.games[value].defaultModFolder
-            }));
-        }
-        // Entferne Fehler für dieses Feld
-        if (errors[field]) {
-            setErrors(prev => ({
-                ...prev,
-                [field]: ''
-            }));
-        }
-        // Reset check result when URL changes
-        if (field === 'serverSyncUrl') {
-            setUrlCheckResult(null);
-        }
-    };
-    const validateForm = () => {
-        const newErrors = {};
-        if (!formData.name?.trim()) {
-            newErrors.name = t('profileEdit.nameRequired');
-        }
-        // Mod folder nicht mehr validieren - wird automatisch gesetzt
-        if (formData.serverSyncUrl && !isValidUrl(formData.serverSyncUrl)) {
-            newErrors.serverSyncUrl = t('profileEdit.invalidUrl');
-        }
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
-    const isValidUrl = (url) => {
-        try {
-            new URL(url);
-            return true;
-        }
-        catch {
-            return false;
-        }
-    };
-    const handleCheckUrl = async () => {
-        if (!formData.serverSyncUrl)
-            return;
-        if (!isValidUrl(formData.serverSyncUrl)) {
-            setUrlCheckResult({ success: false, message: 'Ungültiges URL-Format' });
-            return;
-        }
-        setIsCheckingUrl(true);
-        setUrlCheckResult(null);
-        try {
-            const { ipcRenderer } = window.require('electron');
-            const result = await ipcRenderer.invoke('check-fastdl-url', formData.serverSyncUrl);
-            if (result.success) {
-                setUrlCheckResult({ success: true, message: `${result.count} Mods gefunden` });
-            }
-            else {
-                setUrlCheckResult({ success: false, message: result.error || 'Fehler beim Prüfen' });
-            }
-        }
-        catch (error) {
-            setUrlCheckResult({ success: false, message: 'Verbindungsfehler' });
-        }
-        finally {
-            setIsCheckingUrl(false);
-        }
-    };
-    const getDocumentsModPath = (profileId) => {
-        // Erstelle automatischen Pfad im Dokumentenordner basierend auf der ID (Zeitstempel)
-        const os = __webpack_require__(/*! os */ "os");
-        const path = __webpack_require__(/*! path */ "path");
-        return path.join(os.homedir(), 'Documents', 'FS_ModManager', 'Profiles', profileId);
-    };
-    const handleSave = () => {
-        if (!validateForm()) {
-            return;
-        }
-        const profileId = profile?.id || `profile_${Date.now()}`;
-        const profileData = {
-            id: profileId,
-            name: formData.name,
-            version: formData.version || '1.0.0',
-            description: formData.description,
-            serverSyncUrl: formData.serverSyncUrl,
-            modFolderPath: profile?.modFolderPath || getDocumentsModPath(profileId), // Immer alten Pfad behalten!
-            gameVersion: formData.gameVersion,
-            mods: profile?.mods || []
-        };
-        if (isCreating && copyCurrentMods && settings?.games?.[formData.gameVersion]?.defaultModFolder) {
-            profileData._copyFromModFolder = settings.games[formData.gameVersion].defaultModFolder;
-        }
-        onSave(profileData);
-    };
-    if (!isOpen) {
-        return null;
-    }
-    return (react_1.default.createElement("div", { className: "popup-overlay", onClick: onClose },
-        react_1.default.createElement("div", { className: "popup-content profile-edit-popup", onClick: (e) => e.stopPropagation() },
-            react_1.default.createElement("div", { className: "popup-header" },
-                react_1.default.createElement("h2", null, isCreating ? t('profileEdit.create') : t('profileEdit.title')),
-                react_1.default.createElement("button", { className: "popup-close", onClick: (e) => { e.stopPropagation(); onClose(); } }, "\u00D7")),
-            react_1.default.createElement("div", { className: "popup-body" },
-                react_1.default.createElement("div", { className: "form-group" },
-                    react_1.default.createElement("label", { htmlFor: "profileName" },
-                        t('profileEdit.name'),
-                        " *"),
-                    react_1.default.createElement("input", { id: "profileName", type: "text", value: formData.name || '', onChange: (e) => handleInputChange('name', e.target.value), className: errors.name ? 'error' : '', placeholder: t('profileEdit.name') }),
-                    "            ",
-                    errors.name && react_1.default.createElement("span", { className: "error-message" }, errors.name)),
-                "          ",
-                react_1.default.createElement("div", { className: "form-group" },
-                    react_1.default.createElement("label", { htmlFor: "gameVersion" }, "Spielversion *"),
-                    react_1.default.createElement("select", { id: "gameVersion", value: formData.gameVersion || 'fs25', onChange: (e) => handleInputChange('gameVersion', e.target.value), className: "dark-select" },
-                        react_1.default.createElement("option", { value: "fs19" }, "Farming Simulator 19"),
-                        react_1.default.createElement("option", { value: "fs22" }, "Farming Simulator 22"),
-                        react_1.default.createElement("option", { value: "fs25" }, "Farming Simulator 25"))),
-                react_1.default.createElement("div", { className: "form-group" },
-                    react_1.default.createElement("label", { htmlFor: "packVersion" }, "Pack-Version"),
-                    react_1.default.createElement("input", { id: "packVersion", type: "text", value: formData.version || '', onChange: (e) => handleInputChange('version', e.target.value), placeholder: "z.B. 1.0.0" })),
-                react_1.default.createElement("div", { className: "form-group" },
-                    react_1.default.createElement("label", { htmlFor: "profileDescription" }, t('profileEdit.description')),
-                    react_1.default.createElement("textarea", { id: "profileDescription", value: formData.description || '', onChange: (e) => handleInputChange('description', e.target.value), placeholder: t('profileEdit.descriptionPlaceholder'), rows: 3 })),
-                isCreating && (react_1.default.createElement("div", { className: "form-group" },
-                    react_1.default.createElement("label", { className: "checkbox-label", style: { display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', marginTop: '8px' } },
-                        react_1.default.createElement("input", { type: "checkbox", checked: copyCurrentMods, onChange: (e) => setCopyCurrentMods(e.target.checked) }),
-                        "Aktuelle Mods hinzuf\u00FCgen"),
-                    react_1.default.createElement("div", { style: { fontSize: '0.85em', color: '#aaa', marginTop: '4px' } }, "Kopiert die aktuell installierten Mods aus dem Spiel in dieses neue Profil."))),
-                react_1.default.createElement("div", { className: "form-group" },
-                    react_1.default.createElement("label", { htmlFor: "serverSyncUrl" }, "FastDL Server-URL (f\u00FCr Sync)"),
-                    react_1.default.createElement("div", { style: { display: 'flex', gap: '8px' } },
-                        react_1.default.createElement("input", { id: "serverSyncUrl", type: "text", value: formData.serverSyncUrl || '', onChange: (e) => handleInputChange('serverSyncUrl', e.target.value), className: errors.serverSyncUrl ? 'error' : '', placeholder: "http://dein-server.de/mods/", style: { flex: 1 } }),
-                        react_1.default.createElement("button", { className: "button secondary", onClick: handleCheckUrl, disabled: isCheckingUrl || !formData.serverSyncUrl, style: { padding: '8px 12px', whiteSpace: 'nowrap' } }, isCheckingUrl ? 'Prüfe...' : 'Link prüfen')),
-                    urlCheckResult && (react_1.default.createElement("div", { style: {
-                            marginTop: '6px',
-                            fontSize: '0.9em',
-                            color: urlCheckResult.success ? '#4ade80' : '#f87171'
-                        } },
-                        urlCheckResult.success ? '✅ ' : '❌ ',
-                        urlCheckResult.message)),
-                    errors.serverSyncUrl && react_1.default.createElement("span", { className: "error-message" }, errors.serverSyncUrl))),
-            react_1.default.createElement("div", { className: "popup-footer" },
-                react_1.default.createElement("button", { className: "button secondary", onClick: onClose }, t('common.cancel')),
-                react_1.default.createElement("button", { className: "button primary", onClick: handleSave }, isCreating ? t('profileEdit.create') : t('common.save'))))));
-};
-exports["default"] = ProfileEditPopup;
-
-
-/***/ }),
-
-/***/ "./src/renderer/components/ProfileSettingsView.tsx":
-/*!*********************************************************!*\
-  !*** ./src/renderer/components/ProfileSettingsView.tsx ***!
-  \*********************************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/dist/index.js");
-const { ipcRenderer } = window.require('electron');
-const ProfileSettingsView = ({ settings, modListReloadKey }) => {
-    const { id } = (0, react_router_dom_1.useParams)();
-    const navigate = (0, react_router_dom_1.useNavigate)();
-    const [profile, setProfile] = (0, react_1.useState)(null);
-    const [isLoading, setIsLoading] = (0, react_1.useState)(true);
-    const [isSyncing, setIsSyncing] = (0, react_1.useState)(false);
-    const [syncMessage, setSyncMessage] = (0, react_1.useState)('');
-    const [syncError, setSyncError] = (0, react_1.useState)('');
-    const [isDeploying, setIsDeploying] = (0, react_1.useState)(false);
-    const [deployMessage, setDeployMessage] = (0, react_1.useState)('');
-    const [deployError, setDeployError] = (0, react_1.useState)('');
-    const [isCheckingUrl, setIsCheckingUrl] = (0, react_1.useState)(false);
-    const [urlCheckResult, setUrlCheckResult] = (0, react_1.useState)(null);
-    (0, react_1.useEffect)(() => {
-        loadProfile();
-    }, [id, modListReloadKey]);
-    const loadProfile = async () => {
-        try {
-            setIsLoading(true);
-            const profiles = await ipcRenderer.invoke('load-profiles');
-            const foundProfile = profiles.find((p) => p.id === id);
-            if (foundProfile) {
-                setProfile(foundProfile);
-            }
-            else {
-                alert('Profil nicht gefunden');
-                navigate('/');
-            }
-        }
-        catch (error) {
-            console.error('Fehler beim Laden des Profils:', error);
-        }
-        finally {
-            setIsLoading(false);
-        }
-    };
-    const handleChange = (e) => {
-        if (!profile)
-            return;
-        const { name, value } = e.target;
-        setProfile({
-            ...profile,
-            [name]: value
-        });
-    };
-    const handleSaveProfile = async () => {
-        if (!profile)
-            return;
-        try {
-            await ipcRenderer.invoke('save-profile', profile);
-            alert('Profil erfolgreich gespeichert');
-        }
-        catch (error) {
-            console.error('Fehler beim Speichern des Profils:', error);
-            alert(`Fehler beim Speichern des Profils: ${error instanceof Error ? error.message : String(error)}`);
-        }
-    };
-    const handleFolderSelect = async () => {
-        if (!profile)
-            return;
-        const folderPath = await ipcRenderer.invoke('open-folder-dialog');
-        if (folderPath) {
-            setProfile({
-                ...profile,
-                modFolderPath: folderPath
-            });
-        }
-    };
-    const handleSyncWithServer = async () => {
-        console.log('🚀 handleSyncWithServer called');
-        console.log('🚀 Profile:', profile);
-        if (!profile || !profile.serverSyncUrl) {
-            console.log('❌ No profile or serverSyncUrl');
-            setSyncError('Bitte geben Sie eine Server-Sync-URL ein');
-            return;
-        }
-        try {
-            console.log('🚀 Starting sync process...');
-            setIsSyncing(true);
-            setSyncMessage('Verbindung zum Server wird hergestellt...');
-            setSyncError('');
-            // Prüfen, ob die URL gültig ist
-            if (!profile.serverSyncUrl.startsWith('http')) {
-                throw new Error('Ungültige Server-URL. Die URL muss mit http:// oder https:// beginnen.');
-            }
-            // Versuchen Sie, die URL zu analysieren
-            try {
-                const url = new URL(profile.serverSyncUrl);
-                console.log('✅ URL is valid:', url.toString());
-            }
-            catch (e) {
-                throw new Error('Ungültige URL-Format.');
-            }
-            setSyncMessage('Lade Mod-Liste vom Server...');
-            console.log('🚀 Calling IPC sync-mods with:', profile.id, profile.serverSyncUrl);
-            // IPC-Aufruf zum Main-Prozess für die tatsächliche Server-Synchronisation
-            const result = await ipcRenderer.invoke('sync-mods', profile.id, profile.serverSyncUrl);
-            console.log('📦 IPC Result:', result);
-            if (result.success) {
-                const stats = result.stats || { new: 0, updated: 0, unchanged: 0, total: 0 };
-                setSyncMessage(`Synchronisation abgeschlossen: ${stats.new} neue, ${stats.updated} aktualisierte, ${stats.unchanged} unveränderte Mods. Gesamtzahl: ${stats.total} Mods.`);
-                // Aktualisiertes Profil neu laden, um die neuen Mods anzuzeigen
-                await loadProfile();
-                // Download-Leiste dauerhaft anzeigen - Status bleibt sichtbar
-                setSyncMessage('Synchronisation abgeschlossen');
-                setIsSyncing(false);
-                // Entferne nicht mehr die Nachricht - sie bleibt dauerhaft sichtbar
-            }
-            else {
-                throw new Error(result.error || 'Unbekannter Fehler bei der Server-Synchronisation');
-            }
-        }
-        catch (error) {
-            console.error('❌ Error during sync:', error);
-            setSyncError(`Fehler: ${error instanceof Error ? error.message : String(error)}`);
-            setIsSyncing(false);
-        }
-    };
-    const handleDeployMods = async () => {
-        if (!profile)
-            return;
-        try {
-            setIsDeploying(true);
-            setDeployMessage('Mods werden bereitgestellt...');
-            setDeployError('');
-            // Hier sollte die Logik für die Bereitstellung der Mods implementiert werden
-            // Zum Beispiel das Hochladen der Mod-Dateien an den Server oder das Erstellen eines Installationspakets
-            setTimeout(() => {
-                setDeployMessage('Mods erfolgreich bereitgestellt');
-                setTimeout(() => {
-                    setDeployMessage('');
-                    setIsDeploying(false);
-                }, 2000);
-            }, 2000);
-        }
-        catch (error) {
-            console.error('Fehler bei der Bereitstellung der Mods:', error);
-            setDeployError(`Fehler: ${error instanceof Error ? error.message : String(error)}`);
-            setIsDeploying(false);
-        }
-    };
-    const handleDeployToGame = async () => {
-        if (!profile)
-            return;
-        const gameVersion = profile.gameVersion || 'fs25';
-        const defaultModFolder = settings.games?.[gameVersion]?.defaultModFolder || settings.defaultModFolder;
-        if (!defaultModFolder) {
-            setDeployError(`Bitte legen Sie zuerst einen Standardmodordner für ${gameVersion.toUpperCase()} in den Einstellungen fest`);
-            return;
-        }
-        try {
-            setIsDeploying(true);
-            setDeployMessage('Bereite Bereitstellung der Mods vor...');
-            setDeployError('');
-            // Bestätigung vom Benutzer einholen
-            if (!confirm(`Diese Aktion wird alle aktuellen Mods im Ordner "${defaultModFolder}" durch die Mods dieses Profils ersetzen. Möchten Sie fortfahren?`)) {
-                setIsDeploying(false);
-                setDeployMessage('');
-                return;
-            }
-            setDeployMessage('Kopiere Mods ins Spiel...');
-            // Rufe die Funktion zum Bereitstellen der Mods auf
-            const result = await ipcRenderer.invoke('deploy-profile-mods', profile.id, defaultModFolder);
-            if (result.success) {
-                setDeployMessage('Mods wurden erfolgreich ins Spiel kopiert');
-                setTimeout(() => {
-                    setDeployMessage('');
-                }, 3000);
-            }
-            else {
-                setDeployError(`Fehler beim Bereitstellen der Mods: ${result.error}`);
-            }
-        }
-        catch (error) {
-            console.error('Fehler beim Bereitstellen der Mods:', error);
-            setDeployError(`Fehler: ${error instanceof Error ? error.message : String(error)}`);
-        }
-        finally {
-            setIsDeploying(false);
-        }
-    };
-    if (isLoading) {
-        return react_1.default.createElement("div", { className: "loading" }, "Lade Profil...");
-    }
-    const handleCheckUrl = async () => {
-        if (!profile || !profile.serverSyncUrl)
-            return;
-        setIsCheckingUrl(true);
-        setUrlCheckResult(null);
-        try {
-            const result = await ipcRenderer.invoke('check-fastdl-url', profile.serverSyncUrl);
-            if (result.success) {
-                setUrlCheckResult({ success: true, message: `${result.count} Mods gefunden` });
-            }
-            else {
-                setUrlCheckResult({ success: false, message: result.error || 'Fehler beim Prüfen' });
-            }
-        }
-        catch (error) {
-            setUrlCheckResult({ success: false, message: 'Verbindungsfehler' });
-        }
-        finally {
-            setIsCheckingUrl(false);
-        }
-    };
-    if (!profile) {
-        return react_1.default.createElement("div", { className: "error" }, "Profil nicht gefunden");
-    }
-    return (react_1.default.createElement("div", { className: "profile-settings-view" },
-        react_1.default.createElement("div", { className: "card" },
-            react_1.default.createElement("h2", null, "Profil Einstellungen"),
-            react_1.default.createElement("div", { className: "form-group" },
-                react_1.default.createElement("label", { htmlFor: "name" }, "Profilname"),
-                react_1.default.createElement("input", { type: "text", id: "name", name: "name", value: profile.name, onChange: handleChange, placeholder: "z.B. Mein Hauptprofil" })),
-            react_1.default.createElement("div", { className: "form-group" },
-                react_1.default.createElement("label", { htmlFor: "version" }, "Modpack-Version"),
-                react_1.default.createElement("input", { type: "text", id: "version", name: "version", value: profile.version, onChange: handleChange, placeholder: "z.B. v1.0.0 oder 2024-06-19" })),
-            react_1.default.createElement("div", { className: "form-group" },
-                react_1.default.createElement("label", { htmlFor: "description" }, "Beschreibung"),
-                react_1.default.createElement("textarea", { id: "description", name: "description", value: profile.description || '', onChange: handleChange, placeholder: "Beschreibung des Profils" })),
-            react_1.default.createElement("div", { className: "form-actions" },
-                react_1.default.createElement("button", { className: "btn btn-primary", onClick: handleSaveProfile }, "Profil speichern"),
-                react_1.default.createElement("button", { className: "btn", onClick: () => navigate('/') }, "Zur\u00FCck zur \u00DCbersicht"))),
-        react_1.default.createElement("div", { className: "card" },
-            react_1.default.createElement("h2", null, "Server-Synchronisation"),
-            react_1.default.createElement("p", null, "Hier k\u00F6nnen Sie einen Server-Link eingeben, um Mods mit einem Dedicated Server zu synchronisieren."),
-            react_1.default.createElement("div", { className: "form-group" },
-                react_1.default.createElement("label", { htmlFor: "server-sync-url" }, "Server-Link (FastDL)"),
-                react_1.default.createElement("div", { style: { display: 'flex', gap: '8px' } },
-                    react_1.default.createElement("input", { type: "text", id: "server-sync-url", name: "serverSyncUrl", value: profile.serverSyncUrl || '', onChange: handleChange, placeholder: "z.B. http://178.63.189.92:8080/mods.html?lang=de", style: { flex: 1 } }),
-                    react_1.default.createElement("button", { className: "btn btn-secondary", onClick: handleCheckUrl, disabled: isCheckingUrl || !profile.serverSyncUrl, style: { whiteSpace: 'nowrap' } }, isCheckingUrl ? 'Prüfe...' : 'Link prüfen')),
-                urlCheckResult && (react_1.default.createElement("div", { style: {
-                        marginTop: '6px',
-                        fontSize: '0.9em',
-                        color: urlCheckResult.success ? '#4ade80' : '#f87171'
-                    } },
-                    urlCheckResult.success ? '✅ ' : '❌ ',
-                    urlCheckResult.message)),
-                react_1.default.createElement("small", null, "Der Link sollte auf die Mods-\u00DCbersichtsseite des Servers verweisen (Directory Listing oder GIANTS Server).")),
-            profile.lastSyncDate && (react_1.default.createElement("div", { className: "info-box" },
-                react_1.default.createElement("p", null,
-                    "Letzte Synchronisierung: ",
-                    new Date(profile.lastSyncDate).toLocaleString()))),
-            react_1.default.createElement("div", { className: "sync-actions" },
-                react_1.default.createElement("div", { style: { background: 'yellow', padding: '5px', margin: '5px 0' } },
-                    "DEBUG: isSyncing = ",
-                    String(isSyncing),
-                    " | Button should be: ",
-                    isSyncing ? 'DISABLED' : 'ENABLED'),
-                react_1.default.createElement("button", { className: "btn btn-secondary", onClick: () => {
-                        console.log('🔵 Button clicked!');
-                        console.log('🔍 isSyncing:', isSyncing);
-                        console.log('🔍 Button disabled:', isSyncing);
-                        try {
-                            handleSyncWithServer();
-                        }
-                        catch (error) {
-                            console.error('❌ Error calling handleSyncWithServer:', error);
-                        }
-                    }, disabled: false, style: {
-                        backgroundColor: isSyncing ? '#ccc' : '#007bff',
-                        cursor: isSyncing ? 'not-allowed' : 'pointer',
-                        border: '2px solid red' // Debug border
-                    }, onMouseEnter: () => console.log('🔵 Button hover IN'), onMouseLeave: () => console.log('🔵 Button hover OUT') }, isSyncing ? 'Synchronisierung läuft...' : 'Mit Server synchronisieren')),
-            react_1.default.createElement("div", { className: "alert alert-info" }, syncMessage || 'Bereit für Synchronisation'),
-            syncError && (react_1.default.createElement("div", { className: "alert alert-error" }, syncError))),
-        react_1.default.createElement("div", { className: "card" },
-            react_1.default.createElement("h2", null, "Mods im Profil"),
-            profile.mods.length > 0 ? (react_1.default.createElement("table", null,
-                react_1.default.createElement("thead", null,
-                    react_1.default.createElement("tr", null,
-                        react_1.default.createElement("th", null, "Status"),
-                        react_1.default.createElement("th", null, "Name"),
-                        react_1.default.createElement("th", null, "Version"),
-                        react_1.default.createElement("th", null, "Gr\u00F6\u00DFe"),
-                        react_1.default.createElement("th", null, "Quelle"))),
-                react_1.default.createElement("tbody", null, profile.mods.map((mod) => (react_1.default.createElement("tr", { key: mod.fileName },
-                    react_1.default.createElement("td", null,
-                        react_1.default.createElement("span", { className: `status ${mod.isActive ? 'active' : 'inactive'}` }, mod.isActive ? 'Aktiv' : 'Inaktiv')),
-                    react_1.default.createElement("td", null, mod.name),
-                    react_1.default.createElement("td", null, mod.version || 'Unbekannt'),
-                    react_1.default.createElement("td", null, mod.fileSize || '-'),
-                    react_1.default.createElement("td", null,
-                        react_1.default.createElement("span", { className: `badge ${mod.downloadUrl ? 'badge-primary' : 'badge-secondary'}` }, mod.downloadUrl ? 'Server' : 'Lokal')))))))) : (react_1.default.createElement("div", { className: "empty-state" },
-                react_1.default.createElement("p", null, "Dieses Profil enth\u00E4lt noch keine Mods."),
-                react_1.default.createElement("p", null, "Synchronisieren Sie mit einem Server oder f\u00FCgen Sie Mods manuell hinzu.")))),
-        react_1.default.createElement("div", { className: "card" },
-            react_1.default.createElement("h2", null, "Mods bereitstellen"),
-            react_1.default.createElement("p", null, "Hier k\u00F6nnen Sie die Mods Ihres Profils bereitstellen, um sie auf einem Server zu verwenden."),
-            react_1.default.createElement("div", { className: "form-actions" },
-                react_1.default.createElement("button", { className: "btn btn-primary", onClick: handleDeployMods, disabled: isDeploying }, isDeploying ? 'Bereitstellung läuft...' : 'Mods bereitstellen')),
-            deployMessage && (react_1.default.createElement("div", { className: "alert alert-success" }, deployMessage)),
-            deployError && (react_1.default.createElement("div", { className: "alert alert-error" }, deployError))),
-        react_1.default.createElement("div", { className: "card" },
-            react_1.default.createElement("h2", null, "Mods ins Spiel laden"),
-            react_1.default.createElement("p", null, "Hier k\u00F6nnen Sie die Mods dieses Profils in den Spielordner kopieren, um sie im Spiel zu verwenden. Das \u00FCberschreibt alle bestehenden Mods im Spielordner."),
-            react_1.default.createElement("div", { className: "info-box" },
-                react_1.default.createElement("p", null,
-                    react_1.default.createElement("strong", null, "Spielmodordner:"),
-                    " ",
-                    settings.games?.[profile.gameVersion || 'fs25']?.defaultModFolder || settings.defaultModFolder || 'Nicht festgelegt')),
-            react_1.default.createElement("div", { className: "deploy-actions" },
-                react_1.default.createElement("button", { className: "btn btn-primary", onClick: handleDeployToGame, disabled: isDeploying }, isDeploying ? 'Kopiere Mods...' : 'Mods ins Spiel kopieren')),
-            deployMessage && (react_1.default.createElement("div", { className: "alert alert-success" }, deployMessage)),
-            deployError && (react_1.default.createElement("div", { className: "alert alert-error" }, deployError)))));
-};
-exports["default"] = ProfileSettingsView;
 
 
 /***/ }),
@@ -43167,14 +42672,16 @@ const react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/re
 const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/dist/index.js");
 const i18n_1 = __webpack_require__(/*! ../i18n */ "./src/renderer/i18n.ts");
 const { ipcRenderer } = window.require('electron');
-const ProfilesView = ({ settings, onCreateProfile, onEditProfile, onShowModInfo, modListReloadKey }) => {
+const ProfilesView = ({ settings, onShowModInfo, modListReloadKey }) => {
     const navigate = (0, react_router_dom_1.useNavigate)();
     const [profiles, setProfiles] = (0, react_1.useState)([]);
-    const [expandedProfile, setExpandedProfile] = (0, react_1.useState)(null);
+    const [selectedProfileId, setSelectedProfileId] = (0, react_1.useState)('');
     const [isSyncing, setIsSyncing] = (0, react_1.useState)({});
     const [showUrlInput, setShowUrlInput] = (0, react_1.useState)(null);
     const [urlInput, setUrlInput] = (0, react_1.useState)('');
     const [isDownloading, setIsDownloading] = (0, react_1.useState)(false);
+    const [categoryFilters, setCategoryFilters] = (0, react_1.useState)({});
+    const [syncUrlType, setSyncUrlType] = (0, react_1.useState)(null);
     // Übersetzungsfunktion
     const t = (0, i18n_1.useTranslation)(settings.language);
     (0, react_1.useEffect)(() => {
@@ -43184,22 +42691,75 @@ const ProfilesView = ({ settings, onCreateProfile, onEditProfile, onShowModInfo,
         try {
             const loadedProfiles = await ipcRenderer.invoke('load-profiles');
             setProfiles(loadedProfiles);
+            if (loadedProfiles.length > 0 && !selectedProfileId) {
+                setSelectedProfileId(loadedProfiles[0].id);
+            }
         }
         catch (error) {
-            console.error('Fehler beim Laden der Profile:', error);
+            console.error(t('profiles.loadError'), error);
         }
     };
+    const checkSyncUrl = async (url) => {
+        if (!url) {
+            setSyncUrlType(null);
+            return;
+        }
+        setSyncUrlType('checking');
+        try {
+            const result = await ipcRenderer.invoke('check-fastdl-url', url);
+            if (result.success) {
+                setSyncUrlType(result.hasVersions ? 'giants' : 'fastdl');
+            }
+            else {
+                setSyncUrlType(null);
+            }
+        }
+        catch (err) {
+            setSyncUrlType(null);
+        }
+    };
+    (0, react_1.useEffect)(() => {
+        const profile = profiles.find(p => p.id === selectedProfileId);
+        if (profile?.serverSyncUrl) {
+            checkSyncUrl(profile.serverSyncUrl);
+        }
+        else {
+            setSyncUrlType(null);
+        }
+    }, [selectedProfileId]);
+    const handleCreateProfile = async () => {
+        try {
+            const newProfile = {
+                id: `profile_${Date.now()}`,
+                name: t('profiles.newProfile'),
+                gameVersion: 'fs25',
+                version: '1.0.0',
+                description: '',
+                serverSyncUrl: '',
+                mods: []
+            };
+            await ipcRenderer.invoke('create-profile', newProfile);
+            setSelectedProfileId(newProfile.id);
+            await loadProfiles();
+        }
+        catch (error) {
+            console.error(t('profiles.createError'), error);
+            alert(`${t('profiles.createError')} ${error instanceof Error ? error.message : String(error)}`);
+        }
+    };
+    const selectedProfile = profiles.find(p => p.id === selectedProfileId);
     const handleDeleteProfile = async (profileId) => {
         if (!confirm(t('profiles.deleteConfirm'))) {
             return;
         }
         try {
             await ipcRenderer.invoke('delete-profile', profileId);
+            setSelectedProfileId('');
             await loadProfiles();
         }
         catch (error) {
-            console.error('Fehler beim Löschen des Profils:', error);
-            alert(`Fehler beim Löschen des Profils: ${error instanceof Error ? error.message : String(error)}`);
+            console.error(t('profiles.deleteError'), error);
+            alert(`${t('profiles.deleteError')} ${error instanceof Error ? error.message : String(error)}`);
         }
     };
     const handleSyncProfile = async (profile) => {
@@ -43211,12 +42771,12 @@ const ProfilesView = ({ settings, onCreateProfile, onEditProfile, onShowModInfo,
         }
         setIsSyncing(prev => ({ ...prev, [profile.id]: true }));
         try {
-            console.log(`Synchronisiere Profil: ${profile.name} (${profile.id})`);
+            console.log(`${t('sync.syncing')} ${profile.name} (${profile.id})`);
             await ipcRenderer.invoke('sync-profile', profile.id);
         }
         catch (error) {
-            console.error('Fehler beim Synchronisieren:', error);
-            alert(`Fehler beim Synchronisieren: ${error instanceof Error ? error.message : String(error)}`);
+            console.error(t('sync.errorDetail'), error);
+            alert(`${t('sync.errorDetail')} ${error instanceof Error ? error.message : String(error)}`);
         }
         finally {
             setIsSyncing(prev => ({ ...prev, [profile.id]: false }));
@@ -43228,7 +42788,7 @@ const ProfilesView = ({ settings, onCreateProfile, onEditProfile, onShowModInfo,
             await loadProfiles();
         }
         catch (error) {
-            console.error('Fehler beim Umschalten des Mods:', error);
+            console.error(t('mods.toggleError'), error);
         }
     };
     const handleDeleteMod = async (profileId, modId) => {
@@ -43240,8 +42800,8 @@ const ProfilesView = ({ settings, onCreateProfile, onEditProfile, onShowModInfo,
             await loadProfiles();
         }
         catch (error) {
-            console.error('Fehler beim Löschen des Mods:', error);
-            alert(`Fehler beim Löschen des Mods: ${error instanceof Error ? error.message : String(error)}`);
+            console.error(t('mods.deleteError'), error);
+            alert(`${t('mods.deleteError')} ${error instanceof Error ? error.message : String(error)}`);
         }
     };
     const handleOpenModFolder = async (profile) => {
@@ -43250,8 +42810,23 @@ const ProfilesView = ({ settings, onCreateProfile, onEditProfile, onShowModInfo,
             await shell.openPath(profile.modFolderPath);
         }
         catch (error) {
-            console.error('Fehler beim Öffnen des Mod-Ordners:', error);
-            alert(`Fehler beim Öffnen des Mod-Ordners: ${error instanceof Error ? error.message : String(error)}`);
+            console.error(t('mods.openFolderError'), error);
+            alert(`${t('mods.openFolderError')} ${error instanceof Error ? error.message : String(error)}`);
+        }
+    };
+    const handleSelectFolder = async (field) => {
+        if (!selectedProfile)
+            return;
+        const folderPath = await ipcRenderer.invoke('open-folder-dialog');
+        if (folderPath) {
+            const updatedProfile = { ...selectedProfile, [field]: folderPath };
+            try {
+                await ipcRenderer.invoke('save-profile', updatedProfile);
+                await loadProfiles();
+            }
+            catch (error) {
+                console.error(t('profiles.saveError'), error);
+            }
         }
     };
     const handleAddMods = async (profile) => {
@@ -43264,20 +42839,45 @@ const ProfilesView = ({ settings, onCreateProfile, onEditProfile, onShowModInfo,
                 properties: ['openFile', 'multiSelections']
             });
             if (result && result.filePaths && result.filePaths.length > 0) {
-                // Zeige Fortschritt an
                 const modCount = result.filePaths.length;
-                alert(`${modCount} Mod(s) werden hinzugefügt...`);
+                alert(t('mods.addProgress').replace('{count}', modCount.toString()));
                 for (const filePath of result.filePaths) {
                     await ipcRenderer.invoke('add-mod-to-profile', profile.id, filePath);
                 }
-                // Profile neu laden
                 await loadProfiles();
-                alert(`${modCount} Mod(s) erfolgreich hinzugefügt!`);
+                alert(t('mods.addSuccess').replace('{count}', modCount.toString()));
             }
         }
         catch (error) {
-            console.error('Fehler beim Hinzufügen der Mods:', error);
-            alert(`Fehler beim Hinzufügen der Mods: ${error instanceof Error ? error.message : String(error)}`);
+            console.error(t('mods.addError'), error);
+            alert(`${t('mods.addError')} ${error instanceof Error ? error.message : String(error)}`);
+        }
+    };
+    const handleDragOver = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+    };
+    const handleDrop = async (e, profileId) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const files = Array.from(e.dataTransfer.files).filter((f) => f.name.toLowerCase().endsWith('.zip'));
+        if (files.length === 0)
+            return;
+        alert(t('mods.importProgress').replace('{count}', files.length.toString()));
+        const filePaths = files.map((f) => f.path);
+        try {
+            const result = await ipcRenderer.invoke('import-dropped-mods', profileId, filePaths);
+            if (result.success) {
+                await loadProfiles();
+                alert(result.message);
+            }
+            else {
+                alert(`${t('error.prefix')} ${result.error}`);
+            }
+        }
+        catch (error) {
+            console.error(t('mods.importError'), error);
+            alert(`${t('error.prefix')} ${error instanceof Error ? error.message : String(error)}`);
         }
     };
     const handleAddModFromUrl = async (profileId) => {
@@ -43293,24 +42893,16 @@ const ProfilesView = ({ settings, onCreateProfile, onEditProfile, onShowModInfo,
                 setUrlInput('');
             }
             else {
-                alert(`Fehler: ${result.error}`);
+                alert(`${t('error.prefix')} ${result.error}`);
             }
         }
         catch (error) {
-            console.error('Fehler beim Herunterladen der Mod:', error);
-            alert(`Fehler: ${error instanceof Error ? error.message : String(error)}`);
+            console.error(t('mods.downloadError'), error);
+            alert(`${t('error.prefix')} ${error instanceof Error ? error.message : String(error)}`);
         }
         finally {
             setIsDownloading(false);
         }
-    };
-    const formatFileSize = (bytes) => {
-        if (bytes === 0)
-            return '0 Bytes';
-        const k = 1024;
-        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     };
     const getModTitle = (mod) => {
         if (mod.modDescData?.title) {
@@ -43321,58 +42913,189 @@ const ProfilesView = ({ settings, onCreateProfile, onEditProfile, onShowModInfo,
         }
         return mod.name;
     };
-    return (react_1.default.createElement("div", { className: "profiles-view" },
-        react_1.default.createElement("div", { className: "card" },
+    const checkConflicts = (profile) => {
+        const activeMods = profile.mods.filter(m => m.isActive);
+        const activeMaps = activeMods.filter(m => m.modDescData?.isMap);
+        const missingDeps = [];
+        const activeModNames = new Set(activeMods.map(m => m.name.toLowerCase()));
+        for (const mod of activeMods) {
+            if (mod.modDescData?.dependencies) {
+                for (const dep of mod.modDescData.dependencies) {
+                    if (!activeModNames.has(dep.toLowerCase()) && !activeMods.some(m => m.fileName.toLowerCase() === dep.toLowerCase() + '.zip')) {
+                        missingDeps.push(`"${mod.name}" benötigt "${dep}"`);
+                    }
+                }
+            }
+        }
+        return { activeMaps, missingDeps };
+    };
+    const handleProfileChange = async (e) => {
+        if (!selectedProfile)
+            return;
+        const target = e.target;
+        const { name, value, type, checked } = target;
+        let parsedValue = value;
+        if (type === 'checkbox')
+            parsedValue = checked;
+        if (type === 'number')
+            parsedValue = parseInt(value, 10);
+        const updatedProfile = {
+            ...selectedProfile,
+            [name]: parsedValue
+        };
+        try {
+            await ipcRenderer.invoke('save-profile', updatedProfile);
+            await loadProfiles(); // Reload to reflect changes
+        }
+        catch (error) {
+            console.error(t('profiles.saveError'), error);
+        }
+    };
+    return (react_1.default.createElement("div", { className: "profiles-view", style: { display: 'flex', flexDirection: 'column', gap: '20px' } },
+        react_1.default.createElement("div", { className: "card profile-selection-card" },
             react_1.default.createElement("h2", null, t('profiles.title')),
-            react_1.default.createElement("p", null, "Hier k\u00F6nnen Sie Ihre Mod-Profile verwalten. Jedes Profil kann unterschiedliche Mods und Einstellungen haben."),
-            profiles.length > 0 ? (react_1.default.createElement("div", { className: "profiles-list" }, profiles.map((profile) => (react_1.default.createElement("div", { className: "profile-card", key: profile.id },
-                react_1.default.createElement("div", { className: "profile-header" },
-                    react_1.default.createElement("div", { className: "profile-info" },
-                        react_1.default.createElement("h3", null, profile.name),
-                        "                    ",
-                        react_1.default.createElement("div", { className: "profile-stats" },
-                            react_1.default.createElement("span", null,
-                                "Mods: ",
-                                profile.mods.length),
-                            react_1.default.createElement("span", null,
-                                t('mods.active'),
-                                ": ",
-                                profile.mods.filter(m => m.isActive).length),
-                            profile.lastSyncDate && (react_1.default.createElement("span", null,
-                                "Sync: ",
-                                new Date(profile.lastSyncDate).toLocaleDateString()))),
-                        profile.description && (react_1.default.createElement("p", { className: "profile-description" }, profile.description))),
-                    react_1.default.createElement("div", { className: "profile-actions" },
-                        react_1.default.createElement("button", { className: "btn btn-secondary btn-sm", onClick: () => setExpandedProfile(expandedProfile === profile.id ? null : profile.id) }, expandedProfile === profile.id ? t('profiles.less') : t('profiles.details')),
-                        react_1.default.createElement("button", { className: "btn btn-primary btn-sm", onClick: () => onEditProfile(profile) }, t('common.edit')),
-                        profile.serverSyncUrl && (react_1.default.createElement("button", { className: "btn btn-success btn-sm", onClick: () => handleSyncProfile(profile), disabled: !!isSyncing[profile.id] }, isSyncing[profile.id] ? t('profiles.syncing') : t('profiles.sync'))),
-                        react_1.default.createElement("button", { className: "btn btn-danger btn-sm", onClick: () => handleDeleteProfile(profile.id) }, t('common.delete')))),
-                "                ",
-                expandedProfile === profile.id && (react_1.default.createElement("div", { className: "profile-details" },
-                    react_1.default.createElement("div", { className: "profile-mods" },
-                        react_1.default.createElement("div", { className: "mods-header" },
-                            react_1.default.createElement("h4", null,
-                                t('mods.title'),
-                                " (",
-                                profile.mods.length,
-                                ")"),
-                            react_1.default.createElement("div", { className: "mods-actions" },
-                                react_1.default.createElement("button", { className: "btn btn-secondary btn-sm", onClick: () => handleOpenModFolder(profile), title: "Mod-Ordner \u00F6ffnen" }, "\uD83D\uDCC1 Ordner \u00F6ffnen"),
-                                react_1.default.createElement("button", { className: "btn btn-primary btn-sm", onClick: () => handleAddMods(profile), title: "Mods hinzuf\u00FCgen (Datei)" }, "\u2795 Mods hinzuf\u00FCgen (Datei)"),
-                                react_1.default.createElement("button", { className: "btn btn-info btn-sm", onClick: () => setShowUrlInput(profile.id === showUrlInput ? null : profile.id), title: "Mod hinzuf\u00FCgen (URL)" }, "\uD83C\uDF10 Mod hinzuf\u00FCgen (URL)"))),
-                        showUrlInput === profile.id && (react_1.default.createElement("div", { className: "url-input-container", style: { margin: '10px 0', padding: '10px', background: 'rgba(0,0,0,0.1)', borderRadius: '4px', display: 'flex', gap: '10px' } },
-                            react_1.default.createElement("input", { type: "text", placeholder: "z.B. https://www.farming-simulator.com/mod.php?mod_id=...", value: urlInput, onChange: (e) => setUrlInput(e.target.value), style: { flex: 1, padding: '8px', borderRadius: '4px', border: '1px solid var(--border-color, #444)', background: 'var(--bg-secondary, #2a2a2a)', color: 'var(--text-primary, #fff)' }, disabled: isDownloading }),
-                            react_1.default.createElement("button", { className: "btn btn-success", onClick: () => handleAddModFromUrl(profile.id), disabled: isDownloading || !urlInput }, isDownloading ? 'Lädt herunter...' : 'Hinzufügen'))),
-                        profile.mods.length > 0 ? (react_1.default.createElement("div", { className: "mods-list" }, profile.mods.map((mod) => (react_1.default.createElement("div", { key: mod.fileName, className: `mod-item ${mod.isActive ? 'active' : 'inactive'}` },
+            react_1.default.createElement("p", null, t('profiles.selectionDesc')),
+            react_1.default.createElement("div", { className: "profile-selector", style: { display: 'flex', gap: '10px', alignItems: 'center', marginTop: '15px' } },
+                react_1.default.createElement("select", { value: selectedProfileId, onChange: (e) => setSelectedProfileId(e.target.value), style: { padding: '8px', flex: 1, borderRadius: '4px', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)' } },
+                    profiles.length === 0 && react_1.default.createElement("option", { value: "" }, t('profiles.noProfiles')),
+                    profiles.map(p => (react_1.default.createElement("option", { key: p.id, value: p.id }, p.name)))),
+                react_1.default.createElement("button", { className: "btn btn-primary", onClick: handleCreateProfile }, t('profiles.createNew')))),
+        selectedProfile && (react_1.default.createElement(react_1.default.Fragment, null,
+            react_1.default.createElement("div", { className: "card profile-settings-card" },
+                react_1.default.createElement("div", { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' } },
+                    react_1.default.createElement("h3", { style: { margin: 0 } }, t('profiles.editTitle')),
+                    react_1.default.createElement("div", { style: { display: 'flex', gap: '8px' } },
+                        selectedProfile.serverSyncUrl && (react_1.default.createElement("button", { className: "btn btn-success btn-sm", onClick: () => handleSyncProfile(selectedProfile), disabled: !!isSyncing[selectedProfile.id] }, isSyncing[selectedProfile.id] ? t('profiles.syncing') : t('profiles.sync'))),
+                        react_1.default.createElement("button", { className: "btn btn-danger btn-sm", onClick: () => handleDeleteProfile(selectedProfile.id) }, t('profiles.delete')))),
+                react_1.default.createElement("div", { className: "profile-stats", style: { fontSize: '0.9em', color: 'var(--text-secondary)', marginBottom: '20px' } },
+                    react_1.default.createElement("span", null,
+                        "Mods: ",
+                        selectedProfile.mods.length),
+                    " |",
+                    react_1.default.createElement("span", null,
+                        " ",
+                        t('mods.active'),
+                        ": ",
+                        selectedProfile.mods.filter(m => m.isActive).length),
+                    selectedProfile.lastSyncDate && (react_1.default.createElement("span", null,
+                        " | Letzter Sync: ",
+                        new Date(selectedProfile.lastSyncDate).toLocaleDateString()))),
+                react_1.default.createElement("div", { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' } },
+                    react_1.default.createElement("div", { className: "form-group" },
+                        react_1.default.createElement("label", null, t('profileEdit.name')),
+                        react_1.default.createElement("input", { type: "text", name: "name", value: selectedProfile.name, onChange: handleProfileChange })),
+                    react_1.default.createElement("div", { className: "form-group" },
+                        react_1.default.createElement("label", null, t('profileEdit.gameVersion')),
+                        react_1.default.createElement("select", { name: "gameVersion", value: selectedProfile.gameVersion || 'fs25', onChange: handleProfileChange },
+                            react_1.default.createElement("option", { value: "fs25" }, "Farming Simulator 25"),
+                            react_1.default.createElement("option", { value: "fs22" }, "Farming Simulator 22"),
+                            react_1.default.createElement("option", { value: "fs19" }, "Farming Simulator 19"))),
+                    react_1.default.createElement("div", { className: "form-group" },
+                        react_1.default.createElement("label", null, t('profileEdit.description')),
+                        react_1.default.createElement("input", { type: "text", name: "description", value: selectedProfile.description || '', onChange: handleProfileChange, placeholder: "Optionale Beschreibung..." })),
+                    react_1.default.createElement("div", { className: "form-group" },
+                        react_1.default.createElement("label", null, t('profileEdit.packVersion')),
+                        react_1.default.createElement("input", { type: "text", name: "version", value: selectedProfile.version || '1.0.0', onChange: handleProfileChange, placeholder: "z.B. 1.0.0" })),
+                    react_1.default.createElement("div", { className: "form-group", style: { gridColumn: '1 / -1' } },
+                        react_1.default.createElement("label", null, t('profileEdit.serverSyncUrl')),
+                        react_1.default.createElement("input", { type: "text", name: "serverSyncUrl", value: selectedProfile.serverSyncUrl || '', onChange: handleProfileChange, onBlur: (e) => checkSyncUrl(e.target.value), placeholder: "http://localhost:8080/mods.html" }),
+                        syncUrlType === 'checking' && react_1.default.createElement("small", { style: { color: 'var(--text-color)', opacity: 0.7, marginTop: '4px', display: 'block' } }, t('profiles.checkingUrl'))),
+                    react_1.default.createElement("div", { className: "form-group", style: { gridColumn: '1 / -1' } },
+                        react_1.default.createElement("label", null,
+                            t('profileEdit.serverStatsUrl'),
+                            syncUrlType === 'fastdl' && react_1.default.createElement("span", { style: { color: '#ef4444', marginLeft: '8px' } }, t('profileEdit.fastdlRequired'))),
+                        react_1.default.createElement("input", { type: "text", name: "serverWebStatsUrl", value: selectedProfile.serverWebStatsUrl || '', onChange: handleProfileChange, placeholder: "http://[IP_ADDRESS]/feed/dedicated-server-stats.xml?code=XXX", style: syncUrlType === 'fastdl' && !selectedProfile.serverWebStatsUrl ? { borderColor: '#ef4444' } : {} }),
+                        syncUrlType === 'fastdl' && !selectedProfile.serverWebStatsUrl ? (react_1.default.createElement("small", { style: { color: '#ef4444', marginTop: '4px', display: 'block' } }, t('profileEdit.fastdlWarning'))) : (react_1.default.createElement("small", { style: { color: 'var(--text-color)', opacity: 0.7, marginTop: '4px', display: 'block' } }, t('profileEdit.statsInfo')))),
+                    react_1.default.createElement("div", { className: "form-group", style: { gridColumn: '1 / -1' } },
+                        react_1.default.createElement("label", null, t('profileEdit.modFolder')),
+                        react_1.default.createElement("div", { style: { display: 'flex', gap: '8px' } },
+                            react_1.default.createElement("input", { type: "text", value: selectedProfile.modFolderPath || '', readOnly: true, style: { flex: 1, backgroundColor: 'rgba(0,0,0,0.2)' } }),
+                            react_1.default.createElement("button", { className: "btn btn-secondary", onClick: () => handleSelectFolder('modFolderPath') }, t('settings.browse')))),
+                    react_1.default.createElement("div", { className: "form-group", style: { gridColumn: '1 / -1' } },
+                        react_1.default.createElement("label", null, t('profileEdit.launchParams')),
+                        react_1.default.createElement("input", { type: "text", name: "launchParameters", value: selectedProfile.launchParameters || '', onChange: handleProfileChange, placeholder: "-autoStartSavegameId 1" })),
+                    react_1.default.createElement("div", { className: "form-group", style: { gridColumn: '1 / -1' } },
+                        react_1.default.createElement("label", { style: { display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', width: 'fit-content' } },
+                            react_1.default.createElement("input", { type: "checkbox", name: "autoBackupSavegame", checked: !!selectedProfile.autoBackupSavegame, onChange: handleProfileChange, style: { width: 'auto', margin: 0 } }),
+                            react_1.default.createElement("span", null, t('profileEdit.autoBackup')))),
+                    selectedProfile.autoBackupSavegame && (react_1.default.createElement("div", { className: "form-group" },
+                        react_1.default.createElement("label", null, t('profileEdit.savegameNum')),
+                        react_1.default.createElement("input", { type: "number", name: "savegameIndex", min: "1", max: "20", value: selectedProfile.savegameIndex || 1, onChange: handleProfileChange }))))),
+            react_1.default.createElement("div", { className: "card profile-mods-card", onDragOver: handleDragOver, onDrop: (e) => handleDrop(e, selectedProfile.id) },
+                react_1.default.createElement("div", { className: "mods-header", style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' } },
+                    react_1.default.createElement("h3", { style: { margin: 0 } }, t('mods.title')),
+                    react_1.default.createElement("div", { className: "mods-actions" },
+                        react_1.default.createElement("button", { className: "btn btn-secondary btn-sm", onClick: () => handleOpenModFolder(selectedProfile), title: "Mod-Ordner \u00F6ffnen" },
+                            "\uD83D\uDCC1 ",
+                            t('profiles.openFolder') || 'Ordner öffnen'),
+                        react_1.default.createElement("button", { className: "btn btn-primary btn-sm", onClick: () => handleAddMods(selectedProfile), title: "Mods hinzuf\u00FCgen (Datei)" },
+                            "\u2795 ",
+                            t('profiles.addFile') || 'Datei'),
+                        react_1.default.createElement("button", { className: "btn btn-info btn-sm", onClick: () => setShowUrlInput(selectedProfile.id === showUrlInput ? null : selectedProfile.id), title: "Mod hinzuf\u00FCgen (URL)" },
+                            "\uD83C\uDF10 ",
+                            t('profiles.addUrl') || 'URL'))),
+                showUrlInput === selectedProfile.id && (react_1.default.createElement("div", { className: "url-input-container", style: { margin: '10px 0', padding: '10px', background: 'rgba(0,0,0,0.1)', borderRadius: '4px', display: 'flex', gap: '10px' } },
+                    react_1.default.createElement("input", { type: "text", placeholder: "z.B. https://www.farming-simulator.com/mod.php?mod_id=...", value: urlInput, onChange: (e) => setUrlInput(e.target.value), style: { flex: 1, padding: '8px', borderRadius: '4px', border: '1px solid var(--border-color, #444)', background: 'var(--bg-secondary, #2a2a2a)', color: 'var(--text-primary, #fff)' }, disabled: isDownloading }),
+                    react_1.default.createElement("button", { className: "btn btn-success", onClick: () => handleAddModFromUrl(selectedProfile.id), disabled: isDownloading || !urlInput }, isDownloading ? (t('profiles.downloading') || 'Lädt herunter...') : (t('profiles.add') || 'Hinzufügen')))),
+                (() => {
+                    const { activeMaps, missingDeps } = checkConflicts(selectedProfile);
+                    const categories = Array.from(new Set(selectedProfile.mods.map(m => m.modDescData?.category || 'Unknown').filter(c => c !== 'Unknown'))).sort();
+                    const tags = Array.from(new Set(selectedProfile.mods.flatMap(m => m.tags || []))).sort();
+                    const currentCategory = categoryFilters[selectedProfile.id] || 'All';
+                    const filteredMods = currentCategory === 'All'
+                        ? selectedProfile.mods
+                        : selectedProfile.mods.filter(m => (m.modDescData?.category || 'Unknown') === currentCategory || (m.tags || []).includes(currentCategory));
+                    return (react_1.default.createElement(react_1.default.Fragment, null,
+                        (activeMaps.length > 1 || missingDeps.length > 0) && (react_1.default.createElement("div", { className: "conflict-warnings", style: { background: 'rgba(239, 68, 68, 0.1)', borderLeft: '4px solid #ef4444', padding: '10px', margin: '10px 0', borderRadius: '4px' } },
+                            react_1.default.createElement("h4", { style: { color: '#ef4444', marginTop: 0, marginBottom: '8px' } }, t("profiles.conflictWarning") || "⚠️ Mod Conflicts Detected!"),
+                            activeMaps.length > 1 && (react_1.default.createElement("p", { style: { margin: '4px 0', color: '#fca5a5' } },
+                                "Es sind ",
+                                activeMaps.length,
+                                " Karten (Maps) gleichzeitig aktiviert. Der Farming Simulator unterst\u00FCtzt nur 1 aktive Karte. Dies f\u00FChrt zu Abst\u00FCrzen!")),
+                            missingDeps.length > 0 && (react_1.default.createElement("ul", { style: { margin: '4px 0', paddingLeft: '20px', color: '#fca5a5' } }, missingDeps.map((dep, i) => react_1.default.createElement("li", { key: i }, dep)))))),
+                        categories.length > 0 && (react_1.default.createElement("div", { className: "category-filter", style: { marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '10px' } },
+                            react_1.default.createElement("span", null, "Filter:"),
+                            react_1.default.createElement("select", { value: currentCategory, onChange: (e) => setCategoryFilters(prev => ({ ...prev, [selectedProfile.id]: e.target.value })), style: { padding: '6px', borderRadius: '4px', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)' } },
+                                react_1.default.createElement("option", { value: "All" },
+                                    t("profiles.allMods") || "All Mods",
+                                    " (",
+                                    selectedProfile.mods.length,
+                                    ")"),
+                                categories.length > 0 && react_1.default.createElement("optgroup", { label: t("profiles.categories") || "Categories" }, categories.map(cat => (react_1.default.createElement("option", { key: `cat_${cat}`, value: cat },
+                                    cat,
+                                    " (",
+                                    selectedProfile.mods.filter(m => m.modDescData?.category === cat).length,
+                                    ")")))),
+                                tags.length > 0 && react_1.default.createElement("optgroup", { label: t("profiles.customTags") || "Custom Tags" }, tags.map(tag => (react_1.default.createElement("option", { key: `tag_${tag}`, value: tag },
+                                    "#",
+                                    tag,
+                                    " (",
+                                    selectedProfile.mods.filter(m => (m.tags || []).includes(tag)).length,
+                                    ")"))))),
+                            currentCategory !== 'All' && (react_1.default.createElement("button", { className: "btn btn-sm btn-secondary", onClick: () => {
+                                    const newProfile = { ...selectedProfile };
+                                    newProfile.mods.forEach(m => {
+                                        if ((m.modDescData?.category || 'Unknown') === currentCategory || (m.tags || []).includes(currentCategory)) {
+                                            m.isActive = !m.isActive;
+                                        }
+                                    });
+                                    ipcRenderer.invoke('save-profile', newProfile).then(loadProfiles);
+                                } },
+                                t('profiles.toggleAllIn') || 'Alle in umschalten',
+                                " ",
+                                currentCategory)))),
+                        filteredMods.length > 0 ? (react_1.default.createElement("div", { className: "mods-list" }, filteredMods.map((mod) => (react_1.default.createElement("div", { key: mod.fileName, className: `mod-item ${mod.isActive ? 'active' : 'inactive'}` },
                             react_1.default.createElement("div", { className: "mod-info" },
-                                react_1.default.createElement("div", { className: "mod-name" }, getModTitle(mod))),
+                                react_1.default.createElement("div", { className: "mod-name" },
+                                    getModTitle(mod),
+                                    mod.tags && mod.tags.length > 0 && (react_1.default.createElement("div", { className: "mod-tags", style: { display: 'inline-flex', gap: '4px', marginLeft: '10px' } }, mod.tags.map(t => (react_1.default.createElement("span", { key: t, style: { background: 'rgba(59, 130, 246, 0.2)', color: '#60a5fa', padding: '2px 6px', borderRadius: '12px', fontSize: '0.75rem' } },
+                                        "#",
+                                        t))))))),
                             react_1.default.createElement("div", { className: "mod-actions" },
-                                react_1.default.createElement("button", { className: `btn btn-sm ${mod.isActive ? 'btn-warning' : 'btn-success'}`, onClick: () => handleToggleMod(profile.id, mod.fileName, !mod.isActive) }, mod.isActive ? t('mods.deactivate') : t('mods.activate')),
+                                react_1.default.createElement("button", { className: `btn btn-sm ${mod.isActive ? 'btn-warning' : 'btn-success'}`, onClick: () => handleToggleMod(selectedProfile.id, mod.fileName, !mod.isActive) }, mod.isActive ? t('mods.deactivate') : t('mods.activate')),
                                 react_1.default.createElement("button", { className: "btn btn-sm btn-info", onClick: () => onShowModInfo(mod) }, t('mods.info')),
-                                react_1.default.createElement("button", { className: "btn btn-sm btn-danger", onClick: () => handleDeleteMod(profile.id, mod.fileName) }, t('common.delete')))))))) : (react_1.default.createElement("div", { className: "no-mods" }, t('mods.noMods'))))))))))) : (react_1.default.createElement("div", { className: "empty-state" },
-                react_1.default.createElement("p", null, "Sie haben noch keine Profile erstellt."))),
-            react_1.default.createElement("div", { className: "create-profile-section" },
-                react_1.default.createElement("button", { className: "btn btn-primary", onClick: onCreateProfile }, t('profiles.createNew'))))));
+                                react_1.default.createElement("button", { className: "btn btn-sm btn-danger", onClick: () => handleDeleteMod(selectedProfile.id, mod.fileName) }, t('mods.delete')))))))) : (react_1.default.createElement("div", { className: "no-mods" }, selectedProfile.mods.length > 0 ? 'Keine Mods in dieser Kategorie gefunden.' : t('mods.noMods')))));
+                })())))));
 };
 exports["default"] = ProfilesView;
 
@@ -43446,7 +43169,7 @@ const SettingsView = ({ settings, setSettings }) => {
                 }
             },
             autoCheckUpdates: oldSettings.autoCheckUpdates || true,
-            language: oldSettings.language || 'de',
+            language: oldSettings.language || 'en',
             debugLogging: oldSettings.debugLogging || false,
             currentVersion: oldSettings.currentVersion || '1.0.0'
         };
@@ -43471,11 +43194,12 @@ const SettingsView = ({ settings, setSettings }) => {
             [name]: newValue
         };
         setLocalSettings(updatedSettings);
-        // Bei Sprachänderung sofort anwenden
+        // Bei Sprachänderung sofort anwenden und speichern
         if (name === 'language') {
             setSettings(updatedSettings);
-            // Erzwinge Neurendering der gesamten App
-            window.location.reload();
+            ipcRenderer.invoke('save-settings', updatedSettings).catch((err) => {
+                console.error('Failed to save language setting', err);
+            });
         }
     };
     const handleGameSettingChange = (game, field, value) => {
@@ -43590,6 +43314,142 @@ exports["default"] = SettingsView;
 
 /***/ }),
 
+/***/ "./src/renderer/components/SplashScreen.tsx":
+/*!**************************************************!*\
+  !*** ./src/renderer/components/SplashScreen.tsx ***!
+  \**************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const i18n_1 = __webpack_require__(/*! ../i18n */ "./src/renderer/i18n.ts");
+const SplashScreen = ({ onComplete, language }) => {
+    const [fadingOut, setFadingOut] = (0, react_1.useState)(false);
+    const t = (0, i18n_1.useTranslation)(language || 'de');
+    (0, react_1.useEffect)(() => {
+        // Zeige den Splash-Screen für mindestens 2 Sekunden, dann ausfaden
+        const timer = setTimeout(() => {
+            setFadingOut(true);
+            setTimeout(onComplete, 500); // 500ms für die CSS Transition
+        }, 2000);
+        return () => clearTimeout(timer);
+    }, [onComplete]);
+    return (react_1.default.createElement("div", { className: `splash-screen ${fadingOut ? 'fade-out' : ''}` },
+        react_1.default.createElement("div", { className: "splash-content" },
+            react_1.default.createElement("div", { className: "tractor-icon" }, "\uD83D\uDE9C"),
+            react_1.default.createElement("h1", { className: "splash-title" }, "FS25 Mod Manager"),
+            react_1.default.createElement("p", { className: "splash-subtitle" }, t("start.loadingProfiles") || "Lade Profile und Einstellungen..."),
+            react_1.default.createElement("div", { className: "splash-loader" },
+                react_1.default.createElement("div", { className: "loader-bar" }))),
+        react_1.default.createElement("style", null, `
+        .splash-screen {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 9999;
+          transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        .splash-screen.fade-out {
+          opacity: 0;
+          visibility: hidden;
+        }
+        .splash-content {
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        .tractor-icon {
+          font-size: 80px;
+          margin-bottom: 20px;
+          animation: bounce 2s infinite ease-in-out;
+          filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.5));
+        }
+        .splash-title {
+          color: #f8fafc;
+          font-size: 2.5rem;
+          font-weight: 800;
+          margin: 0 0 10px 0;
+          letter-spacing: 1px;
+          text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+        .splash-subtitle {
+          color: #94a3b8;
+          font-size: 1.1rem;
+          margin: 0 0 40px 0;
+        }
+        .splash-loader {
+          width: 300px;
+          height: 6px;
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 10px;
+          overflow: hidden;
+          position: relative;
+        }
+        .loader-bar {
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 50%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+          animation: loading 1.5s infinite ease-in-out;
+        }
+        @keyframes loading {
+          0% { left: -50%; }
+          100% { left: 100%; }
+        }
+        @keyframes bounce {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-15px); }
+        }
+      `)));
+};
+exports["default"] = SplashScreen;
+
+
+/***/ }),
+
 /***/ "./src/renderer/components/StartPage.tsx":
 /*!***********************************************!*\
   !*** ./src/renderer/components/StartPage.tsx ***!
@@ -43646,6 +43506,9 @@ const StartPage = ({ settings, modListReloadKey }) => {
     const [error, setError] = (0, react_1.useState)('');
     const [deployProgress, setDeployProgress] = (0, react_1.useState)(null);
     const [serverUpdatesPreview, setServerUpdatesPreview] = (0, react_1.useState)({});
+    const [liveServerStats, setLiveServerStats] = (0, react_1.useState)({});
+    const [isCheckingModHub, setIsCheckingModHub] = (0, react_1.useState)(false);
+    const [modHubUpdates, setModHubUpdates] = (0, react_1.useState)([]);
     (0, react_1.useEffect)(() => {
         const handleDeployProgress = (_, progress) => {
             setDeployProgress(progress);
@@ -43659,20 +43522,54 @@ const StartPage = ({ settings, modListReloadKey }) => {
     (0, react_1.useEffect)(() => {
         if (selectedProfileId) {
             const selectedProfile = profiles.find(p => p.id === selectedProfileId);
-            if (selectedProfile?.serverSyncUrl && !serverUpdatesPreview[selectedProfileId]) {
-                setServerUpdatesPreview(prev => ({ ...prev, [selectedProfileId]: { count: 0, loading: true } }));
-                ipcRenderer.invoke('check-server-updates', selectedProfile)
-                    .then((res) => {
-                    if (res.success) {
-                        setServerUpdatesPreview(prev => ({ ...prev, [selectedProfileId]: { count: res.count, loading: false } }));
-                    }
-                    else {
+            if (selectedProfile) {
+                // Mod Updates
+                if (selectedProfile.serverSyncUrl && !serverUpdatesPreview[selectedProfileId]) {
+                    setServerUpdatesPreview(prev => ({ ...prev, [selectedProfileId]: { count: 0, loading: true } }));
+                    ipcRenderer.invoke('check-server-updates', selectedProfile)
+                        .then((res) => {
+                        if (res.success) {
+                            setServerUpdatesPreview(prev => ({ ...prev, [selectedProfileId]: { count: res.count, loading: false } }));
+                        }
+                        else {
+                            setServerUpdatesPreview(prev => ({ ...prev, [selectedProfileId]: { count: 0, loading: false } }));
+                        }
+                    })
+                        .catch(() => {
                         setServerUpdatesPreview(prev => ({ ...prev, [selectedProfileId]: { count: 0, loading: false } }));
-                    }
-                })
-                    .catch(() => {
-                    setServerUpdatesPreview(prev => ({ ...prev, [selectedProfileId]: { count: 0, loading: false } }));
-                });
+                    });
+                }
+                // Live Server Stats
+                if (selectedProfile.serverWebStatsUrl && !liveServerStats[selectedProfileId]) {
+                    setLiveServerStats(prev => ({ ...prev, [selectedProfileId]: { loading: true } }));
+                    const fetchStatsWithRetry = async (url, attemptsLeft = 6) => {
+                        try {
+                            const res = await ipcRenderer.invoke('fetch-server-stats', url);
+                            if (res.success) {
+                                setLiveServerStats(prev => ({ ...prev, [selectedProfileId]: { stats: res.stats, loading: false } }));
+                            }
+                            else {
+                                if (attemptsLeft > 1) {
+                                    setLiveServerStats(prev => ({ ...prev, [selectedProfileId]: { error: `Server offline... (Versuch ${7 - attemptsLeft}/6)`, loading: true } }));
+                                    setTimeout(() => fetchStatsWithRetry(url, attemptsLeft - 1), 5000);
+                                }
+                                else {
+                                    setLiveServerStats(prev => ({ ...prev, [selectedProfileId]: { error: res.error, loading: false } }));
+                                }
+                            }
+                        }
+                        catch (err) {
+                            if (attemptsLeft > 1) {
+                                setLiveServerStats(prev => ({ ...prev, [selectedProfileId]: { error: `Server offline... (Versuch ${7 - attemptsLeft}/6)`, loading: true } }));
+                                setTimeout(() => fetchStatsWithRetry(url, attemptsLeft - 1), 5000);
+                            }
+                            else {
+                                setLiveServerStats(prev => ({ ...prev, [selectedProfileId]: { error: String(err), loading: false } }));
+                            }
+                        }
+                    };
+                    fetchStatsWithRetry(selectedProfile.serverWebStatsUrl);
+                }
             }
         }
     }, [selectedProfileId, profiles]);
@@ -43694,6 +43591,35 @@ const StartPage = ({ settings, modListReloadKey }) => {
         }
         finally {
             setIsLoading(false);
+            setIsLaunching(false);
+        }
+    };
+    const handleCheckModHubUpdates = async (profile) => {
+        setIsCheckingModHub(true);
+        setModHubUpdates([]);
+        try {
+            const activeMods = profile.mods.filter(m => m.isActive).map(m => ({
+                name: m.modDescData?.title?.['en'] || m.modDescData?.title?.['de'] || Object.values(m.modDescData?.title || {})[0] || m.name,
+                version: m.version
+            }));
+            // Sende Dateinamen oder internen Namen
+            const searchData = profile.mods.filter(m => m.isActive).map(m => ({
+                name: m.name,
+                version: m.version
+            }));
+            const result = await ipcRenderer.invoke('scrape-modhub-updates', searchData);
+            if (result.success && result.updates) {
+                setModHubUpdates(result.updates);
+                if (result.updates.length === 0) {
+                    alert(t("start.allCheckedModsUpToDate") || "Alle überprüften Mods sind aktuell!");
+                }
+            }
+        }
+        catch (error) {
+            console.error('Fehler beim Prüfen von ModHub:', error);
+        }
+        finally {
+            setIsCheckingModHub(false);
         }
     };
     const handleProfileChange = (e) => {
@@ -43701,41 +43627,61 @@ const StartPage = ({ settings, modListReloadKey }) => {
     };
     const handleStartGame = async () => {
         if (!selectedProfileId) {
-            setError('Bitte wählen Sie ein Profil aus');
+            setError(t("start.pleaseSelectProfile") || 'Bitte wählen Sie ein Profil aus');
             return;
         }
         const selectedProfile = profiles.find(p => p.id === selectedProfileId);
         if (!selectedProfile) {
-            setError('Profil nicht gefunden');
+            setError(t("start.profileNotFound") || 'Profil nicht gefunden');
             return;
         }
         const gameVersion = selectedProfile.gameVersion || 'fs25';
         const gameSettings = settings.games?.[gameVersion];
         if (!gameSettings?.defaultModFolder) {
-            setError(`Der Mod-Ordner für ${gameVersion.toUpperCase()} ist nicht konfiguriert. Bitte überprüfen Sie die Einstellungen.`);
+            setError(`${t("start.modFolderNotConfigured") || "Der Mod-Ordner für"} ${gameVersion.toUpperCase()} ${t("start.isNotConfigured") || "ist nicht konfiguriert. Bitte überprüfen Sie die Einstellungen."}`);
             return;
         }
         if (!gameSettings?.gamePath) {
-            setError(`Der Spielpfad für ${gameVersion.toUpperCase()} ist nicht konfiguriert. Bitte überprüfen Sie die Einstellungen.`);
+            setError(`${t("start.gamePathNotConfigured") || "Der Spielpfad für"} ${gameVersion.toUpperCase()} ${t("start.isNotConfigured") || "ist nicht konfiguriert. Bitte überprüfen Sie die Einstellungen."}`);
             return;
         }
         try {
             setIsLaunching(true);
             setDeployProgress(null);
-            setMessage('Bereite Mods vor...');
+            setMessage(t("start.preparingMods") || 'Bereite Mods vor...');
             setError('');
+            // Map-Konflikt-Detektor
+            const activeMaps = selectedProfile.mods.filter(m => m.isActive && m.modDescData?.isMap);
+            if (activeMaps.length > 1) {
+                const mapNames = activeMaps.map(m => m.name).join(', ');
+                if (!confirm(`${t("start.warningMultipleMaps") || "⚠️ ACHTUNG: Du hast mehr als eine Karte"} (${activeMaps.length}) ${t("start.activatedInProfile") || "im Profil aktiviert"}:\n${mapNames}\n\n${t("start.onlyOneMapSupported") || "Das Spiel unterstützt nur EINE Map pro Profil und wird voraussichtlich abstürzen oder Fehler verursachen."}\n\n${t("start.startAnyway") || "Trotzdem starten?"}`)) {
+                    setIsLaunching(false);
+                    return;
+                }
+            }
             const deployResult = await ipcRenderer.invoke('deploy-profile-mods', selectedProfileId, gameSettings.defaultModFolder);
             if (!deployResult.success) {
                 throw new Error(deployResult.error);
             }
+            // Savegame Backup
+            if (selectedProfile.autoBackupSavegame && selectedProfile.savegameIndex) {
+                setMessage(`${t("start.creatingBackup") || "Erstelle Backup für Savegame"} ${selectedProfile.savegameIndex}...`);
+                const backupResult = await ipcRenderer.invoke('backup-savegame', selectedProfileId, gameSettings.defaultModFolder, selectedProfile.savegameIndex);
+                if (!backupResult.success) {
+                    if (!confirm(`⚠️ ${t("start.backupFailed") || "Backup fehlgeschlagen"}: ${backupResult.error}\n\n${t("start.startAnyway") || "Trotzdem starten?"}`)) {
+                        setIsLaunching(false);
+                        return;
+                    }
+                }
+            }
             // Speichere zuletzt genutztes Profil für In-Game Update Check
             await ipcRenderer.invoke('save-settings', { ...settings, lastLaunchedProfileId: selectedProfileId });
-            setMessage('Mods erfolgreich vorbereitet! Starte Farming Simulator 25...');
-            const launchResult = await ipcRenderer.invoke('launch-game', gameSettings.gamePath);
+            setMessage(`${t("start.modsPrepared") || "Mods erfolgreich vorbereitet! Starte"} Farming Simulator 25...`);
+            const launchResult = await ipcRenderer.invoke('launch-game', gameSettings.gamePath, selectedProfile.launchParameters);
             if (!launchResult.success) {
-                throw new Error(launchResult.error || 'Unbekannter Fehler beim Starten des Spiels');
+                throw new Error(launchResult.error || (t("start.unknownLaunchError") || 'Unbekannter Fehler beim Starten des Spiels'));
             }
-            setMessage(`${gameVersion.toUpperCase()} wurde gestartet!`);
+            setMessage(`${gameVersion.toUpperCase()} ${t("start.wasStarted") || "wurde gestartet!"}`);
             setTimeout(() => {
                 setMessage('');
                 setDeployProgress(null);
@@ -43744,7 +43690,7 @@ const StartPage = ({ settings, modListReloadKey }) => {
         }
         catch (error) {
             console.error('Fehler beim Starten des Spiels:', error);
-            setError(`Fehler: ${error instanceof Error ? error.message : String(error)}`);
+            setError(`${t("start.error") || "Fehler"}: ${error instanceof Error ? error.message : String(error)}`);
             setIsLaunching(false);
             setDeployProgress(null);
         }
@@ -43756,17 +43702,21 @@ const StartPage = ({ settings, modListReloadKey }) => {
         return (react_1.default.createElement("div", { className: "start-page" },
             react_1.default.createElement("div", { className: "loading-section" },
                 react_1.default.createElement("div", { className: "loading-spinner" }),
-                react_1.default.createElement("p", null, "Lade Profile..."))));
+                react_1.default.createElement("p", null, t("start.loading") || "Lade Profile..."))));
     }
     return (react_1.default.createElement("div", { className: "start-page-new" }, profiles.length === 0 ? (react_1.default.createElement("div", { className: "no-profiles-section" },
         react_1.default.createElement("div", { className: "welcome-card" },
-            react_1.default.createElement("h1", null, "\uD83D\uDE9C Willkommen beim Farming Mod Manager"),
-            react_1.default.createElement("p", null, "Du hast noch keine Profile erstellt."),
-            react_1.default.createElement("p", null, "Erstelle dein erstes Profil, um zu beginnen!"),
-            react_1.default.createElement("button", { className: "btn btn-primary btn-large", onClick: handleManageProfiles }, "Erstes Profil erstellen")))) : (react_1.default.createElement(react_1.default.Fragment, null,
+            react_1.default.createElement("h1", null,
+                "\uD83D\uDE9C ",
+                t("start.welcome") || "Willkommen beim Farming Mod Manager"),
+            react_1.default.createElement("p", null, t("start.noProfilesDesc") || "Du hast noch keine Profile erstellt."),
+            react_1.default.createElement("p", null, t("start.createFirstProfile") || "Erstelle dein erstes Profil, um zu beginnen!"),
+            react_1.default.createElement("button", { className: "btn btn-primary btn-large", onClick: handleManageProfiles }, t("start.createFirstProfileBtn") || "Erstes Profil erstellen")))) : (react_1.default.createElement(react_1.default.Fragment, null,
         react_1.default.createElement("div", { className: "main-content-area" },
             react_1.default.createElement("div", { className: "profile-selection-card" },
-                react_1.default.createElement("h2", null, "\uD83C\uDFAE Profil ausw\u00E4hlen"),
+                react_1.default.createElement("h2", null,
+                    "\uD83C\uDFAE ",
+                    t("start.selectProfile") || "Profil auswählen"),
                 react_1.default.createElement("div", { className: "profile-selector" },
                     react_1.default.createElement("select", { value: selectedProfileId, onChange: handleProfileChange, disabled: isLaunching, className: "profile-select" }, profiles.map(profile => (react_1.default.createElement("option", { key: profile.id, value: profile.id },
                         profile.name,
@@ -43779,46 +43729,83 @@ const StartPage = ({ settings, modListReloadKey }) => {
                     return null;
                 return (react_1.default.createElement(react_1.default.Fragment, null,
                     react_1.default.createElement("div", { className: "info-card" },
-                        react_1.default.createElement("h3", null, "\uD83D\uDCCB Profil-Informationen"),
+                        react_1.default.createElement("h3", null,
+                            "\uD83D\uDCCB ",
+                            t("start.profileInfo") || "Profil-Informationen"),
                         react_1.default.createElement("div", { className: "info-item" },
-                            react_1.default.createElement("span", { className: "label" }, "Name:"),
+                            react_1.default.createElement("span", { className: "label" }, t("start.name") || "Name:"),
                             react_1.default.createElement("span", { className: "value" }, selectedProfile.name)),
                         react_1.default.createElement("div", { className: "info-item" },
-                            react_1.default.createElement("span", { className: "label" }, "Spielversion:"),
+                            react_1.default.createElement("span", { className: "label" }, t("start.gameVersion") || "Game version:"),
                             react_1.default.createElement("span", { className: "value" }, selectedProfile.gameVersion?.toUpperCase() || 'FS25')),
                         react_1.default.createElement("div", { className: "info-item" },
-                            react_1.default.createElement("span", { className: "label" }, "Version:"),
+                            react_1.default.createElement("span", { className: "label" }, t("start.version") || "Version:"),
                             react_1.default.createElement("span", { className: "value" }, selectedProfile.version)),
                         selectedProfile.description && (react_1.default.createElement("div", { className: "info-item" },
-                            react_1.default.createElement("span", { className: "label" }, "Beschreibung:"),
+                            react_1.default.createElement("span", { className: "label" }, t("start.description") || "Description:"),
                             react_1.default.createElement("span", { className: "value" }, selectedProfile.description)))),
                     react_1.default.createElement("div", { className: "info-card" },
-                        react_1.default.createElement("h3", null, "\uD83D\uDCE6 Mod-\u00DCbersicht"),
+                        react_1.default.createElement("h3", null, t("start.modStats") || "📦 Mod Overview"),
                         react_1.default.createElement("div", { className: "mod-stats" },
                             react_1.default.createElement("div", { className: "stat-item" },
                                 react_1.default.createElement("span", { className: "stat-number" }, selectedProfile.mods.length),
-                                react_1.default.createElement("span", { className: "stat-label" }, "Gesamt")),
+                                react_1.default.createElement("span", { className: "stat-label" }, t("start.total") || "Total")),
                             react_1.default.createElement("div", { className: "stat-item active" },
                                 react_1.default.createElement("span", { className: "stat-number" }, selectedProfile.mods.filter(m => m.isActive).length),
-                                react_1.default.createElement("span", { className: "stat-label" }, "Aktiv")),
+                                react_1.default.createElement("span", { className: "stat-label" }, t("start.active") || "Active")),
                             react_1.default.createElement("div", { className: "stat-item inactive" },
                                 react_1.default.createElement("span", { className: "stat-number" }, selectedProfile.mods.filter(m => !m.isActive).length),
-                                react_1.default.createElement("span", { className: "stat-label" }, "Inaktiv")))),
-                    selectedProfile.serverSyncUrl && (react_1.default.createElement("div", { className: "info-card" },
-                        react_1.default.createElement("h3", null, "\uD83C\uDF10 Server-Synchronisation"),
-                        react_1.default.createElement("div", { className: "info-item" },
-                            react_1.default.createElement("span", { className: "label" }, "Server-URL:"),
-                            react_1.default.createElement("span", { className: "value" }, selectedProfile.serverSyncUrl)),
-                        selectedProfile.lastSyncDate && (react_1.default.createElement("div", { className: "info-item" },
-                            react_1.default.createElement("span", { className: "label" }, "Letzter Sync:"),
-                            react_1.default.createElement("span", { className: "value" }, new Date(selectedProfile.lastSyncDate).toLocaleString('de-DE')))),
-                        serverUpdatesPreview[selectedProfile.id] && (react_1.default.createElement("div", { className: "info-item", style: { marginTop: '10px', padding: '8px', background: 'rgba(0,0,0,0.2)', borderRadius: '4px' } },
-                            react_1.default.createElement("span", { className: "label" }, "Updates verf\u00FCgbar:"),
-                            react_1.default.createElement("span", { className: "value", style: { fontWeight: 'bold', color: serverUpdatesPreview[selectedProfile.id].loading ? '#aaa' : (serverUpdatesPreview[selectedProfile.id].count > 0 ? '#fbbf24' : '#4ade80') } }, serverUpdatesPreview[selectedProfile.id].loading
-                                ? 'Prüfe Server...'
-                                : (serverUpdatesPreview[selectedProfile.id].count > 0
-                                    ? `⚠️ ${serverUpdatesPreview[selectedProfile.id].count} Mods können aktualisiert werden`
-                                    : '✅ Alle Mods aktuell'))))))));
+                                react_1.default.createElement("span", { className: "stat-label" }, t("start.inactive") || "Inactive")))),
+                    (selectedProfile.serverSyncUrl || selectedProfile.serverWebStatsUrl) && (react_1.default.createElement("div", { className: "info-card" },
+                        react_1.default.createElement("h3", null, t("start.serverInfo") || "🌐 Server & Multiplayer"),
+                        selectedProfile.serverSyncUrl && (react_1.default.createElement(react_1.default.Fragment, null,
+                            react_1.default.createElement("div", { className: "info-item" },
+                                react_1.default.createElement("span", { className: "label" }, t("start.syncUrl") || "Sync URL:"),
+                                react_1.default.createElement("span", { className: "value", style: { overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '200px' }, title: selectedProfile.serverSyncUrl }, selectedProfile.serverSyncUrl)),
+                            selectedProfile.lastSyncDate && (react_1.default.createElement("div", { className: "info-item" },
+                                react_1.default.createElement("span", { className: "label" }, t("start.lastSync") || "Last sync:"),
+                                react_1.default.createElement("span", { className: "value" }, new Date(selectedProfile.lastSyncDate).toLocaleString('de-DE')))),
+                            serverUpdatesPreview[selectedProfile.id] && (react_1.default.createElement("div", { className: "info-item", style: { marginTop: '10px', padding: '8px', background: 'rgba(0,0,0,0.2)', borderRadius: '4px' } },
+                                react_1.default.createElement("span", { className: "label" }, t("start.updatesAvailableLabel") || "Updates available:"),
+                                react_1.default.createElement("span", { className: "value", style: { fontWeight: 'bold', color: serverUpdatesPreview[selectedProfile.id].loading ? '#aaa' : (serverUpdatesPreview[selectedProfile.id].count > 0 ? '#fbbf24' : '#4ade80') } }, serverUpdatesPreview[selectedProfile.id].loading
+                                    ? (t("start.checkingServer") || 'Prüfe Server...')
+                                    : (serverUpdatesPreview[selectedProfile.id].count > 0
+                                        ? (t("start.modsCanBeUpdated") || '⚠️ {count} Mods können aktualisiert werden').replace('{count}', serverUpdatesPreview[selectedProfile.id].count.toString())
+                                        : (t("start.allModsUpToDate") || '✅ Alle Mods aktuell'))))))),
+                        selectedProfile.serverWebStatsUrl && liveServerStats[selectedProfile.id] && (react_1.default.createElement("div", { style: { marginTop: '15px', padding: '10px', background: 'rgba(59, 130, 246, 0.1)', borderLeft: '4px solid #3b82f6', borderRadius: '4px' } },
+                            react_1.default.createElement("h4", { style: { margin: '0 0 10px 0', color: '#60a5fa' } }, t("start.liveServerStats") || "📡 Live Server Status"),
+                            liveServerStats[selectedProfile.id].loading ? (react_1.default.createElement("span", { style: { color: '#ccc', fontSize: '0.9rem' } }, t("start.connectingToServer") || "Connecting to server...")) : liveServerStats[selectedProfile.id].error ? (react_1.default.createElement("span", { style: { color: '#f87171', fontSize: '0.9rem' } }, t("start.serverOfflineLabel") || "Server offline or unreachable.")) : (react_1.default.createElement("div", { style: { fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '5px' } },
+                                react_1.default.createElement("div", { style: { display: 'flex', justifyContent: 'space-between' } },
+                                    react_1.default.createElement("span", { style: { color: '#94a3b8' } }, t("start.server") || "Server:"),
+                                    react_1.default.createElement("span", { style: { fontWeight: 'bold', color: '#f8fafc' } }, liveServerStats[selectedProfile.id].stats?.serverName)),
+                                react_1.default.createElement("div", { style: { display: 'flex', justifyContent: 'space-between' } },
+                                    react_1.default.createElement("span", { style: { color: '#94a3b8' } }, t("start.map") || "Map:"),
+                                    react_1.default.createElement("span", { style: { fontWeight: 'bold', color: '#f8fafc' } }, liveServerStats[selectedProfile.id].stats?.mapName)),
+                                react_1.default.createElement("div", { style: { display: 'flex', justifyContent: 'space-between' } },
+                                    react_1.default.createElement("span", { style: { color: '#94a3b8' } }, t("start.players") || "Players:"),
+                                    react_1.default.createElement("span", { style: { fontWeight: 'bold', color: '#f8fafc' } },
+                                        liveServerStats[selectedProfile.id].stats?.playersOnline,
+                                        " / ",
+                                        liveServerStats[selectedProfile.id].stats?.capacity)),
+                                react_1.default.createElement("div", { style: { display: 'flex', justifyContent: 'space-between' } },
+                                    react_1.default.createElement("span", { style: { color: '#94a3b8' } }, t("start.balance") || "Balance:"),
+                                    react_1.default.createElement("span", { style: { fontWeight: 'bold', color: '#4ade80' } },
+                                        Number(liveServerStats[selectedProfile.id].stats?.money || 0).toLocaleString('de-DE'),
+                                        " \u20AC")))))))),
+                    !selectedProfile.serverSyncUrl && (react_1.default.createElement("div", { className: "info-card" },
+                        react_1.default.createElement("h3", null, t("start.modHubUpdatesTitle") || "🔍 ModHub Updates"),
+                        react_1.default.createElement("p", { style: { fontSize: '0.9rem', color: '#ccc', marginBottom: '10px' } }, "Pr\u00FCfe deine aktiven Singleplayer-Mods auf offizielle GIANTS ModHub Updates."),
+                        react_1.default.createElement("button", { className: "btn btn-secondary btn-sm", onClick: () => handleCheckModHubUpdates(selectedProfile), disabled: isCheckingModHub }, isCheckingModHub ? t('start.modHubChecking') : t('start.modHubUpdates')),
+                        modHubUpdates.length > 0 && (react_1.default.createElement("div", { style: { marginTop: '10px', padding: '10px', background: 'rgba(251, 191, 36, 0.1)', borderLeft: '4px solid #fbbf24', borderRadius: '4px' } },
+                            react_1.default.createElement("h4", { style: { margin: '0 0 5px 0', color: '#fbbf24' } },
+                                "\u26A0\uFE0F ",
+                                modHubUpdates.length,
+                                " Updates gefunden!"),
+                            react_1.default.createElement("ul", { style: { margin: 0, paddingLeft: '20px', fontSize: '0.9rem' } }, modHubUpdates.map((u) => (react_1.default.createElement("li", { key: u.name, style: { margin: '3px 0' } },
+                                react_1.default.createElement("a", { href: "#", style: { color: '#60a5fa', textDecoration: 'none' }, onClick: (e) => { e.preventDefault(); window.require('electron').shell.openExternal(u.url); } }, u.name),
+                                " (v",
+                                u.latestVersion,
+                                ")"))))))))));
             })()))),
         react_1.default.createElement("div", { className: "launch-section" },
             message && (react_1.default.createElement("div", { className: "status-message success", style: {
@@ -43848,6 +43835,149 @@ const StartPage = ({ settings, modListReloadKey }) => {
                 "Starte Spiel...")) : (react_1.default.createElement(react_1.default.Fragment, null, "\uD83D\uDE9C Spiel starten"))))))));
 };
 exports["default"] = StartPage;
+
+
+/***/ }),
+
+/***/ "./src/renderer/components/StorageCleanerView.tsx":
+/*!********************************************************!*\
+  !*** ./src/renderer/components/StorageCleanerView.tsx ***!
+  \********************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const { ipcRenderer } = window.require('electron');
+const i18n_1 = __webpack_require__(/*! ../i18n */ "./src/renderer/i18n.ts");
+const StorageCleanerView = ({ settings }) => {
+    const [orphanedMods, setOrphanedMods] = (0, react_1.useState)([]);
+    const [loading, setLoading] = (0, react_1.useState)(false);
+    const [error, setError] = (0, react_1.useState)(null);
+    const [freedSpaceTotal, setFreedSpaceTotal] = (0, react_1.useState)(0);
+    const t = (0, i18n_1.useTranslation)(settings.language);
+    const scanMods = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            // Nutze den FS25 Pfad als Standard
+            const defaultModFolder = settings.games?.fs25?.defaultModFolder || settings.defaultModFolder;
+            if (!defaultModFolder) {
+                throw new Error(t("storage.noModFolder") || "Kein Mod-Ordner in den Einstellungen hinterlegt.");
+            }
+            const result = await ipcRenderer.invoke('scan-orphaned-mods', defaultModFolder);
+            if (result.success) {
+                setOrphanedMods(result.orphaned || []);
+            }
+            else {
+                setError(result.error);
+            }
+        }
+        catch (err) {
+            setError(String(err));
+        }
+        finally {
+            setLoading(false);
+        }
+    };
+    (0, react_1.useEffect)(() => {
+        scanMods();
+    }, []);
+    const deleteMods = async () => {
+        if (orphanedMods.length === 0)
+            return;
+        if (!confirm((t("storage.confirmDelete") || `Möchtest du wirklich {count} verwaiste Mods löschen?`).replace('{count}', orphanedMods.length.toString())))
+            return;
+        setLoading(true);
+        try {
+            const paths = orphanedMods.map(m => m.path);
+            const result = await ipcRenderer.invoke('delete-orphaned-mods', paths);
+            if (result.success) {
+                alert((t("storage.deletedResult") || `{count} Mods gelöscht. Platz freigegeben: {space}`).replace('{count}', result.deleted.toString()).replace('{space}', formatFileSize(result.freedSpace)));
+                setFreedSpaceTotal(prev => prev + result.freedSpace);
+                await scanMods();
+            }
+            else {
+                alert(`${t("storage.deleteError") || "Fehler beim Löschen:"} ${result.error}`);
+            }
+        }
+        catch (err) {
+            alert(`${t("common.error") || "Fehler"}: ${err}`);
+        }
+        finally {
+            setLoading(false);
+        }
+    };
+    const formatFileSize = (bytes) => {
+        if (bytes === 0)
+            return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    };
+    const totalSize = orphanedMods.reduce((acc, mod) => acc + mod.size, 0);
+    return (react_1.default.createElement("div", { className: "storage-cleaner-view", style: { padding: '20px', overflowY: 'auto', height: '100%' } },
+        react_1.default.createElement("div", { className: "card" },
+            react_1.default.createElement("h2", null, t("storage.title") || "🧹 Speicher-Bereinigung (Junk-Cleaner)"),
+            react_1.default.createElement("p", null, t("storage.desc") || "Dieses Tool scannt deinen globalen Mod-Ordner nach verwaisten Mods. Verwaiste Mods sind Dateien, die aktuell in keinem deiner Singleplayer-Profile genutzt werden. (Multiplayer/Server-Profile werden ignoriert, da diese ihre eigenen Sync-Ordner nutzen)."),
+            react_1.default.createElement("div", { style: { marginBottom: '20px', display: 'flex', gap: '10px' } },
+                react_1.default.createElement("button", { className: "btn btn-primary", onClick: scanMods, disabled: loading }, loading ? (t("storage.scanning") || 'Scanne Festplatte...') : (t("storage.scanBtn") || 'Erneut scannen')),
+                react_1.default.createElement("button", { className: "btn btn-danger", onClick: deleteMods, disabled: loading || orphanedMods.length === 0 },
+                    t("storage.deleteBtn") || "Alle verwaisten Mods löschen",
+                    " (",
+                    formatFileSize(totalSize),
+                    ")")),
+            error && (react_1.default.createElement("div", { className: "error-message", style: { color: '#ef4444', marginBottom: '20px' } },
+                t("common.error") || "Fehler",
+                ": ",
+                error)),
+            freedSpaceTotal > 0 && (react_1.default.createElement("div", { style: { padding: '10px', background: 'rgba(74, 222, 128, 0.1)', color: '#4ade80', borderRadius: '4px', marginBottom: '20px' } }, (t("storage.freedSpaceMsg") || "🎉 Du hast heute bereits {space} Speicherplatz freigeräumt!").replace('{space}', formatFileSize(freedSpaceTotal)))),
+            !loading && !error && orphanedMods.length === 0 && (react_1.default.createElement("div", { className: "success-message", style: { color: '#4ade80', padding: '20px', background: 'rgba(74, 222, 128, 0.1)', borderRadius: '8px' } }, t("storage.cleanMsg") || "✨ Dein Mod-Ordner ist sauber! Es wurden keine verwaisten Dateien gefunden.")),
+            !loading && orphanedMods.length > 0 && (react_1.default.createElement("div", { className: "orphaned-list" },
+                react_1.default.createElement("h3", { style: { borderBottom: '1px solid var(--border-color)', paddingBottom: '10px' } },
+                    t("storage.junkFiles") || "Gefundene Junk-Dateien",
+                    " (",
+                    orphanedMods.length,
+                    ")"),
+                react_1.default.createElement("div", { style: { display: 'flex', flexDirection: 'column', gap: '5px', marginTop: '10px', maxHeight: '400px', overflowY: 'auto', paddingRight: '10px' } }, orphanedMods.map((mod, idx) => (react_1.default.createElement("div", { key: idx, style: { display: 'flex', justifyContent: 'space-between', padding: '8px', background: 'var(--bg-secondary)', borderRadius: '4px' } },
+                    react_1.default.createElement("span", { style: { color: '#ccc' } }, mod.name),
+                    react_1.default.createElement("span", { style: { color: '#fbbf24' } }, formatFileSize(mod.size)))))))))));
+};
+exports["default"] = StorageCleanerView;
 
 
 /***/ }),
@@ -44004,7 +44134,7 @@ exports.useTranslation = useTranslation;
 const de_1 = __importDefault(__webpack_require__(/*! ./lang/de */ "./src/renderer/lang/de.ts"));
 const en_1 = __importDefault(__webpack_require__(/*! ./lang/en */ "./src/renderer/lang/en.ts"));
 const translations = { en: en_1.default, de: de_1.default };
-function t(key, language = 'de') {
+function t(key, language = 'en') {
     const translation = translations[language]?.[key];
     if (translation) {
         return translation;
@@ -44017,7 +44147,7 @@ function t(key, language = 'de') {
     // Fallback auf den Schlüssel selbst
     return key;
 }
-function useTranslation(language = 'de') {
+function useTranslation(language = 'en') {
     return (key) => t(key, language);
 }
 
@@ -44194,7 +44324,166 @@ const de = {
     'error.fileNotFound': 'Datei nicht gefunden',
     'error.invalidFile': 'Ungültiges Dateiformat',
     'error.networkError': 'Netzwerkfehler',
-    'error.unknownError': 'Unbekannter Fehler aufgetreten'
+    'error.unknownError': 'Unbekannter Fehler aufgetreten',
+    'mods.noDescription': 'Keine Beschreibung verfügbar',
+    'mods.unknown': 'Unbekannt',
+    'mods.generalInfo': 'Allgemeine Informationen',
+    'mods.name': 'Name',
+    'mods.status': 'Status',
+    'mods.multiplayer': 'Multiplayer',
+    'mods.supported': 'Unterstützt',
+    'mods.notSupported': 'Nicht unterstützt',
+    'mods.category': 'Kategorie',
+    'mods.dependencies': 'Abhängigkeiten',
+    'mods.fileInfo': 'Datei-Informationen',
+    'mods.sourceLocal': 'Lokal',
+    'mods.sourceServer': 'Server Sync',
+    'mods.searchModHub': 'Auf ModHub suchen',
+    'profiles.noProfiles': 'Keine Profile vorhanden',
+    'profiles.checkingUrl': 'Prüfe Server-URL...',
+    'profiles.searchModHub': 'ModHub Aktualisierung prüfen',
+    'start.modHubUpdates': 'ModHub Updates suchen',
+    'start.modHubChecking': 'Prüfe ModHub...',
+    'start.noUpdatesFound': 'Alle Mods sind aktuell!',
+    'start.updatesAvailable': '{count} Update(s) verfügbar!',
+    'start.updatePreview': 'ModHub Updates',
+    'start.serverOffline': 'Server offline oder Fehler',
+    'settings.autoBackup': 'Automatisches Backup',
+    'settings.autoBackupDesc': 'Speichert ein lokales Backup des Savegames vor jedem Start des Spiels.',
+    'settings.languageDesc': 'Wählen Sie die Sprache für den Mod Manager aus.',
+    'update.downloading': 'Update wird heruntergeladen...',
+    'update.ready': 'Das Update wurde erfolgreich heruntergeladen und ist bereit zur Installation!',
+    'update.restarting': 'Die Anwendung wird neu gestartet.',
+    'sync.verifyingHash': 'Überprüfe Hash',
+    'sync.fetchingInfo': 'Lade Info',
+    'sync.wait': 'Warten...',
+    'logs.analyze': 'Logs analysieren',
+    'logs.clear': 'Logs löschen',
+    'logs.noErrors': 'Keine Fehler gefunden',
+    'logs.warnings': 'Warnungen',
+    'logs.errors': 'Fehler',
+    'logs.all': 'Alle',
+    'logs.searchPlaceholder': 'Suchen...',
+    'storage.scan': 'Scannen',
+    'storage.clean': 'Ausgewählte bereinigen',
+    'storage.selectAll': 'Alle auswählen',
+    'storage.deselectAll': 'Auswahl aufheben',
+    'storage.noFiles': 'Keine bereinigbaren Dateien gefunden',
+    'storage.spaceFreed': '{space} freigegeben',
+    'inGame.title': 'In-Game Mod Updates',
+    'inGame.desc': 'Die folgenden Mods haben ein Update auf dem ModHub:',
+    'inGame.updateAll': 'Alle aktualisieren',
+    'inGame.ignore': 'Ignorieren',
+    'profileEdit.fastdlRequired': '(Pflichtfeld für FastDL!)',
+    'profileEdit.fastdlWarning': 'FastDL-Server ohne Versionsdaten erkannt. Du MUSST die Dedicated Server Web-Stats URL angeben, da sonst kein Versionsabgleich stattfinden kann!',
+    'profiles.loadError': 'Fehler beim Laden der Profile:',
+    'profiles.newProfile': 'Neues Profil',
+    'profiles.createError': 'Fehler beim Erstellen des Profils:',
+    'profiles.deleteError': 'Fehler beim Löschen des Profils:',
+    'sync.syncing': 'Synchronisiere Profil:',
+    'sync.errorDetail': 'Fehler beim Synchronisieren:',
+    'mods.toggleError': 'Fehler beim Umschalten des Mods:',
+    'mods.deleteError': 'Fehler beim Löschen des Mods:',
+    'mods.openFolderError': 'Fehler beim Öffnen des Mod-Ordners:',
+    'profiles.saveError': 'Fehler beim Speichern:',
+    'mods.addProgress': '{count} Mod(s) werden hinzugefügt...',
+    'mods.addSuccess': '{count} Mod(s) erfolgreich hinzugefügt!',
+    'mods.addError': 'Fehler beim Hinzufügen der Mods:',
+    'mods.importProgress': '{count} Mod(s) werden importiert...',
+    'mods.importError': 'Fehler beim Importieren gedroppter Mods:',
+    'error.prefix': 'Fehler:',
+    'mods.downloadError': 'Fehler beim Herunterladen der Mod:',
+    'profileEdit.gameVersion': 'Spielversion',
+    'profileEdit.packVersion': 'Pack-Version (Modpack Version)',
+    'profileEdit.serverSyncUrl': 'FastDL Server-Sync URL',
+    'profileEdit.serverStatsUrl': 'Dedicated Server Web-Stats URL',
+    'profileEdit.statsInfo': 'Diese XML liefert uns Hash-Werte und Versionsnummern zum Abgleich der Mods.',
+    'profileEdit.launchParams': 'Startparameter',
+    'profileEdit.autoBackup': 'Auto-Backup für Savegame beim Start',
+    'profileEdit.savegameNum': 'Savegame Slot (Nummer)',
+    'profiles.editTitle': 'Profil bearbeiten',
+    'profiles.selection': 'Profilauswahl',
+    'profiles.selectionDesc': 'Wähle ein Profil aus, das du bearbeiten oder synchronisieren möchtest.',
+    // New UI Keys
+    'nav.logs': 'Log Analyzer',
+    'nav.storage': 'Speicher',
+    'start.name': 'Name:',
+    'start.profileInfo': 'Profil-Informationen',
+    'start.gameVersion': 'Spielversion:',
+    'start.version': 'Version:',
+    'start.description': 'Beschreibung:',
+    'start.modStats': '📦 Mod-Übersicht',
+    'start.total': 'Gesamt',
+    'start.active': 'Aktiv',
+    'start.inactive': 'Inaktiv',
+    'start.serverInfo': '🌐 Server & Multiplayer',
+    'start.syncUrl': 'Sync-URL:',
+    'start.updatesAvailableLabel': 'Updates verfügbar:',
+    'start.checkingServer': 'Prüfe Server...',
+    'start.modsCanBeUpdated': '⚠️ {count} Mods können aktualisiert werden',
+    'start.allModsUpToDate': '✅ Alle Mods aktuell',
+    'start.liveServerStats': '📡 Live Server-Status',
+    'start.connectingToServer': 'Verbinde mit Server...',
+    'start.serverOfflineLabel': 'Server offline oder nicht erreichbar.',
+    'start.server': 'Server:',
+    'start.map': 'Karte:',
+    'start.players': 'Spieler:',
+    'start.balance': 'Kontostand:',
+    'start.modHubUpdatesTitle': '🔍 ModHub-Updates',
+    'start.modHubUpdatesDesc': 'Prüfe deine aktiven Singleplayer-Mods auf offizielle GIANTS ModHub Updates.',
+    'start.startingGame': 'Startet Spiel...',
+    'start.startGame': '🚜 Spiel starten',
+    'start.allCheckedModsUpToDate': 'Alle überprüften Mods sind aktuell!',
+    'start.pleaseSelectProfile': 'Bitte wählen Sie ein Profil aus',
+    'start.profileNotFound': 'Profil nicht gefunden',
+    'start.modFolderNotConfigured': 'Der Mod-Ordner für',
+    'start.isNotConfigured': 'ist nicht konfiguriert. Bitte überprüfen Sie die Einstellungen.',
+    'start.gamePathNotConfigured': 'Der Spielpfad für',
+    'start.preparingMods': 'Bereite Mods vor...',
+    'start.warningMultipleMaps': '⚠️ ACHTUNG: Du hast mehr als eine Karte',
+    'start.activatedInProfile': 'im Profil aktiviert',
+    'start.onlyOneMapSupported': 'Das Spiel unterstützt nur EINE Map pro Profil und wird voraussichtlich abstürzen oder Fehler verursachen.',
+    'start.startAnyway': 'Trotzdem starten?',
+    'start.creatingBackup': 'Erstelle Backup für Savegame',
+    'start.backupFailed': 'Backup fehlgeschlagen',
+    'start.modsPrepared': 'Mods erfolgreich vorbereitet! Starte',
+    'start.unknownLaunchError': 'Unbekannter Fehler beim Starten des Spiels',
+    'start.wasStarted': 'wurde gestartet!',
+    'start.loading': 'Lade Profile...',
+    'start.welcome': 'Willkommen beim Farming Mod Manager',
+    'start.noProfilesDesc': 'Du hast noch keine Profile erstellt.',
+    'start.createFirstProfileBtn': 'Erstes Profil erstellen',
+    'start.loadingProfiles': 'Lade Profile und Einstellungen...',
+    'profiles.openFolder': 'Ordner öffnen',
+    'profiles.addFile': 'Datei',
+    'profiles.addUrl': 'URL',
+    'profiles.downloading': 'Lädt herunter...',
+    'profiles.add': 'Hinzufügen',
+    'profiles.toggleAllIn': 'Alle umschalten in',
+    'logs.title': '🛠️ Auto-Debugger (Log-Analyse)',
+    'logs.errorNoModFolder': 'Kein Mod-Ordner in den Einstellungen konfiguriert.',
+    'logs.errorNoLog': 'log.txt nicht gefunden in {folder}',
+    'logs.desc': 'Der Auto-Debugger scannt deine aktuelle FS25 log.txt nach Fehlern und zeigt dir an, welche Mods diese verursachen.',
+    'logs.rescan': 'Log neu einlesen',
+    'logs.analyzing': 'Analysiere...',
+    'logs.openLog': 'log.txt öffnen',
+    'logs.noErrorsFound': '🎉 Keine fehlerhaften Mods in der log.txt gefunden! Dein Spiel sollte stabil laufen.',
+    'logs.errorsFound': '⚠️ {count} Mods verursachen Fehler!',
+    'logs.errorCount': 'Fehler gefunden',
+    'logs.example': 'Beispiel:',
+    'logs.tip': 'Tipp: Gehe in deine Profile und deaktiviere oder lösche diesen Mod, um Abstürze zu vermeiden.',
+    'storage.title': '🧹 Speicher-Bereinigung (Junk-Cleaner)',
+    'storage.desc': 'Dieses Tool scannt deinen globalen Mod-Ordner nach verwaisten Mods. Verwaiste Mods sind Dateien, die aktuell in keinem deiner Singleplayer-Profile genutzt werden. (Multiplayer/Server-Profile werden ignoriert, da diese ihre eigenen Sync-Ordner nutzen).',
+    'storage.scanBtn': 'Erneut scannen',
+    'storage.scanning': 'Scanne Festplatte...',
+    'storage.deleteBtn': 'Alle verwaisten Mods löschen',
+    'storage.freedSpaceMsg': '🎉 Du hast heute bereits {space} Speicherplatz freigeräumt!',
+    'storage.cleanMsg': '✨ Dein Mod-Ordner ist sauber! Es wurden keine verwaisten Dateien gefunden.',
+    'storage.junkFiles': 'Gefundene Junk-Dateien',
+    'storage.confirmDelete': 'Möchtest du wirklich {count} verwaiste Mods löschen?',
+    'storage.deletedResult': '{count} Mods gelöscht. Platz freigegeben: {space}',
+    'storage.deleteError': 'Fehler beim Löschen:',
+    'storage.noModFolder': 'Kein Mod-Ordner in den Einstellungen hinterlegt.'
 };
 exports["default"] = de;
 
@@ -44345,7 +44634,167 @@ const en = {
     'error.fileNotFound': 'File not found',
     'error.invalidFile': 'Invalid file format',
     'error.networkError': 'Network error',
-    'error.unknownError': 'Unknown error occurred'
+    'error.unknownError': 'Unknown error occurred',
+    'mods.noDescription': 'No description available',
+    'mods.unknown': 'Unknown',
+    'mods.generalInfo': 'General Information',
+    'mods.name': 'Name',
+    'mods.status': 'Status',
+    'mods.multiplayer': 'Multiplayer',
+    'mods.supported': 'Supported',
+    'mods.notSupported': 'Not supported',
+    'mods.category': 'Category',
+    'mods.dependencies': 'Dependencies',
+    'mods.fileInfo': 'File Information',
+    'mods.sourceLocal': 'Local',
+    'mods.sourceServer': 'Server Sync',
+    'mods.searchModHub': 'Search on ModHub',
+    'profiles.noProfiles': 'No profiles available',
+    'profiles.checkingUrl': 'Checking Server URL...',
+    'profiles.searchModHub': 'Check ModHub updates',
+    'start.modHubUpdates': 'Check ModHub Updates',
+    'start.modHubChecking': 'Checking ModHub...',
+    'start.noUpdatesFound': 'All mods are up to date!',
+    'start.updatesAvailable': '{count} update(s) available!',
+    'start.updatePreview': 'ModHub Updates',
+    'start.serverOffline': 'Server offline or error',
+    'settings.autoBackup': 'Automatic Backup',
+    'settings.autoBackupDesc': 'Creates a local backup of your savegame before launching the game.',
+    'settings.languageDesc': 'Choose the language for the Mod Manager.',
+    'update.downloading': 'Downloading update...',
+    'update.ready': 'Update successfully downloaded and ready to install!',
+    'update.restarting': 'Application will restart.',
+    'sync.verifyingHash': 'Verifying hash',
+    'sync.fetchingInfo': 'Fetching info',
+    'sync.wait': 'Waiting...',
+    'sync.saving': 'Saving...',
+    'logs.analyze': 'Analyze Logs',
+    'logs.clear': 'Clear Logs',
+    'logs.noErrors': 'No errors found',
+    'logs.warnings': 'Warnings',
+    'logs.errors': 'Errors',
+    'logs.all': 'All',
+    'logs.searchPlaceholder': 'Search...',
+    'storage.scan': 'Scan',
+    'storage.clean': 'Clean Selected',
+    'storage.selectAll': 'Select All',
+    'storage.deselectAll': 'Deselect All',
+    'storage.noFiles': 'No cleanable files found',
+    'storage.spaceFreed': '{space} freed',
+    'inGame.title': 'In-Game Mod Updates',
+    'inGame.desc': 'The following mods have updates available on ModHub:',
+    'inGame.updateAll': 'Update All',
+    'inGame.ignore': 'Ignore',
+    'profileEdit.fastdlRequired': '(Required for FastDL!)',
+    'profileEdit.fastdlWarning': 'FastDL server without version data detected. You MUST provide the Dedicated Server Web-Stats URL, otherwise version matching is impossible!',
+    'profiles.loadError': 'Error loading profiles:',
+    'profiles.newProfile': 'New Profile',
+    'profiles.createError': 'Error creating profile:',
+    'profiles.deleteError': 'Error deleting profile:',
+    'sync.syncing': 'Syncing profile:',
+    'sync.errorDetail': 'Error during sync:',
+    'mods.toggleError': 'Error toggling mod:',
+    'mods.deleteError': 'Error deleting mod:',
+    'mods.openFolderError': 'Error opening mod folder:',
+    'profiles.saveError': 'Error saving profile:',
+    'mods.addProgress': '{count} mod(s) are being added...',
+    'mods.addSuccess': '{count} mod(s) successfully added!',
+    'mods.addError': 'Error adding mods:',
+    'mods.importProgress': '{count} mod(s) are being imported...',
+    'mods.importError': 'Error importing dropped mods:',
+    'error.prefix': 'Error:',
+    'mods.downloadError': 'Error downloading mod:',
+    'profileEdit.gameVersion': 'Game Version',
+    'profileEdit.packVersion': 'Pack Version (Modpack Version)',
+    'profileEdit.serverSyncUrl': 'FastDL Server Sync URL',
+    'profileEdit.serverStatsUrl': 'Dedicated Server Web Stats URL',
+    'profileEdit.statsInfo': 'This XML provides hash values and version numbers for mod synchronization.',
+    'profileEdit.launchParams': 'Launch Parameters',
+    'profileEdit.autoBackup': 'Auto-backup savegame on launch',
+    'profileEdit.savegameNum': 'Savegame Slot (Number)',
+    'profiles.editTitle': 'Edit Profile',
+    'profiles.selection': 'Profile Selection',
+    'profiles.selectionDesc': 'Select a profile to edit or synchronize.',
+    // New UI Keys
+    'nav.logs': 'Log Analyzer',
+    'nav.storage': 'Storage',
+    'start.name': 'Name:',
+    'start.profileInfo': 'Profile Info',
+    'start.gameVersion': 'Game version:',
+    'start.version': 'Version:',
+    'start.description': 'Description:',
+    'start.modStats': '📦 Mod Overview',
+    'start.total': 'Total',
+    'start.active': 'Active',
+    'start.inactive': 'Inactive',
+    'start.serverInfo': '🌐 Server & Multiplayer',
+    'start.syncUrl': 'Sync URL:',
+    'start.updatesAvailableLabel': 'Updates available:',
+    'start.checkingServer': 'Checking server...',
+    'start.modsCanBeUpdated': '⚠️ {count} mods can be updated',
+    'start.allModsUpToDate': '✅ All mods up to date',
+    'start.liveServerStats': '📡 Live Server Status',
+    'start.connectingToServer': 'Connecting to server...',
+    'start.serverOfflineLabel': 'Server offline or unreachable.',
+    'start.server': 'Server:',
+    'start.map': 'Map:',
+    'start.players': 'Players:',
+    'start.balance': 'Balance:',
+    'start.modHubUpdatesTitle': '🔍 ModHub Updates',
+    'start.modHubUpdatesDesc': 'Check your active singleplayer mods for official GIANTS ModHub updates.',
+    'start.startingGame': 'Starting game...',
+    'start.startGame': '🚜 Start Game',
+    'start.allCheckedModsUpToDate': 'All checked mods are up to date!',
+    'start.pleaseSelectProfile': 'Please select a profile',
+    'start.profileNotFound': 'Profile not found',
+    'start.modFolderNotConfigured': 'The mod folder for',
+    'start.isNotConfigured': 'is not configured. Please check the settings.',
+    'start.gamePathNotConfigured': 'The game path for',
+    'start.preparingMods': 'Preparing mods...',
+    'start.warningMultipleMaps': '⚠️ WARNING: You have more than one map',
+    'start.activatedInProfile': 'activated in this profile',
+    'start.onlyOneMapSupported': 'The game only supports ONE map per profile and will likely crash or cause errors.',
+    'start.startAnyway': 'Start anyway?',
+    'start.creatingBackup': 'Creating backup for savegame',
+    'start.backupFailed': 'Backup failed',
+    'start.modsPrepared': 'Mods successfully prepared! Starting',
+    'start.unknownLaunchError': 'Unknown error while starting the game',
+    'start.wasStarted': 'was started!',
+    'start.loading': 'Loading profiles...',
+    'start.welcome': 'Welcome to Farming Mod Manager',
+    'start.noProfilesDesc': 'You have not created any profiles yet.',
+    'start.createFirstProfileBtn': 'Create first profile',
+    'start.loadingProfiles': 'Loading profiles and settings...',
+    'profiles.openFolder': 'Open Folder',
+    'profiles.addFile': 'Add File',
+    'profiles.addUrl': 'URL',
+    'profiles.downloading': 'Downloading...',
+    'profiles.add': 'Add',
+    'profiles.toggleAllIn': 'Toggle all in',
+    'logs.title': '🛠️ Auto-Debugger (Log Analyzer)',
+    'logs.errorNoModFolder': 'No Mod folder configured in settings.',
+    'logs.errorNoLog': 'log.txt not found in {folder}',
+    'logs.desc': 'The Auto-Debugger scans your current FS25 log.txt for errors and shows which mods are causing them.',
+    'logs.rescan': 'Rescan Log',
+    'logs.analyzing': 'Analyzing...',
+    'logs.openLog': 'Open log.txt',
+    'logs.noErrorsFound': '🎉 No faulty mods found in log.txt! Your game should run stable.',
+    'logs.errorsFound': '⚠️ {count} mods cause errors!',
+    'logs.errorCount': 'Errors found',
+    'logs.example': 'Example:',
+    'logs.tip': 'Tip: Go to your profiles and deactivate or delete this mod to prevent crashes.',
+    'storage.title': '🧹 Storage Cleaner (Junk-Cleaner)',
+    'storage.desc': 'This tool scans your global mod folder for orphaned mods. Orphaned mods are files that are currently not used in any of your singleplayer profiles. (Multiplayer/Server profiles are ignored as they use their own sync folders).',
+    'storage.scanBtn': 'Rescan',
+    'storage.scanning': 'Scanning disk...',
+    'storage.deleteBtn': 'Delete all orphaned mods',
+    'storage.freedSpaceMsg': '🎉 You have already freed {space} today!',
+    'storage.cleanMsg': '✨ Your mod folder is clean! No orphaned files were found.',
+    'storage.junkFiles': 'Found junk files',
+    'storage.confirmDelete': 'Do you really want to delete {count} orphaned mods?',
+    'storage.deletedResult': '{count} mods deleted. Space freed: {space}',
+    'storage.deleteError': 'Error deleting:',
+    'storage.noModFolder': 'No mod folder specified in settings.'
 };
 exports["default"] = en;
 
@@ -44431,26 +44880,6 @@ module.exports = "data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%
 /***/ ((module) => {
 
 module.exports = "data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3e%3cpath fill=%27none%27 stroke=%27%23343a40%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%272%27 d=%27M2 5l6 6 6-6%27/%3e%3c/svg%3e";
-
-/***/ }),
-
-/***/ "os":
-/*!*********************!*\
-  !*** external "os" ***!
-  \*********************/
-/***/ ((module) => {
-
-module.exports = require("os");
-
-/***/ }),
-
-/***/ "path":
-/*!***********************!*\
-  !*** external "path" ***!
-  \***********************/
-/***/ ((module) => {
-
-module.exports = require("path");
 
 /***/ })
 

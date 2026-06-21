@@ -32,7 +32,7 @@ const SettingsView: React.FC<SettingsViewProps> = ({ settings, setSettings }) =>
         }
       },
       autoCheckUpdates: oldSettings.autoCheckUpdates || true,
-      language: oldSettings.language || 'de',
+      language: oldSettings.language || 'en',
       debugLogging: oldSettings.debugLogging || false,
       currentVersion: oldSettings.currentVersion || '1.0.0'
     };
@@ -63,12 +63,13 @@ const SettingsView: React.FC<SettingsViewProps> = ({ settings, setSettings }) =>
     
     setLocalSettings(updatedSettings);
 
-    // Bei Sprachänderung sofort anwenden
-    if (name === 'language') {
-      setSettings(updatedSettings);
-      // Erzwinge Neurendering der gesamten App
-      window.location.reload();
-    }
+      // Bei Sprachänderung sofort anwenden und speichern
+      if (name === 'language') {
+        setSettings(updatedSettings);
+        ipcRenderer.invoke('save-settings', updatedSettings).catch((err: any) => {
+          console.error('Failed to save language setting', err);
+        });
+      }
   };
 
   const handleGameSettingChange = (game: 'fs19' | 'fs22' | 'fs25', field: 'gamePath' | 'defaultModFolder', value: string) => {

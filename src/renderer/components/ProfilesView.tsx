@@ -7,42 +7,96 @@ const { ipcRenderer } = window.require('electron');
 
 interface ProfilesViewProps {
   settings: Settings;
-  onCreateProfile: () => void;
-  onEditProfile: (profile: Profile) => void;
   onShowModInfo: (mod: ModInfo) => void;
   modListReloadKey?: number;
 }
 
 const ProfilesView: React.FC<ProfilesViewProps> = ({ 
   settings, 
-  onCreateProfile, 
-  onEditProfile, 
   onShowModInfo,
   modListReloadKey
 }) => {
   const navigate = useNavigate();
   const [profiles, setProfiles] = useState<Profile[]>([]);
-  const [expandedProfile, setExpandedProfile] = useState<string | null>(null);
+  const [selectedProfileId, setSelectedProfileId] = useState<string>('');
+  
   const [isSyncing, setIsSyncing] = useState<{[profileId: string]: boolean}>({});
   const [showUrlInput, setShowUrlInput] = useState<string | null>(null);
   const [urlInput, setUrlInput] = useState('');
   const [isDownloading, setIsDownloading] = useState(false);
   const [categoryFilters, setCategoryFilters] = useState<{[profileId: string]: string}>({});
+  const [syncUrlType, setSyncUrlType] = useState<'checking' | 'giants' | 'fastdl' | null>(null);
   
+
+
   // Übersetzungsfunktion
   const t = useTranslation(settings.language);
 
   useEffect(() => {
     loadProfiles();
   }, [modListReloadKey]);
+
   const loadProfiles = async () => {
     try {
       const loadedProfiles = await ipcRenderer.invoke('load-profiles');
       setProfiles(loadedProfiles);
+      if (loadedProfiles.length > 0 && !selectedProfileId) {
+        setSelectedProfileId(loadedProfiles[0].id);
+      }
     } catch (error) {
-      console.error('Fehler beim Laden der Profile:', error);
+      console.error(t('profiles.loadError'), error);
     }
   };
+
+  const checkSyncUrl = async (url: string) => {
+    if (!url) {
+      setSyncUrlType(null);
+      return;
+    }
+    setSyncUrlType('checking');
+    try {
+      const result = await ipcRenderer.invoke('check-fastdl-url', url);
+      if (result.success) {
+        setSyncUrlType(result.hasVersions ? 'giants' : 'fastdl');
+      } else {
+        setSyncUrlType(null);
+      }
+    } catch (err) {
+      setSyncUrlType(null);
+    }
+  };
+
+  useEffect(() => {
+    const profile = profiles.find(p => p.id === selectedProfileId);
+    if (profile?.serverSyncUrl) {
+      checkSyncUrl(profile.serverSyncUrl);
+    } else {
+      setSyncUrlType(null);
+    }
+  }, [selectedProfileId]);
+
+  const handleCreateProfile = async () => {
+    try {
+      const newProfile = {
+        id: `profile_${Date.now()}`,
+        name: t('profiles.newProfile'),
+        gameVersion: 'fs25',
+        version: '1.0.0',
+        description: '',
+        serverSyncUrl: '',
+        mods: []
+      };
+      await ipcRenderer.invoke('create-profile', newProfile);
+      setSelectedProfileId(newProfile.id);
+      await loadProfiles();
+    } catch (error) {
+      console.error(t('profiles.createError'), error);
+      alert(`${t('profiles.createError')} ${error instanceof Error ? error.message : String(error)}`);
+    }
+  };
+
+  const selectedProfile = profiles.find(p => p.id === selectedProfileId);
+
   const handleDeleteProfile = async (profileId: string) => {
     if (!confirm(t('profiles.deleteConfirm'))) {
       return;
@@ -50,12 +104,14 @@ const ProfilesView: React.FC<ProfilesViewProps> = ({
 
     try {
       await ipcRenderer.invoke('delete-profile', profileId);
+      setSelectedProfileId('');
       await loadProfiles();
     } catch (error) {
-      console.error('Fehler beim Löschen des Profils:', error);
-      alert(`Fehler beim Löschen des Profils: ${error instanceof Error ? error.message : String(error)}`);
+      console.error(t('profiles.deleteError'), error);
+      alert(`${t('profiles.deleteError')} ${error instanceof Error ? error.message : String(error)}`);
     }
   };
+
   const handleSyncProfile = async (profile: Profile) => {
     if (isSyncing[profile.id]) return; // Spam-Schutz: Doppelklick verhindern
     if (!profile.serverSyncUrl) {
@@ -64,11 +120,11 @@ const ProfilesView: React.FC<ProfilesViewProps> = ({
     }
     setIsSyncing(prev => ({ ...prev, [profile.id]: true }));
     try {
-      console.log(`Synchronisiere Profil: ${profile.name} (${profile.id})`);
+      console.log(`${t('sync.syncing')} ${profile.name} (${profile.id})`);
       await ipcRenderer.invoke('sync-profile', profile.id);
     } catch (error) {
-      console.error('Fehler beim Synchronisieren:', error);
-      alert(`Fehler beim Synchronisieren: ${error instanceof Error ? error.message : String(error)}`);
+      console.error(t('sync.errorDetail'), error);
+      alert(`${t('sync.errorDetail')} ${error instanceof Error ? error.message : String(error)}`);
     } finally {
       setIsSyncing(prev => ({ ...prev, [profile.id]: false }));
     }
@@ -79,9 +135,10 @@ const ProfilesView: React.FC<ProfilesViewProps> = ({
       await ipcRenderer.invoke('toggle-mod', profileId, modId, isActive);
       await loadProfiles();
     } catch (error) {
-      console.error('Fehler beim Umschalten des Mods:', error);
+      console.error(t('mods.toggleError'), error);
     }
   };
+
   const handleDeleteMod = async (profileId: string, modId: string) => {
     if (!confirm(t('mods.deleteConfirm'))) {
       return;
@@ -91,8 +148,8 @@ const ProfilesView: React.FC<ProfilesViewProps> = ({
       await ipcRenderer.invoke('delete-mod', profileId, modId);
       await loadProfiles();
     } catch (error) {
-      console.error('Fehler beim Löschen des Mods:', error);
-      alert(`Fehler beim Löschen des Mods: ${error instanceof Error ? error.message : String(error)}`);
+      console.error(t('mods.deleteError'), error);
+      alert(`${t('mods.deleteError')} ${error instanceof Error ? error.message : String(error)}`);
     }
   };
 
@@ -101,8 +158,22 @@ const ProfilesView: React.FC<ProfilesViewProps> = ({
       const { shell } = window.require('electron');
       await shell.openPath(profile.modFolderPath);
     } catch (error) {
-      console.error('Fehler beim Öffnen des Mod-Ordners:', error);
-      alert(`Fehler beim Öffnen des Mod-Ordners: ${error instanceof Error ? error.message : String(error)}`);
+      console.error(t('mods.openFolderError'), error);
+      alert(`${t('mods.openFolderError')} ${error instanceof Error ? error.message : String(error)}`);
+    }
+  };
+  
+  const handleSelectFolder = async (field: 'modFolderPath') => {
+    if (!selectedProfile) return;
+    const folderPath = await ipcRenderer.invoke('open-folder-dialog');
+    if (folderPath) {
+      const updatedProfile = { ...selectedProfile, [field]: folderPath };
+      try {
+        await ipcRenderer.invoke('save-profile', updatedProfile);
+        await loadProfiles();
+      } catch (error) {
+        console.error(t('profiles.saveError'), error);
+      }
     }
   };
 
@@ -117,21 +188,19 @@ const ProfilesView: React.FC<ProfilesViewProps> = ({
       });
 
       if (result && result.filePaths && result.filePaths.length > 0) {
-        // Zeige Fortschritt an
         const modCount = result.filePaths.length;
-        alert(`${modCount} Mod(s) werden hinzugefügt...`);
+        alert(t('mods.addProgress').replace('{count}', modCount.toString()));
 
         for (const filePath of result.filePaths) {
           await ipcRenderer.invoke('add-mod-to-profile', profile.id, filePath);
         }
 
-        // Profile neu laden
         await loadProfiles();
-        alert(`${modCount} Mod(s) erfolgreich hinzugefügt!`);
+        alert(t('mods.addSuccess').replace('{count}', modCount.toString()));
       }
     } catch (error) {
-      console.error('Fehler beim Hinzufügen der Mods:', error);
-      alert(`Fehler beim Hinzufügen der Mods: ${error instanceof Error ? error.message : String(error)}`);
+      console.error(t('mods.addError'), error);
+      alert(`${t('mods.addError')} ${error instanceof Error ? error.message : String(error)}`);
     }
   };
 
@@ -144,11 +213,10 @@ const ProfilesView: React.FC<ProfilesViewProps> = ({
     e.preventDefault();
     e.stopPropagation();
     
-    const files = Array.from(e.dataTransfer.files).filter(f => f.name.toLowerCase().endsWith('.zip'));
+    const files = Array.from(e.dataTransfer.files).filter((f: any) => f.name.toLowerCase().endsWith('.zip'));
     if (files.length === 0) return;
 
-    alert(`${files.length} Mod(s) werden importiert...`);
-    // In Electron, File objects have a 'path' property
+    alert(t('mods.importProgress').replace('{count}', files.length.toString()));
     const filePaths = files.map((f: any) => f.path);
     
     try {
@@ -157,11 +225,11 @@ const ProfilesView: React.FC<ProfilesViewProps> = ({
         await loadProfiles();
         alert(result.message);
       } else {
-        alert(`Fehler: ${result.error}`);
+        alert(`${t('error.prefix')} ${result.error}`);
       }
     } catch (error) {
-      console.error('Fehler beim Importieren gedroppter Mods:', error);
-      alert(`Fehler: ${error instanceof Error ? error.message : String(error)}`);
+      console.error(t('mods.importError'), error);
+      alert(`${t('error.prefix')} ${error instanceof Error ? error.message : String(error)}`);
     }
   };
 
@@ -176,22 +244,14 @@ const ProfilesView: React.FC<ProfilesViewProps> = ({
         setShowUrlInput(null);
         setUrlInput('');
       } else {
-        alert(`Fehler: ${result.error}`);
+        alert(`${t('error.prefix')} ${result.error}`);
       }
     } catch (error) {
-      console.error('Fehler beim Herunterladen der Mod:', error);
-      alert(`Fehler: ${error instanceof Error ? error.message : String(error)}`);
+      console.error(t('mods.downloadError'), error);
+      alert(`${t('error.prefix')} ${error instanceof Error ? error.message : String(error)}`);
     } finally {
       setIsDownloading(false);
     }
-  };
-
-  const formatFileSize = (bytes: number): string => {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
   const getModTitle = (mod: ModInfo): string => {
@@ -214,7 +274,6 @@ const ProfilesView: React.FC<ProfilesViewProps> = ({
     for (const mod of activeMods) {
       if (mod.modDescData?.dependencies) {
         for (const dep of mod.modDescData.dependencies) {
-          // Giant's dependencies are usually exactly the zip name without .zip
           if (!activeModNames.has(dep.toLowerCase()) && !activeMods.some(m => m.fileName.toLowerCase() === dep.toLowerCase() + '.zip')) {
             missingDeps.push(`"${mod.name}" benötigt "${dep}"`);
           }
@@ -225,212 +284,344 @@ const ProfilesView: React.FC<ProfilesViewProps> = ({
     return { activeMaps, missingDeps };
   };
 
-  return (    <div className="profiles-view">
-      <div className="card">
+  const handleProfileChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    if (!selectedProfile) return;
+    
+    const target = e.target as HTMLInputElement;
+    const { name, value, type, checked } = target;
+    
+    let parsedValue: any = value;
+    if (type === 'checkbox') parsedValue = checked;
+    if (type === 'number') parsedValue = parseInt(value, 10);
+
+    const updatedProfile = {
+      ...selectedProfile,
+      [name]: parsedValue
+    };
+    
+    try {
+      await ipcRenderer.invoke('save-profile', updatedProfile);
+      await loadProfiles(); // Reload to reflect changes
+    } catch (error) {
+      console.error(t('profiles.saveError'), error);
+    }
+  };
+
+  return (
+    <div className="profiles-view" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      
+      {/* Kachel 1: {t('profiles.selection')} */}
+      <div className="card profile-selection-card">
         <h2>{t('profiles.title')}</h2>
-        <p>Hier können Sie Ihre Mod-Profile verwalten. Jedes Profil kann unterschiedliche Mods und Einstellungen haben.</p>
-        
-        {profiles.length > 0 ? (
-          <div className="profiles-list">
-            {profiles.map((profile) => (
-              <div 
-                className={`profile-card ${expandedProfile === profile.id ? 'expanded' : ''}`} 
-                key={profile.id}
-                onDragOver={handleDragOver}
-                onDrop={(e) => handleDrop(e, profile.id)}
-              >
-                <div className="profile-header">
-                  <div className="profile-info">
-                    <h3>{profile.name}</h3>                    <div className="profile-stats">
-                      <span>Mods: {profile.mods.length}</span>
-                      <span>{t('mods.active')}: {profile.mods.filter(m => m.isActive).length}</span>
-                      {profile.lastSyncDate && (
-                        <span>Sync: {new Date(profile.lastSyncDate).toLocaleDateString()}</span>
-                      )}
-                    </div>
-                    {profile.description && (
-                      <p className="profile-description">{profile.description}</p>
-                    )}
-                  </div>
-                  <div className="profile-actions">
-                    <button 
-                      className="btn btn-secondary btn-sm"
-                      onClick={() => setExpandedProfile(
-                        expandedProfile === profile.id ? null : profile.id
-                      )}
-                    >
-                      {expandedProfile === profile.id ? t('profiles.less') : t('profiles.details')}
-                    </button>
-                    <button 
-                      className="btn btn-primary btn-sm"
-                      onClick={() => onEditProfile(profile)}
-                    >
-                      {t('common.edit')}
-                    </button>
-                    {profile.serverSyncUrl && (
-                      <button 
-                        className="btn btn-success btn-sm"
-                        onClick={() => handleSyncProfile(profile)}
-                        disabled={!!isSyncing[profile.id]}
-                      >
-                        {isSyncing[profile.id] ? t('profiles.syncing') : t('profiles.sync')}
-                      </button>
-                    )}
-                    <button 
-                      className="btn btn-danger btn-sm"
-                      onClick={() => handleDeleteProfile(profile.id)}
-                    >
-                      {t('common.delete')}
-                    </button>
-                  </div>
-                </div>                {expandedProfile === profile.id && (
-                  <div className="profile-details">
-                    <div className="profile-mods">
-                      <div className="mods-header">
-                        <h4>{t('mods.title')} ({profile.mods.length})</h4>
-                        <div className="mods-actions">
-                          <button 
-                            className="btn btn-secondary btn-sm"
-                            onClick={() => handleOpenModFolder(profile)}
-                            title="Mod-Ordner öffnen"
-                          >
-                            📁 Ordner öffnen
-                          </button>
-                          <button 
-                            className="btn btn-primary btn-sm"
-                            onClick={() => handleAddMods(profile)}
-                            title="Mods hinzufügen (Datei)"
-                          >
-                            ➕ Mods hinzufügen (Datei)
-                          </button>
-                          <button 
-                            className="btn btn-info btn-sm"
-                            onClick={() => setShowUrlInput(profile.id === showUrlInput ? null : profile.id)}
-                            title="Mod hinzufügen (URL)"
-                          >
-                            🌐 Mod hinzufügen (URL)
-                          </button>
-                        </div>
-                      </div>
-                      {showUrlInput === profile.id && (
-                        <div className="url-input-container" style={{ margin: '10px 0', padding: '10px', background: 'rgba(0,0,0,0.1)', borderRadius: '4px', display: 'flex', gap: '10px' }}>
-                          <input 
-                            type="text" 
-                            placeholder="z.B. https://www.farming-simulator.com/mod.php?mod_id=..." 
-                            value={urlInput}
-                            onChange={(e) => setUrlInput(e.target.value)}
-                            style={{ flex: 1, padding: '8px', borderRadius: '4px', border: '1px solid var(--border-color, #444)', background: 'var(--bg-secondary, #2a2a2a)', color: 'var(--text-primary, #fff)' }}
-                            disabled={isDownloading}
-                          />
-                          <button 
-                            className="btn btn-success" 
-                            onClick={() => handleAddModFromUrl(profile.id)}
-                            disabled={isDownloading || !urlInput}
-                          >
-                            {isDownloading ? 'Lädt herunter...' : 'Hinzufügen'}
-                          </button>
-                        </div>
-                      )}
-                      
-                      {(() => {
-                        const { activeMaps, missingDeps } = checkConflicts(profile);
-                        const categories = Array.from(new Set(profile.mods.map(m => m.modDescData?.category || 'Unknown').filter(c => c !== 'Unknown'))).sort();
-                        const currentCategory = categoryFilters[profile.id] || 'All';
-                        const filteredMods = currentCategory === 'All' 
-                          ? profile.mods 
-                          : profile.mods.filter(m => (m.modDescData?.category || 'Unknown') === currentCategory);
-                          
-                        return (
-                          <>
-                            {(activeMaps.length > 1 || missingDeps.length > 0) && (
-                              <div className="conflict-warnings" style={{ background: 'rgba(239, 68, 68, 0.1)', borderLeft: '4px solid #ef4444', padding: '10px', margin: '10px 0', borderRadius: '4px' }}>
-                                <h4 style={{ color: '#ef4444', marginTop: 0, marginBottom: '8px' }}>⚠️ Mod-Konflikte erkannt!</h4>
-                                {activeMaps.length > 1 && (
-                                  <p style={{ margin: '4px 0', color: '#fca5a5' }}>
-                                    Es sind {activeMaps.length} Karten (Maps) gleichzeitig aktiviert. Der Farming Simulator unterstützt nur 1 aktive Karte. Dies führt zu Abstürzen!
-                                  </p>
-                                )}
-                                {missingDeps.length > 0 && (
-                                  <ul style={{ margin: '4px 0', paddingLeft: '20px', color: '#fca5a5' }}>
-                                    {missingDeps.map((dep, i) => <li key={i}>{dep}</li>)}
-                                  </ul>
-                                )}
-                              </div>
-                            )}
-
-                            {categories.length > 0 && (
-                              <div className="category-filter" style={{ marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                <span>Filter:</span>
-                                <select 
-                                  value={currentCategory}
-                                  onChange={(e) => setCategoryFilters(prev => ({ ...prev, [profile.id]: e.target.value }))}
-                                  style={{ padding: '6px', borderRadius: '4px', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)' }}
-                                >
-                                  <option value="All">Alle Mods ({profile.mods.length})</option>
-                                  {categories.map(cat => (
-                                    <option key={cat} value={cat}>{cat} ({profile.mods.filter(m => m.modDescData?.category === cat).length})</option>
-                                  ))}
-                                </select>
-                              </div>
-                            )}
-
-                            {filteredMods.length > 0 ? (
-                              <div className="mods-list">
-                                {filteredMods.map((mod) => (
-                                  <div key={mod.fileName} className={`mod-item ${mod.isActive ? 'active' : 'inactive'}`}>
-
-                                    <div className="mod-info">
-                                      <div className="mod-name">{getModTitle(mod)}</div>
-                                    </div>
-                                    <div className="mod-actions">
-                                      <button
-                                        className={`btn btn-sm ${mod.isActive ? 'btn-warning' : 'btn-success'}`}
-                                        onClick={() => handleToggleMod(profile.id, mod.fileName, !mod.isActive)}
-                                      >
-                                        {mod.isActive ? t('mods.deactivate') : t('mods.activate')}
-                                      </button>
-                                      <button
-                                        className="btn btn-sm btn-info"
-                                        onClick={() => onShowModInfo(mod)}
-                                      >
-                                        {t('mods.info')}
-                                      </button>
-                                      <button
-                                        className="btn btn-sm btn-danger"
-                                        onClick={() => handleDeleteMod(profile.id, mod.fileName)}
-                                      >
-                                        {t('common.delete')}
-                                      </button>
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            ) : (
-                              <div className="no-mods">
-                                {profile.mods.length > 0 ? 'Keine Mods in dieser Kategorie gefunden.' : t('mods.noMods')}
-                              </div>
-                            )}
-                          </>
-                        );
-                      })()}
-                    </div>
-                  </div>
-                )}
-              </div>
+        <p>{t('profiles.selectionDesc')}</p>
+        <div className="profile-selector" style={{ display: 'flex', gap: '10px', alignItems: 'center', marginTop: '15px' }}>
+          <select 
+            value={selectedProfileId} 
+            onChange={(e) => setSelectedProfileId(e.target.value)}
+            style={{ padding: '8px', flex: 1, borderRadius: '4px', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)' }}
+          >
+            {profiles.length === 0 && <option value="">{t('profiles.noProfiles')}</option>}
+            {profiles.map(p => (
+              <option key={p.id} value={p.id}>{p.name}</option>
             ))}
-          </div>
-        ) : (
-          <div className="empty-state">
-            <p>Sie haben noch keine Profile erstellt.</p>
-          </div>
-        )}
-        
-        <div className="create-profile-section">
-          <button className="btn btn-primary" onClick={onCreateProfile}>
+          </select>
+          <button className="btn btn-primary" onClick={handleCreateProfile}>
             {t('profiles.createNew')}
           </button>
         </div>
       </div>
+
+      {selectedProfile && (
+        <>
+          {/* Kachel 2: Profil Einstellungen */}
+          <div className="card profile-settings-card">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+              <h3 style={{ margin: 0 }}>{t('profiles.editTitle')}</h3>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                {selectedProfile.serverSyncUrl && (
+                  <button 
+                    className="btn btn-success btn-sm"
+                    onClick={() => handleSyncProfile(selectedProfile)}
+                    disabled={!!isSyncing[selectedProfile.id]}
+                  >
+                    {isSyncing[selectedProfile.id] ? t('profiles.syncing') : t('profiles.sync')}
+                  </button>
+                )}
+                <button 
+                  className="btn btn-danger btn-sm"
+                  onClick={() => handleDeleteProfile(selectedProfile.id)}
+                >
+                  {t('profiles.delete')}
+                </button>
+              </div>
+            </div>
+
+            <div className="profile-stats" style={{ fontSize: '0.9em', color: 'var(--text-secondary)', marginBottom: '20px' }}>
+              <span>Mods: {selectedProfile.mods.length}</span> | 
+              <span> {t('mods.active')}: {selectedProfile.mods.filter(m => m.isActive).length}</span>
+              {selectedProfile.lastSyncDate && (
+                <span> | Letzter Sync: {new Date(selectedProfile.lastSyncDate).toLocaleDateString()}</span>
+              )}
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+              <div className="form-group">
+                <label>{t('profileEdit.name')}</label>
+                <input type="text" name="name" value={selectedProfile.name} onChange={handleProfileChange} />
+              </div>
+              <div className="form-group">
+                <label>{t('profileEdit.gameVersion')}</label>
+                <select name="gameVersion" value={selectedProfile.gameVersion || 'fs25'} onChange={handleProfileChange}>
+                  <option value="fs25">Farming Simulator 25</option>
+                  <option value="fs22">Farming Simulator 22</option>
+                  <option value="fs19">Farming Simulator 19</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label>{t('profileEdit.description')}</label>
+                <input type="text" name="description" value={selectedProfile.description || ''} onChange={handleProfileChange} placeholder="Optionale Beschreibung..." />
+              </div>
+              <div className="form-group">
+                <label>{t('profileEdit.packVersion')}</label>
+                <input type="text" name="version" value={selectedProfile.version || '1.0.0'} onChange={handleProfileChange} placeholder="z.B. 1.0.0" />
+              </div>
+              <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                <label>{t('profileEdit.serverSyncUrl')}</label>
+                <input 
+                  type="text" 
+                  name="serverSyncUrl" 
+                  value={selectedProfile.serverSyncUrl || ''} 
+                  onChange={handleProfileChange} 
+                  onBlur={(e) => checkSyncUrl(e.target.value)}
+                  placeholder="http://localhost:8080/mods.html" 
+                />
+                {syncUrlType === 'checking' && <small style={{ color: 'var(--text-color)', opacity: 0.7, marginTop: '4px', display: 'block' }}>{t('profiles.checkingUrl')}</small>}
+              </div>
+              <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                <label>
+                  {t('profileEdit.serverStatsUrl')} 
+                  {syncUrlType === 'fastdl' && <span style={{ color: '#ef4444', marginLeft: '8px' }}>{t('profileEdit.fastdlRequired')}</span>}
+                </label>
+                <input 
+                  type="text" 
+                  name="serverWebStatsUrl" 
+                  value={selectedProfile.serverWebStatsUrl || ''} 
+                  onChange={handleProfileChange} 
+                  placeholder="http://[IP_ADDRESS]/feed/dedicated-server-stats.xml?code=XXX" 
+                  style={syncUrlType === 'fastdl' && !selectedProfile.serverWebStatsUrl ? { borderColor: '#ef4444' } : {}}
+                />
+                {syncUrlType === 'fastdl' && !selectedProfile.serverWebStatsUrl ? (
+                  <small style={{ color: '#ef4444', marginTop: '4px', display: 'block' }}>
+                    {t('profileEdit.fastdlWarning')}
+                  </small>
+                ) : (
+                  <small style={{ color: 'var(--text-color)', opacity: 0.7, marginTop: '4px', display: 'block' }}>
+                    {t('profileEdit.statsInfo')}
+                  </small>
+                )}
+              </div>
+              
+              <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                <label>{t('profileEdit.modFolder')}</label>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <input type="text" value={selectedProfile.modFolderPath || ''} readOnly style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.2)' }} />
+                  <button className="btn btn-secondary" onClick={() => handleSelectFolder('modFolderPath')}>{t('settings.browse')}</button>
+                </div>
+              </div>
+              
+              <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                <label>{t('profileEdit.launchParams')}</label>
+                <input type="text" name="launchParameters" value={selectedProfile.launchParameters || ''} onChange={handleProfileChange} placeholder="-autoStartSavegameId 1" />
+              </div>
+              
+              <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', width: 'fit-content' }}>
+                  <input type="checkbox" name="autoBackupSavegame" checked={!!selectedProfile.autoBackupSavegame} onChange={handleProfileChange} style={{ width: 'auto', margin: 0 }} />
+                  <span>{t('profileEdit.autoBackup')}</span>
+                </label>
+              </div>
+              
+              {selectedProfile.autoBackupSavegame && (
+                <div className="form-group">
+                  <label>{t('profileEdit.savegameNum')}</label>
+                  <input type="number" name="savegameIndex" min="1" max="20" value={selectedProfile.savegameIndex || 1} onChange={handleProfileChange} />
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Kachel 3: Mod Liste */}
+          <div 
+            className="card profile-mods-card"
+            onDragOver={handleDragOver}
+            onDrop={(e) => handleDrop(e, selectedProfile.id)}
+          >
+            <div className="mods-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+              <h3 style={{ margin: 0 }}>{t('mods.title')}</h3>
+              <div className="mods-actions">
+                <button 
+                  className="btn btn-secondary btn-sm"
+                  onClick={() => handleOpenModFolder(selectedProfile)}
+                  title="Mod-Ordner öffnen"
+                >
+                  📁 {t('profiles.openFolder') || 'Ordner öffnen'}
+                </button>
+                <button 
+                  className="btn btn-primary btn-sm"
+                  onClick={() => handleAddMods(selectedProfile)}
+                  title="Mods hinzufügen (Datei)"
+                >
+                  ➕ {t('profiles.addFile') || 'Datei'}
+                </button>
+                <button 
+                  className="btn btn-info btn-sm"
+                  onClick={() => setShowUrlInput(selectedProfile.id === showUrlInput ? null : selectedProfile.id)}
+                  title="Mod hinzufügen (URL)"
+                >
+                  🌐 {t('profiles.addUrl') || 'URL'}
+                </button>
+              </div>
+            </div>
+            
+            {showUrlInput === selectedProfile.id && (
+              <div className="url-input-container" style={{ margin: '10px 0', padding: '10px', background: 'rgba(0,0,0,0.1)', borderRadius: '4px', display: 'flex', gap: '10px' }}>
+                <input 
+                  type="text" 
+                  placeholder="z.B. https://www.farming-simulator.com/mod.php?mod_id=..." 
+                  value={urlInput}
+                  onChange={(e) => setUrlInput(e.target.value)}
+                  style={{ flex: 1, padding: '8px', borderRadius: '4px', border: '1px solid var(--border-color, #444)', background: 'var(--bg-secondary, #2a2a2a)', color: 'var(--text-primary, #fff)' }}
+                  disabled={isDownloading}
+                />
+                <button 
+                  className="btn btn-success" 
+                  onClick={() => handleAddModFromUrl(selectedProfile.id)}
+                  disabled={isDownloading || !urlInput}
+                >
+                  {isDownloading ? (t('profiles.downloading') || 'Lädt herunter...') : (t('profiles.add') || 'Hinzufügen')}
+                </button>
+              </div>
+            )}
+            
+            {(() => {
+              const { activeMaps, missingDeps } = checkConflicts(selectedProfile);
+              const categories = Array.from(new Set(selectedProfile.mods.map(m => m.modDescData?.category || 'Unknown').filter(c => c !== 'Unknown'))).sort();
+              const tags = Array.from(new Set(selectedProfile.mods.flatMap(m => m.tags || []))).sort();
+              const currentCategory = categoryFilters[selectedProfile.id] || 'All';
+              const filteredMods = currentCategory === 'All' 
+                ? selectedProfile.mods 
+                : selectedProfile.mods.filter(m => (m.modDescData?.category || 'Unknown') === currentCategory || (m.tags || []).includes(currentCategory));
+                
+              return (
+                <>
+                  {(activeMaps.length > 1 || missingDeps.length > 0) && (
+                    <div className="conflict-warnings" style={{ background: 'rgba(239, 68, 68, 0.1)', borderLeft: '4px solid #ef4444', padding: '10px', margin: '10px 0', borderRadius: '4px' }}>
+                      <h4 style={{ color: '#ef4444', marginTop: 0, marginBottom: '8px' }}>{t("profiles.conflictWarning") || "⚠️ Mod Conflicts Detected!"}</h4>
+                      {activeMaps.length > 1 && (
+                        <p style={{ margin: '4px 0', color: '#fca5a5' }}>
+                          Es sind {activeMaps.length} Karten (Maps) gleichzeitig aktiviert. Der Farming Simulator unterstützt nur 1 aktive Karte. Dies führt zu Abstürzen!
+                        </p>
+                      )}
+                      {missingDeps.length > 0 && (
+                        <ul style={{ margin: '4px 0', paddingLeft: '20px', color: '#fca5a5' }}>
+                          {missingDeps.map((dep, i) => <li key={i}>{dep}</li>)}
+                        </ul>
+                      )}
+                    </div>
+                  )}
+
+                  {categories.length > 0 && (
+                    <div className="category-filter" style={{ marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <span>Filter:</span>
+                      <select 
+                        value={currentCategory}
+                        onChange={(e) => setCategoryFilters(prev => ({ ...prev, [selectedProfile.id]: e.target.value }))}
+                        style={{ padding: '6px', borderRadius: '4px', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)' }}
+                      >
+                        <option value="All">{t("profiles.allMods") || "All Mods"} ({selectedProfile.mods.length})</option>
+                        {categories.length > 0 && <optgroup label={t("profiles.categories") || "Categories"}>
+                          {categories.map(cat => (
+                            <option key={`cat_${cat}`} value={cat}>{cat} ({selectedProfile.mods.filter(m => m.modDescData?.category === cat).length})</option>
+                          ))}
+                        </optgroup>}
+                        {tags.length > 0 && <optgroup label={t("profiles.customTags") || "Custom Tags"}>
+                          {tags.map(tag => (
+                            <option key={`tag_${tag}`} value={tag}>#{tag} ({selectedProfile.mods.filter(m => (m.tags || []).includes(tag)).length})</option>
+                          ))}
+                        </optgroup>}
+                      </select>
+                      
+                      {currentCategory !== 'All' && (
+                        <button 
+                          className="btn btn-sm btn-secondary" 
+                          onClick={() => {
+                            const newProfile = { ...selectedProfile };
+                            newProfile.mods.forEach(m => {
+                              if ((m.modDescData?.category || 'Unknown') === currentCategory || (m.tags || []).includes(currentCategory)) {
+                                m.isActive = !m.isActive;
+                              }
+                            });
+                            ipcRenderer.invoke('save-profile', newProfile).then(loadProfiles);
+                          }}
+                        >
+                          {t('profiles.toggleAllIn') || 'Alle in umschalten'} {currentCategory}
+                        </button>
+                      )}
+                    </div>
+                  )}
+
+                  {filteredMods.length > 0 ? (
+                    <div className="mods-list">
+                      {filteredMods.map((mod) => (
+                        <div key={mod.fileName} className={`mod-item ${mod.isActive ? 'active' : 'inactive'}`}>
+
+                          <div className="mod-info">
+                            <div className="mod-name">
+                              {getModTitle(mod)}
+                              {mod.tags && mod.tags.length > 0 && (
+                                <div className="mod-tags" style={{ display: 'inline-flex', gap: '4px', marginLeft: '10px' }}>
+                                  {mod.tags.map(t => (
+                                    <span key={t} style={{ background: 'rgba(59, 130, 246, 0.2)', color: '#60a5fa', padding: '2px 6px', borderRadius: '12px', fontSize: '0.75rem' }}>#{t}</span>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          <div className="mod-actions">
+
+                            <button
+                              className={`btn btn-sm ${mod.isActive ? 'btn-warning' : 'btn-success'}`}
+                              onClick={() => handleToggleMod(selectedProfile.id, mod.fileName, !mod.isActive)}
+                            >
+                              {mod.isActive ? t('mods.deactivate') : t('mods.activate')}
+                            </button>
+                            <button
+                              className="btn btn-sm btn-info"
+                              onClick={() => onShowModInfo(mod)}
+                            >
+                              {t('mods.info')}
+                            </button>
+                            <button
+                              className="btn btn-sm btn-danger"
+                              onClick={() => handleDeleteMod(selectedProfile.id, mod.fileName)}
+                            >
+                              {t('mods.delete')}
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="no-mods">
+                      {selectedProfile.mods.length > 0 ? 'Keine Mods in dieser Kategorie gefunden.' : t('mods.noMods')}
+                    </div>
+                  )}
+                </>
+              );
+            })()}
+          </div>
+        </>
+      )}
     </div>
   );
 };

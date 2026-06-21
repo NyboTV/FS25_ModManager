@@ -8,12 +8,13 @@ A modern, robust mod manager for Farming Simulator (FS19, FS22, FS25), built wit
 
 ![FS25 Mod Manager Screenshot](https://raw.githubusercontent.com/NyboTV/FS25_ModManager/refs/heads/master/dist/image/screenshot.png)
 
-## 🌍 Languages
+## 🌍 Languages & Resources
 
 This project provides documentation in multiple languages. Please choose your preferred language below:
 
-* 🇺🇸 [English Documentation (README_EN.md)](README_EN.md)
+* 🇬🇧 [English Documentation (README_EN.md)](README_EN.md)
 * 🇩🇪 [Deutsche Dokumentation (README_DE.md)](README_DE.md)
+* 📝 [Changelog (CHANGELOG.md)](CHANGELOG.md)
 
 ---
 
@@ -29,3 +30,7 @@ For full features, instructions, server synchronization details, and development
 This project is licensed under the **ISC License**.
 
 **Farming Simulator** is a registered trademark of **GIANTS Software GmbH**.
+
+## Official Testers
+- [serienskylan](https://www.twitch.tv/serienskylan) (German Streamer)
+

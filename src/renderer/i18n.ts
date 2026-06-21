@@ -8,7 +8,7 @@ import en from './lang/en';
 
 const translations: { [lang: string]: LanguageStrings } = { en, de };
 
-export function t(key: string, language: 'en' | 'de' = 'de'): string {
+export function t(key: string, language: 'en' | 'de' = 'en'): string {
   const translation = translations[language]?.[key];
   if (translation) {
     return translation;
@@ -22,6 +22,6 @@ export function t(key: string, language: 'en' | 'de' = 'de'): string {
   return key;
 }
 
-export function useTranslation(language: 'en' | 'de' = 'de') {
+export function useTranslation(language: 'en' | 'de' = 'en') {
   return (key: string) => t(key, language);
 }

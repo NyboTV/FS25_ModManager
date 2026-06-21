@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as http from 'http';
 import * as https from 'https';
+import { decodeHtmlEntities } from '../common/utils';
 import { logger } from './main';
 import { parseModsFromHtmlCheerio } from './mod-html-parser';
 
@@ -17,6 +18,59 @@ export class ModSyncManager {
     this.appDataPath = appDataPath;
     this.setupIpcHandlers();
   }
+
+  private async fetchHtml(url: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const client = url.startsWith('https') ? https : http;
+      client.get(url, (res) => {
+        if (res.statusCode && (res.statusCode < 200 || res.statusCode >= 300)) {
+          return reject(new Error('Status Code: ' + res.statusCode));
+        }
+        let data = '';
+        res.on('data', chunk => data += chunk);
+        res.on('end', () => resolve(data));
+      }).on('error', reject);
+    });
+  }
+
+  private async fetchDedicatedServerModData(url: string): Promise<Map<string, { hash: string, version: string }>> {
+    const modDataMap = new Map<string, { hash: string, version: string }>();
+    try {
+      logger.info('Lade Dedicated Server Stats von: ' + url);
+      const client = url.startsWith('https') ? https : http;
+      const xmlData = await new Promise<string>((resolve, reject) => {
+        client.get(url, (res) => {
+          if (res.statusCode && (res.statusCode < 200 || res.statusCode >= 300)) {
+            return reject(new Error('Status Code: ' + res.statusCode));
+          }
+          let data = '';
+          res.on('data', chunk => data += chunk);
+          res.on('end', () => resolve(data));
+        }).on('error', reject);
+      });
+
+      const regex = /<Mod\s+([^>]+)>/gi;
+      let match;
+      while ((match = regex.exec(xmlData)) !== null) {
+        const attrs = match[1];
+        const nameMatch = attrs.match(/name="([^"]+)"/i);
+        const hashMatch = attrs.match(/hash="([^"]+)"/i);
+        const versionMatch = attrs.match(/version="([^"]*)"/i);
+        
+        if (nameMatch) {
+           modDataMap.set(decodeHtmlEntities(nameMatch[1]) + '.zip', {
+             hash: hashMatch ? hashMatch[1] : '',
+             version: versionMatch ? decodeHtmlEntities(versionMatch[1]) : ''
+           });
+        }
+      }
+    } catch (e) {
+      logger.error('Fehler beim Laden der Dedicated Server Stats XML:', e);
+    }
+    return modDataMap;
+  }
+
+
   /**
    * Synchronisiert Mods zwischen Profil und Server
    */

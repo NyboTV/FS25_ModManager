@@ -50,9 +50,9 @@ const ModInfoPopup: React.FC<ModInfoPopupProps> = ({
 
   const getLocalizedDescription = (): string => {
     if (mod.modDescData && mod.modDescData.description) {
-      return mod.modDescData.description[language] || mod.modDescData.description['en'] || Object.values(mod.modDescData.description)[0] || mod.description || 'Keine Beschreibung verfügbar';
+      return mod.modDescData.description[language] || mod.modDescData.description['en'] || Object.values(mod.modDescData.description)[0] || mod.description || t('mods.noDescription');
     }
-    return mod.description || 'Keine Beschreibung verfügbar';
+    return mod.description || t('mods.noDescription');
   };
 
   // Hilfsfunktion: fileSize-String (z.B. "40.37 MB") in Bytes umwandeln
@@ -96,38 +96,38 @@ const ModInfoPopup: React.FC<ModInfoPopupProps> = ({
 
             <div className="mod-details">
               <div className="detail-group">
-                <h3>Allgemeine Informationen</h3>
+                <h3>{t('mods.generalInfo')}</h3>
                 <div className="detail-item">
-                  <span className="detail-label">Name:</span>
+                  <span className="detail-label">{t('mods.name')}:</span>
                   <span className="detail-value">{getLocalizedTitle()}</span>
                 </div>
                 <div className="detail-item">
                   <span className="detail-label">{t('mods.author')}:</span>
-                  <span className="detail-value">{mod.author || (mod.modDescData?.author ?? 'Unbekannt')}</span>
+                  <span className="detail-value">{mod.author || (mod.modDescData?.author ?? t('mods.unknown'))}</span>
                 </div>
                 <div className="detail-item">
                   <span className="detail-label">{t('mods.version')}:</span>
-                  <span className="detail-value">{mod.version || (mod.modDescData?.version ?? 'Unbekannt')}</span>
+                  <span className="detail-value">{mod.version || (mod.modDescData?.version ?? t('mods.unknown'))}</span>
                 </div>
                 <div className="detail-item">
-                  <span className="detail-label">Status:</span>
+                  <span className="detail-label">{t('mods.status')}:</span>
                   <span className={`detail-value status ${mod.isActive ? 'active' : 'inactive'}`}>{mod.isActive ? t('mods.active') : t('mods.inactive')}</span>
                 </div>
                 {mod.modDescData?.multiplayerSupported !== undefined && (
                   <div className="detail-item">
-                    <span className="detail-label">Multiplayer:</span>
-                    <span className="detail-value">{mod.modDescData.multiplayerSupported ? 'Unterstützt' : 'Nicht unterstützt'}</span>
+                    <span className="detail-label">{t('mods.multiplayer')}:</span>
+                    <span className="detail-value">{mod.modDescData.multiplayerSupported ? t('mods.supported') : t('mods.notSupported')}</span>
                   </div>
                 )}
                 {mod.modDescData?.category && (
                   <div className="detail-item">
-                    <span className="detail-label">Kategorie:</span>
+                    <span className="detail-label">{t('mods.category')}:</span>
                     <span className="detail-value">{mod.modDescData.category}</span>
                   </div>
                 )}
                 {mod.modDescData?.dependencies && mod.modDescData.dependencies.length > 0 && (
                   <div className="detail-item">
-                    <span className="detail-label">Abhängigkeiten:</span>
+                    <span className="detail-label">{t('mods.dependencies')}:</span>
                     <span className="detail-value" style={{ color: '#fbbf24' }}>
                       {mod.modDescData.dependencies.join(', ')}
                     </span>
@@ -136,7 +136,7 @@ const ModInfoPopup: React.FC<ModInfoPopupProps> = ({
               </div>
 
               <div className="detail-group">
-                <h3>Datei-Informationen</h3>
+                <h3>{t('mods.fileInfo')}</h3>
                 <div className="detail-item">
                   <span className="detail-label">{t('mods.fileSize')}:</span>
                   <span className="detail-value">{mod.fileSize ? formatFileSize(parseFileSize(mod.fileSize)) : '-'}</span>
@@ -148,7 +148,7 @@ const ModInfoPopup: React.FC<ModInfoPopupProps> = ({
                 <div className="detail-item">
                   <span className="detail-label">{t('mods.source')}:</span>
                   <span className="detail-value">
-                    {mod.downloadUrl ? 'Server Sync' : 'Lokal'}
+                    {mod.downloadUrl ? t('mods.sourceServer') : t('mods.sourceLocal')}
                   </span>
                 </div>
               </div>

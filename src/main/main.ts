@@ -13,6 +13,8 @@ import { GameLaunchManager } from './game-launch-manager';
 import { ModDescManager } from './mod-desc-manager';
 import { UpdateManager } from './update-manager';
 import { LogAnalyzer } from './log-analyzer';
+import { ModInfo, Profile, Settings } from '../common/types';
+import { decodeHtmlEntities } from '../common/utils';
 
 // Konfiguration des Speicherorts für Anwendungsdaten mit app.getPath
 const appDataPath = path.join(app.getPath('documents'), 'FS_ModManager');
@@ -60,9 +62,27 @@ const settings = store.get('settings', {
 logger.enableDebug(settings.debugLogging);
 logger.info('FS25 Mod Manager wird gestartet');
 
+import axios from 'axios';
+
+// Funktion zum Herunterladen der aktuellen mod-mapping.json von GitHub
+async function updateModMapping(appDataPath: string) {
+  try {
+    const mappingUrl = 'https://raw.githubusercontent.com/NyboTV/FS25_ModManager/master/remote/mod-mapping.json';
+    const response = await axios.get(mappingUrl, { timeout: 10000 });
+    if (response.status === 200 && response.data) {
+      const mappingPath = path.join(appDataPath, 'mod-mapping.json');
+      fs.writeFileSync(mappingPath, JSON.stringify(response.data, null, 2));
+      logger.info('mod-mapping.json erfolgreich von GitHub aktualisiert.');
+    }
+  } catch (error) {
+    logger.warn('Fehler beim Aktualisieren der mod-mapping.json: ' + (error instanceof Error ? error.message : String(error)));
+  }
+}
+
 // Electronapp wird initialisiert und bereit
 app.on('ready', () => {
   logger.info('Elektron-App bereit, erstelle Hauptfenster');
+  updateModMapping(appDataPath);
   
   // Initialisiere alle Manager
   windowManager = new WindowManager(store);
@@ -73,7 +93,7 @@ app.on('ready', () => {
   gameLaunchManager = new GameLaunchManager();
   modDescManager = new ModDescManager();
   updateManager = new UpdateManager(currentVersion);
-  logAnalyzer = new LogAnalyzer();
+  logAnalyzer = new LogAnalyzer(store);
   
   // Erstelle das Hauptfenster
   const mainWindow = windowManager.createWindow();
@@ -106,6 +126,71 @@ app.on('ready', () => {
 
   ipcMain.handle('get-app-version', () => {
     return app.getVersion();
+  });
+
+  ipcMain.handle('fetch-server-stats', async (event, url: string) => {
+    try {
+      const axios = require('axios');
+      const response = await axios.get(url, { timeout: 10000 });
+      if (response.status === 200) {
+        const content = response.data.toString();
+        const nameMatch = content.match(/<Server[^>]*\bname="([^"]+)"/i);
+        const gameMatch = content.match(/<Server[^>]*\bgame="([^"]+)"/i);
+        const mapMatch = content.match(/<Server[^>]*\bmapName="([^"]+)"/i);
+        const versionMatch = content.match(/<Server[^>]*\bversion="([^"]+)"/i);
+        const capacityMatch = content.match(/<Slots[^>]*\bcapacity="(\d+)"/i);
+        const numUsedMatch = content.match(/<Slots[^>]*\bnumUsed="(\d+)"/i);
+        const moneyMatch = content.match(/<Server[^>]*\bmoney="(\d+)"/i);
+        
+        const serverName = nameMatch ? decodeHtmlEntities(nameMatch[1]) : 'Unknown';
+        const game = gameMatch ? decodeHtmlEntities(gameMatch[1]) : 'Unknown';
+        const mapName = mapMatch ? decodeHtmlEntities(mapMatch[1]) : 'Unknown';
+        const version = versionMatch ? versionMatch[1] : 'Unknown';
+        const capacity = capacityMatch ? parseInt(capacityMatch[1]) : 0;
+        const money = moneyMatch ? parseInt(moneyMatch[1]) : 0;
+        
+        let playersOnline = 0;
+        if (numUsedMatch) {
+            playersOnline = parseInt(numUsedMatch[1]);
+        } else {
+            const slotsMatch = content.match(/<Player[^>]*\bisUsed="true"/gi);
+            playersOnline = slotsMatch ? slotsMatch.length : 0;
+        }
+        
+        return { success: true, stats: { serverName, game, mapName, version, capacity, playersOnline, money } };
+      }
+    } catch (err) {
+      return { success: false, error: err instanceof Error ? err.message : String(err) };
+    }
+    return { success: false };
+  });
+
+  ipcMain.handle('check-server-updates', async (event, profile: any) => {
+    if (!profile || !profile.serverSyncUrl) return { success: false, updates: 0 };
+    try {
+      const axios = require('axios');
+      const response = await axios.get(profile.serverSyncUrl, { timeout: 10000 });
+      if (response.status === 200) {
+        const content = response.data.toString();
+        let updatesCount = 0;
+        const modRegex = /<Mod[^>]+name="([^"]+)"[^>]+version="([^"]+)"/g;
+        let match;
+        while ((match = modRegex.exec(content)) !== null) {
+            const modName = decodeHtmlEntities(match[1]);
+            const serverVer = match[2];
+            const localMod = profile.mods.find((m: any) => m.fileName === modName + '.zip');
+            if (!localMod) {
+                updatesCount++;
+            } else if (localMod.modDescData?.version && localMod.modDescData.version !== serverVer) {
+                updatesCount++;
+            }
+        }
+        return { success: true, updates: updatesCount };
+      }
+    } catch (err) {
+      return { success: false, error: err instanceof Error ? err.message : String(err) };
+    }
+    return { success: false };
   });
 
   ipcMain.handle('select-folder', async () => {

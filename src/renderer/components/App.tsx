@@ -3,12 +3,12 @@ import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import StartPage from './StartPage';
 import ProfilesView from './ProfilesView';
 import SettingsView from './SettingsView';
-import ProfileSettingsView from './ProfileSettingsView';
-import ProfileEditPopup from './ProfileEditPopup';
 import SyncProgressPopup from './SyncProgressPopup';
 import ModInfoPopup from './ModInfoPopup';
 import LogAnalyzerView from './LogAnalyzerView';
+import StorageCleanerView from './StorageCleanerView';
 import InGameUpdatesPopup from './InGameUpdatesPopup';
+import SplashScreen from './SplashScreen';
 import { Settings, UpdateInfo, SyncProgress, ModInfo } from '../../common/types';
 import { useTranslation } from '../i18n';
 
@@ -38,9 +38,7 @@ const App: React.FC = () => {
   });
 
   // Popup-States
-  const [showProfileEditPopup, setShowProfileEditPopup] = useState(false);
-  const [editingProfile, setEditingProfile] = useState(null);
-  const [isCreatingProfile, setIsCreatingProfile] = useState(false);
+  const [appIsReady, setAppIsReady] = useState(false);
   
   const [showSyncProgress, setShowSyncProgress] = useState(false);
   const [syncProgress, setSyncProgress] = useState<SyncProgress>({
@@ -238,6 +236,7 @@ const App: React.FC = () => {
     if (path.startsWith('/profiles')) return 'profiles';
     if (path.startsWith('/logs')) return 'logs';
     if (path.startsWith('/profile-settings')) return 'profile-settings';
+    if (path.startsWith('/storage')) return 'storage';
     return 'start';
   };
   const handleMinimize = () => {
@@ -252,36 +251,6 @@ const App: React.FC = () => {
   };
 
   // Popup-Handler
-  const handleCreateProfile = () => {
-    setEditingProfile(null);
-    setIsCreatingProfile(true);
-    setShowProfileEditPopup(true);
-  };
-
-  const handleEditProfile = (profile: any) => {
-    setEditingProfile(profile);
-    setIsCreatingProfile(false);
-    setShowProfileEditPopup(true);
-  };
-  const handleSaveProfile = async (profile: any) => {
-    try {
-      if (isCreatingProfile) {
-        await ipcRenderer.invoke('create-profile', profile);
-      } else {
-        await ipcRenderer.invoke('update-profile', profile);
-      }
-      setShowProfileEditPopup(false);
-      
-      // Aktualisiere die Profile-Liste nach dem Speichern
-      if (location.pathname === '/profiles') {
-        // Trigger Reload der ProfilesView
-        window.location.reload();
-      }
-    } catch (error) {
-      console.error('Fehler beim Speichern des Profils:', error);
-    }
-  };
-
   const handleShowModInfo = (mod: ModInfo) => {
     setSelectedMod(mod);
     setShowModInfo(true);
@@ -296,7 +265,9 @@ const App: React.FC = () => {
     ipcRenderer.invoke('install-update');
   };
 
-  return (    <div className="container">
+  return (
+    <div className="container">
+      {!appIsReady && <SplashScreen onComplete={() => setAppIsReady(true)} language={settings?.language} />}
       <header className="header">
         <h1>{t('app.title')}</h1>
         
@@ -330,28 +301,28 @@ const App: React.FC = () => {
           className={`tab ${getCurrentTab() === 'logs' ? 'active' : ''}`}
           onClick={() => navigate('/logs')}
         >
-          Log Analyzer
+          {t('nav.logs')}
         </div>
-        {location.pathname.includes('/profile-settings/') && (
-          <div className="tab active">
-            {t('nav.profileSettings')}
-          </div>
-        )}
-      </div>      <div className="content">
+        <div 
+          className={`tab ${getCurrentTab() === 'storage' ? 'active' : ''}`}
+          onClick={() => navigate('/storage')}
+        >
+          {t('nav.storage')}
+        </div>
+      </div>
+      <div className="content">
         <Routes>
           <Route path="/" element={<StartPage settings={settings} modListReloadKey={modListReloadKey} />} />
           <Route path="/profiles" element={
             <ProfilesView 
               settings={settings} 
-              onCreateProfile={handleCreateProfile}
-              onEditProfile={handleEditProfile}
               onShowModInfo={handleShowModInfo}
               modListReloadKey={modListReloadKey}
             />
           } />
           <Route path="/settings" element={<SettingsView settings={settings} setSettings={setSettings} />} />
-          <Route path="/profile-settings/:id" element={<ProfileSettingsView settings={settings} modListReloadKey={modListReloadKey} />} />
           <Route path="/logs" element={<LogAnalyzerView settings={settings} />} />
+          <Route path="/storage" element={<StorageCleanerView settings={settings} />} />
         </Routes>
       </div>
 
@@ -367,15 +338,8 @@ const App: React.FC = () => {
         <div className="legal">
           Farming Simulator ist eine eingetragene Marke von GIANTS Software GmbH. Diese Anwendung steht in keiner Verbindung zu GIANTS Software.
         </div>
-      </footer>      {/* Popups */}      <ProfileEditPopup
-        profile={editingProfile}
-        isOpen={showProfileEditPopup}
-        onClose={() => setShowProfileEditPopup(false)}
-        onSave={handleSaveProfile}
-        isCreating={isCreatingProfile}
-        language={settings.language}
-        settings={settings}
-      />      <SyncProgressPopup
+      </footer>      {/* Popups */}
+      <SyncProgressPopup
         isOpen={showSyncProgress}
         progress={syncProgress}
         onCancel={handleCancelSync}
@@ -403,7 +367,7 @@ const App: React.FC = () => {
             <div className="popup-body">
               {updateStatus === 'available' && (
                 <>
-                  <p>Eine neue Version ist verfügbar!</p>
+                  <p>{t('update.available')}</p>
                   <div className="version-info">
                     <div>{t('update.current')}: <strong>{updateInfo.currentVersion}</strong></div>
                     <div>{t('update.latest')}: <strong>{updateInfo.latestVersion}</strong></div>
@@ -424,7 +388,7 @@ const App: React.FC = () => {
               )}
               {updateStatus === 'downloading' && (
                 <div className="update-progress">
-                  <p>Update wird heruntergeladen...</p>
+                  <p>{t('update.downloading')}</p>
                   <div className="progress-bar">
                     <div className="progress-fill" style={{ width: `${updateProgress.percent || 0}%` }} />
                   </div>
@@ -436,8 +400,8 @@ const App: React.FC = () => {
               )}
               {updateStatus === 'ready' && (
                 <div className="update-ready">
-                  <p>Das Update wurde erfolgreich heruntergeladen und ist bereit zur Installation!</p>
-                  <p>Die Anwendung wird neu gestartet.</p>
+                  <p>{t('update.ready')}</p>
+                  <p>{t('update.restarting')}</p>
                 </div>
               )}
             </div>

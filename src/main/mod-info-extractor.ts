@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const yauzl = require('yauzl');
 const { logger } = require('./logger');
+import { decodeHtmlEntities } from '../common/utils';
 
 export class ModInfoExtractor {
   /**
@@ -111,7 +112,7 @@ export class ModInfoExtractor {
                         xmlData.match(/<title[^>]*>[\s]*<de[^>]*>([^<]+)<\/de>/i) ||
                         xmlData.match(/<title[^>]*>([^<]+)<\/title>/i);
       if (titleMatch) {
-        info.name = titleMatch[1].trim();
+        info.name = decodeHtmlEntities(titleMatch[1].trim());
       }
 
       // Version extrahieren
@@ -124,7 +125,7 @@ export class ModInfoExtractor {
       // Author extrahieren
       const authorMatch = xmlData.match(/<author>([^<]+)<\/author>/i);
       if (authorMatch) {
-        info.author = authorMatch[1].trim();
+        info.author = decodeHtmlEntities(authorMatch[1].trim());
       }
 
       // Description extrahieren
@@ -132,7 +133,7 @@ export class ModInfoExtractor {
                        xmlData.match(/<description[^>]*>[\s]*<de[^>]*>([^<]+)<\/de>/i) ||
                        xmlData.match(/<description[^>]*>([^<]+)<\/description>/i);
       if (descMatch) {
-        info.description = descMatch[1].trim();
+        info.description = decodeHtmlEntities(descMatch[1].trim());
       }
 
       // Multiplayer Support
@@ -208,10 +209,32 @@ export class ModInfoExtractor {
 
       logger.debug(`Verarbeite ${zipFiles.length} ZIP-Dateien in: ${modsFolder}`);
 
+      let modMapping: any = {};
+      try {
+        // Versuche das Mapping zu laden (z.B. aus dem Projekt Root oder AppData)
+        // __dirname im Build ist typischerweise .webpack/main
+        const mappingPath = path.join(require('electron').app.getPath('documents'), 'FS_ModManager', 'mod-mapping.json');
+        if (fs.existsSync(mappingPath)) {
+          modMapping = JSON.parse(fs.readFileSync(mappingPath, 'utf-8'));
+          logger.info(`Mod-Mapping geladen mit ${Object.keys(modMapping).length} Einträgen.`);
+        }
+      } catch (e) {
+        logger.warn('Konnte mod-mapping.json nicht laden: ' + e);
+      }
+
       for (const zipFile of zipFiles) {
         const zipPath = path.join(modsFolder, zipFile);
         try {
           const modInfo = await this.extractModInfo(zipPath);
+          
+          // Mapping Daten injizieren
+          const mappingData = modMapping[zipFile];
+          if (mappingData) {
+            modInfo.modHubId = mappingData.modId;
+            modInfo.modHubCategory = mappingData.category;
+            modInfo.tags = [mappingData.category]; // Füge Kategorie als Tag hinzu
+          }
+
           modInfos.push(modInfo);
         } catch (error) {
           logger.error(`Fehler beim Verarbeiten von ${zipFile}: ${error}`);

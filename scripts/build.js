@@ -71,6 +71,21 @@ async function incrementVersion() {
     const newVersion = `${major}.${minor}.${patch}`;
     pkgJson.version = newVersion;
     fs.writeFileSync(PKG_JSON_PATH, JSON.stringify(pkgJson, null, 2) + '\n', 'utf8');
+    
+    // Update CHANGELOG.md
+    try {
+        const changelogPath = path.join(ROOT_DIR, 'CHANGELOG.md');
+        if (fs.existsSync(changelogPath)) {
+            let changelog = fs.readFileSync(changelogPath, 'utf8');
+            const today = new Date().toISOString().split('T')[0];
+            changelog = changelog.replace('## [Unreleased]', `## [Unreleased]\n\n## [${newVersion}] - ${today}`);
+            fs.writeFileSync(changelogPath, changelog, 'utf8');
+            log.success(`CHANGELOG.md aktualisiert für Version v${newVersion}!`);
+        }
+    } catch (e) {
+        log.error('Fehler beim Aktualisieren der CHANGELOG.md: ' + e.message);
+    }
+
     log.success(`package.json auf Version v${newVersion} aktualisiert!`);
     
     return newVersion;

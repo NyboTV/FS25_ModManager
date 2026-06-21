@@ -1,87 +1,78 @@
-import * as fs from 'fs';
-import * as path from 'path';
 import { ipcMain } from 'electron';
+import * as path from 'path';
+import * as fs from 'fs';
+import Store from 'electron-store';
 import { logger } from './main';
 
-export interface LogEntry {
-  type: 'info' | 'warning' | 'error';
-  message: string;
-  time?: string;
-  relatedMod?: string;
-  count?: number;
+export interface LogIssue {
+  modName: string;
+  errorMessage: string;
+  count: number;
 }
 
 export class LogAnalyzer {
-  constructor() {
+  private store: Store;
+
+  constructor(store: Store) {
+    this.store = store;
     this.setupIpcHandlers();
   }
 
-  private setupIpcHandlers() {
-    ipcMain.handle('analyze-log', async (event, logPath: string) => {
+  private setupIpcHandlers(): void {
+    ipcMain.handle('analyze-log', async () => {
+      logger.debug('Handler: analyze-log aufgerufen');
       try {
-        return await this.analyzeLogFile(logPath);
+        const settings: any = this.store.get('settings', {});
+        if (!settings.defaultModFolder) {
+          return { success: false, errorCode: 'NO_MOD_FOLDER', error: 'Kein Mod-Ordner konfiguriert.' };
+        }
+
+        // Annahme: defaultModFolder ist z.B. "Documents/My Games/FarmingSimulator2025/mods"
+        // Die log.txt liegt im Parent-Ordner "FarmingSimulator2025"
+        const gameFolder = path.dirname(settings.defaultModFolder);
+        const logFilePath = path.join(gameFolder, 'log.txt');
+
+        if (!fs.existsSync(logFilePath)) {
+          return { success: false, errorCode: 'NO_LOG_FILE', errorData: gameFolder, error: 'log.txt nicht gefunden in ' + gameFolder };
+        }
+
+        const logContent = fs.readFileSync(logFilePath, 'utf8');
+        const lines = logContent.split('\n');
+
+        const issues = new Map<string, LogIssue>();
+
+        for (const line of lines) {
+          if (line.includes('Error:') || line.includes('Warning:')) {
+            // Versuche den Modnamen zu extrahieren. Oft steht dort etwas wie "FS25_Courseplay/irgendwas" 
+            // oder "Error: Failed to load ... in FS25_MyMod"
+            const match = line.match(/(?:FS25_[a-zA-Z0-9_]+)/);
+            if (match) {
+              const modName = match[0];
+              if (!issues.has(modName)) {
+                issues.set(modName, {
+                  modName,
+                  errorMessage: line.trim(),
+                  count: 1
+                });
+              } else {
+                const existing = issues.get(modName)!;
+                existing.count++;
+              }
+            }
+          }
+        }
+
+        const issuesArray = Array.from(issues.values()).sort((a, b) => b.count - a.count);
+
+        return {
+          success: true,
+          issues: issuesArray,
+          logPath: logFilePath
+        };
       } catch (error) {
-        logger.error(`Fehler beim Analysieren der Logdatei: ${error}`);
+        logger.error('Fehler bei der Log-Analyse:', error);
         return { success: false, error: String(error) };
       }
     });
-  }
-
-  async analyzeLogFile(logPath: string): Promise<{ success: boolean; entries?: LogEntry[]; error?: string }> {
-    if (!fs.existsSync(logPath)) {
-      return { success: false, error: 'Die log.txt Datei wurde nicht gefunden.' };
-    }
-
-    const content = fs.readFileSync(logPath, 'utf8');
-    const lines = content.split('\n');
-    const entryMap = new Map<string, LogEntry>();
-    const modRegex = /([a-zA-Z0-9_-]+)\.zip/i;
-
-    for (const line of lines) {
-      if (!line.trim()) continue;
-
-      let type: 'info' | 'warning' | 'error' = 'info';
-      
-      if (line.includes('Error:') || line.includes('Error (')) {
-        type = 'error';
-      } else if (line.includes('Warning:') || line.includes('Warning (')) {
-        type = 'warning';
-      } else if (line.includes('Error')) { // generic fallback
-        type = 'error';
-      }
-
-      // Versuch, einen betroffenen Mod-Namen zu finden (z.B. aus Pfaden)
-      let relatedMod: string | undefined = undefined;
-      const match = line.match(modRegex);
-      if (match && match[1]) {
-        relatedMod = match[1];
-      } else if (line.includes('/mods/')) {
-        const parts = line.split('/mods/');
-        if (parts.length > 1) {
-          const modPart = parts[1].split('/')[0];
-          relatedMod = modPart.replace('.zip', '');
-        }
-      }
-
-      if (type !== 'info') {
-        const trimmedMessage = line.trim();
-        const key = `${type}_${trimmedMessage}`;
-        
-        if (entryMap.has(key)) {
-          const existing = entryMap.get(key)!;
-          existing.count = (existing.count || 1) + 1;
-        } else {
-          entryMap.set(key, {
-            type,
-            message: trimmedMessage,
-            relatedMod,
-            count: 1
-          });
-        }
-      }
-    }
-
-    const entries: LogEntry[] = Array.from(entryMap.values());
-    return { success: true, entries };
   }
 }

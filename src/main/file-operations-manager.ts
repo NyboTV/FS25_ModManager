@@ -59,6 +59,50 @@ export class FileOperationsManager {
       return null;
     });
 
+    // Savegame Backup
+    ipcMain.handle('backup-savegame', async (_, profileId: string, defaultModFolder: string, savegameIndex: number) => {
+      try {
+        if (!defaultModFolder || !fs.existsSync(defaultModFolder)) {
+          return { success: false, error: 'Standard-Mod-Ordner nicht gefunden' };
+        }
+        
+        // Der Mod-Ordner ist normalerweise "Documents/My Games/FarmingSimulator2025/mods"
+        // Das Savegame ist in "Documents/My Games/FarmingSimulator2025/savegameX"
+        const gameDataDir = path.dirname(defaultModFolder);
+        const savegameDir = path.join(gameDataDir, `savegame${savegameIndex}`);
+        
+        if (!fs.existsSync(savegameDir)) {
+          return { success: false, error: `Savegame ${savegameIndex} existiert nicht` };
+        }
+        
+        const backupDir = path.join(this.appDataPath, 'backups', profileId);
+        if (!fs.existsSync(backupDir)) {
+          fs.mkdirSync(backupDir, { recursive: true });
+        }
+        
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        const backupZipPath = path.join(backupDir, `savegame${savegameIndex}_${timestamp}.zip`);
+        
+        const AdmZip = require('adm-zip');
+        const zip = new AdmZip();
+        zip.addLocalFolder(savegameDir);
+        zip.writeZip(backupZipPath);
+        
+        // Optional: Alte Backups löschen (nur die letzten 5 behalten)
+        const backups = fs.readdirSync(backupDir).filter(f => f.startsWith(`savegame${savegameIndex}_`)).sort().reverse();
+        if (backups.length > 5) {
+          for (let i = 5; i < backups.length; i++) {
+            fs.unlinkSync(path.join(backupDir, backups[i]));
+          }
+        }
+        
+        return { success: true, backupPath: backupZipPath };
+      } catch (error) {
+        logger.error('Fehler beim Savegame-Backup:', error);
+        return { success: false, error: String(error) };
+      }
+    });
+
     // Mods in Profil-spezifisches Verzeichnis kopieren
     ipcMain.handle('import-mods-to-profile', async (_, profileId: string, sourcePath: string) => {
       logger.debug(`Handler: import-mods-to-profile aufgerufen für Profil ${profileId} mit Quellpfad ${sourcePath}`);
@@ -134,6 +178,73 @@ export class FileOperationsManager {
           success: false, 
           error: error instanceof Error ? error.message : String(error)
         };
+      }
+    });
+
+    // Speicher-Bereinigung: Orphaned Mods finden
+    ipcMain.handle('scan-orphaned-mods', async (_, defaultModFolder: string) => {
+      try {
+        const profilesPath = path.join(this.appDataPath, 'profiles');
+        const profiles = fs.existsSync(profilesPath) ? fs.readdirSync(profilesPath).filter(d => fs.statSync(path.join(profilesPath, d)).isDirectory()) : [];
+        
+        const activeModFiles = new Set<string>();
+        const profileModFiles = new Set<string>();
+
+        // Sammle alle Mods aus allen Singleplayer-Profilen
+        for (const pid of profiles) {
+          const pJsonPath = path.join(profilesPath, pid, 'profile.json');
+          if (fs.existsSync(pJsonPath)) {
+            const pData = JSON.parse(fs.readFileSync(pJsonPath, 'utf8'));
+            
+            // Sammle Dateien aus dem Profil
+            if (pData.mods && Array.isArray(pData.mods)) {
+              for (const mod of pData.mods) {
+                if (mod.fileName) {
+                  activeModFiles.add(mod.fileName.toLowerCase());
+                }
+              }
+            }
+          }
+        }
+
+        const orphaned: { path: string; name: string; size: number }[] = [];
+
+        // Scanne Default-Mod-Ordner
+        if (defaultModFolder && fs.existsSync(defaultModFolder)) {
+          const files = fs.readdirSync(defaultModFolder);
+          for (const file of files) {
+            if (file.toLowerCase().endsWith('.zip')) {
+              if (!activeModFiles.has(file.toLowerCase())) {
+                const fullPath = path.join(defaultModFolder, file);
+                orphaned.push({ path: fullPath, name: file, size: fs.statSync(fullPath).size });
+              }
+            }
+          }
+        }
+
+        return { success: true, orphaned };
+      } catch (err) {
+        logger.error('Fehler beim Scannen verwaister Mods', err);
+        return { success: false, error: String(err) };
+      }
+    });
+
+    // Orphaned Mods löschen
+    ipcMain.handle('delete-orphaned-mods', async (_, filePaths: string[]) => {
+      try {
+        let deleted = 0;
+        let freedSpace = 0;
+        for (const fPath of filePaths) {
+          if (fs.existsSync(fPath)) {
+            freedSpace += fs.statSync(fPath).size;
+            fs.unlinkSync(fPath);
+            deleted++;
+          }
+        }
+        return { success: true, deleted, freedSpace };
+      } catch (err) {
+        logger.error('Fehler beim Löschen verwaister Mods', err);
+        return { success: false, error: String(err) };
       }
     });
 
@@ -609,6 +720,7 @@ export class FileOperationsManager {
         existing.version = version;
         existing.author = author;
         existing.fileSize = fileSizeStr;
+        existing.modDescData = modDescData;
       } else {
         profile.mods.push({
           name,
@@ -619,7 +731,8 @@ export class FileOperationsManager {
           modHub: '',
           isActive: true,
           downloadUrl: '',
-          detailUrl: ''
+          detailUrl: '',
+          modDescData
         });
       }
     }

@@ -53,6 +53,7 @@
     "electron": "^36.4.0",
     "electron-builder": "^26.0.12",
     "html-webpack-plugin": "^5.6.3",
+    "puppeteer": "^25.1.0",
     "sass": "^1.89.2",
     "sass-loader": "^16.0.5",
     "style-loader": "^4.0.0",

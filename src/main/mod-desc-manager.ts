@@ -74,13 +74,16 @@ export class ModDescManager {
         });
       }
       
+      const isMap = !!(modDesc.maps && modDesc.maps[0] && modDesc.maps[0].map);
+
       const modDescData: ModDescData = {
         author: modDesc.author?.[0] || 'Unbekannt',
         version: modDesc.version?.[0] || '1.0.0',
         title: titleTranslations,
         description: descriptionTranslations,
         iconFilename: modDesc.iconFilename?.[0],
-        multiplayerSupported: modDesc.multiplayer?.[0]?.$.supported === 'true'
+        multiplayerSupported: modDesc.multiplayer?.[0]?.$.supported === 'true',
+        isMap
       };
       
       return modDescData;
