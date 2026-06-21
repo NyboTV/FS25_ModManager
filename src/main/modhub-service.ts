@@ -191,11 +191,11 @@ export class ModHubService {
     try {
       // 1. Get profile
       const { profileManager } = require('./main');
-      const profile = profileManager.getProfile(profileId);
+      const profile = await profileManager.getProfile(profileId);
       if (!profile) throw new Error("Profile not found");
 
-      const targetPath = path.join(profile.modFolderPath, fileName);
-      const downloadUrl = `${BASE_URL}/mod.php?action=download&mod_id=${modId}`;
+      // Fallback to old URL structure if no direct CDN URL is provided
+      const downloadUrl = modDetail?.url || `${BASE_URL}/mod.php?action=download&mod_id=${modId}`;
 
       console.log(`[ModHubService] Starte Download für ${fileName} von ${downloadUrl}`);
       webContents.send('mod-update-progress', { modId, fileName, status: 'starting', percent: 0 });
@@ -206,9 +206,30 @@ export class ModHubService {
         responseType: 'stream',
         timeout: 30000,
         headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+          'Referer': BASE_URL + '/'
         }
       });
+
+      // Echten Dateinamen aus Content-Disposition extrahieren
+      let realFileName = fileName;
+      const contentDisposition = response.headers['content-disposition'];
+      if (contentDisposition) {
+        const filenameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
+        if (filenameMatch && filenameMatch[1]) {
+          realFileName = filenameMatch[1];
+        }
+      } else {
+        // Fallback: Versuche Dateinamen aus der URL zu extrahieren (z.B. bei direkten CDN Links)
+        const urlMatch = downloadUrl.match(/\/([^\/?#]+\.zip)/i);
+        if (urlMatch && urlMatch[1]) {
+          realFileName = urlMatch[1];
+        }
+      }
+      
+      // Update targetPath
+      const modFolderPath = profile.modFolderPath || path.join(app.getPath('userData'), 'FS25_ModManager_Data', 'profiles', profile.id, 'mods');
+      const targetPath = path.join(modFolderPath, realFileName);
 
       const totalLength = parseInt(response.headers['content-length'] || '0', 10);
       let downloadedLength = 0;
@@ -221,32 +242,43 @@ export class ModHubService {
           const percent = Math.round((downloadedLength / totalLength) * 100);
           // Limit IPC spam
           if (percent % 5 === 0) {
-            webContents.send('mod-update-progress', { modId, fileName, status: 'downloading', percent });
+            webContents.send('mod-update-progress', { modId, fileName: realFileName, status: 'downloading', percent });
           }
         }
       });
 
-      return new Promise((resolve, reject) => {
-        writer.on('finish', () => {
-          // Speichere das Mapping direkt ab!
-          if (modDetail) {
-            this.mapping[fileName] = {
-              modId: modId,
-              version: modDetail.version || '1.0.0.0',
-              title: modDetail.title,
-              rating: modDetail.rating || '',
-              category: modDetail.category || 'Unknown',
-              author: modDetail.author || 'Unknown'
-            };
-            this.saveMapping();
-          }
-          
-          webContents.send('mod-update-complete', { modId, fileName, success: true });
-          resolve(true);
-        });
+        return new Promise((resolve, reject) => {
+          writer.on('finish', async () => {
+            // Speichere das Mapping direkt ab!
+            if (modDetail) {
+              this.mapping[realFileName] = {
+                modId: modId,
+                version: modDetail.version || '1.0.0.0',
+                title: modDetail.title,
+                rating: modDetail.rating || '',
+                category: modDetail.category || 'Unknown',
+                author: modDetail.author || 'Unknown'
+              };
+              this.saveMapping();
+            }
+
+            try {
+              // Profil neu laden und Mod hinzufügen, damit die UI ihn sofort sieht
+              const { profileManager } = require('./main');
+              const currentProfile = await profileManager.getProfile(profileId);
+              if (currentProfile) {
+                await profileManager.saveProfile(currentProfile);
+              }
+            } catch (err) {
+              console.error("[ModHubService] Fehler beim Speichern des Profils nach Download:", err);
+            }
+            
+            webContents.send('mod-update-complete', { modId, fileName: realFileName, success: true });
+            resolve(true);
+          });
         writer.on('error', (err) => {
           fs.unlink(targetPath, () => {});
-          webContents.send('mod-update-complete', { modId, fileName, success: false, error: err.message });
+          webContents.send('mod-update-complete', { modId, fileName: realFileName, success: false, error: err.message });
           reject(err);
         });
         response.data.pipe(writer);

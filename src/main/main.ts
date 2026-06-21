@@ -38,7 +38,7 @@ const currentVersion = packageJson.version || '1.0.0';
 
 // Manager-Instanzen
 let windowManager: WindowManager;
-let profileManager: ProfileManager;
+export let profileManager: ProfileManager;
 let settingsManager: SettingsManager;
 let modSyncManager: ModSyncManager;
 let fileOperationsManager: FileOperationsManager;
@@ -124,80 +124,7 @@ app.on('ready', () => {
     return app.getVersion();
   });
 
-  ipcMain.handle('fetch-modhub-page', async (event, page: number, search?: string, category?: string) => {
-    try {
-      const axios = require('axios');
-      const cheerio = require('cheerio');
-      const BASE_URL = 'https://www.farming-simulator.com';
-      
-      let url = `${BASE_URL}/mods.php?title=fs2025&page=${page}`;
-      if (search) url += `&searchMod=${encodeURIComponent(search)}`;
-      if (category && category !== 'All') url += `&filter=${encodeURIComponent(category)}`;
-      
-      const response = await axios.get(url, { timeout: 10000 });
-      const $ = cheerio.load(response.data);
-      
-      const mods: any[] = [];
-      $('.mod-item').each((_: any, el: any) => {
-        const href = $(el).find('a').attr('href');
-        const idMatch = href?.match(/mod_id=([0-9]+)/);
-        if (idMatch) {
-          const modId = idMatch[1];
-          const title = $(el).find('.mod-item__title h4').text().trim();
-          const author = $(el).find('.mod-item__content p:first-child span').text().replace('By:', '').trim();
-          const category = $(el).find('.mod-item__content p:last-child span').text().replace('Category:', '').trim();
-          const imgPath = $(el).find('img').attr('src');
-          const imageUrl = imgPath ? (imgPath.startsWith('http') || imgPath.startsWith('//') ? (imgPath.startsWith('//') ? 'https:' + imgPath : imgPath) : `${BASE_URL}${imgPath.startsWith('/') ? '' : '/'}${imgPath}`) : null;
-          const ratingText = $(el).find('.mod-item__rating-num').text().trim();
-          
-          mods.push({ id: modId, title, author, category, imageUrl, rating: ratingText });
-        }
-      });
-      
-      // Pagination info
-      const hasNext = $('.pagination .pagination__next').length > 0;
-      
-      return { success: true, mods, hasNext };
-    } catch (err) {
-      return { success: false, error: err instanceof Error ? err.message : String(err) };
-    }
-  });
 
-  ipcMain.handle('fetch-modhub-detail', async (event, modId: string) => {
-    try {
-      const axios = require('axios');
-      const cheerio = require('cheerio');
-      const BASE_URL = 'https://www.farming-simulator.com';
-      const response = await axios.get(`${BASE_URL}/mod.php?mod_id=${modId}&title=fs2025`, { timeout: 10000 });
-      const $ = cheerio.load(response.data);
-      
-      // High-res image
-      const imgPath = $('.mod-detail-media img').attr('src');
-      const imageUrl = imgPath ? (imgPath.startsWith('http') || imgPath.startsWith('//') ? (imgPath.startsWith('//') ? 'https:' + imgPath : imgPath) : `${BASE_URL}${imgPath.startsWith('/') ? '' : '/'}${imgPath}`) : null;
-      
-      // Description paragraphs
-      const description: string[] = [];
-      $('.mod-detail-description p').each((_: any, el: any) => {
-        description.push($(el).text().trim());
-      });
-      
-      // Meta info
-      let author = '', version = '', size = '', category = '', date = '';
-      $('.table-mod-detail tr').each((_: any, el: any) => {
-        const key = $(el).find('td:first-child').text().trim();
-        const val = $(el).find('td:last-child').text().trim();
-        if (key.includes('Author')) author = val;
-        if (key.includes('Version')) version = val;
-        if (key.includes('Size')) size = val;
-        if (key.includes('Category')) category = val;
-        if (key.includes('Date')) date = val;
-      });
-      
-      return { success: true, mod: { id: modId, imageUrl, description, author, version, size, category, date } };
-    } catch (err) {
-      return { success: false, error: err instanceof Error ? err.message : String(err) };
-    }
-  });
 
   // Hinzugefügt: Lokales ModHub-Mapping starten
   ipcMain.on('start-modhub-mapping', async (event, profileId) => {
@@ -371,10 +298,11 @@ app.on('ready', () => {
   ipcMain.handle('delete-mod', async (event, profileId: string, modId: string) => {
     const profile = await profileManager.getProfile(profileId);
     if (profile) {
+      const modFolderPath = profile.modFolderPath || path.join(app.getPath('userData'), 'FS25_ModManager_Data', 'profiles', profile.id, 'mods');
       const mod = profile.mods.find((m: any) => m.fileName === modId);
       if (mod && mod.fileName) {
         // Datei im Mod-Ordner löschen
-        const modFilePath = path.join(profile.modFolderPath, 'mods', mod.fileName);
+        const modFilePath = path.join(modFolderPath, mod.fileName);
         if (fs.existsSync(modFilePath)) {
           try {
             fs.unlinkSync(modFilePath);

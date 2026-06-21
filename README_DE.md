@@ -30,6 +30,12 @@ Ein moderner, robuster Mod-Manager für Farming Simulator (FS19, FS22, FS25), en
 - Automatische Backup-Erstellung vor Änderungen
 - Robuste Behandlung von Dateikonflikten und langen Dateinamen unter Windows
 
+### 🌐 Integrierter ModHub Browser
+- **In-App Surfen**: Durchsuchen Sie den offiziellen Farming Simulator ModHub direkt in der App.
+- **Smart Download**: Klicks auf Download-Buttons auf der ModHub-Seite werden abgefangen und erlauben die direkte Installation des Mods in ein von Ihnen gewähltes Profil.
+- **Auto-Mapping**: Heruntergeladene Mods werden vollautomatisch in das interne Mapping (für ModHub-Prüfungen und Updates) eingetragen.
+- **Dark Mode**: Das Design der ModHub-Seite wird automatisch an das dunkle Theme des ModManagers angepasst.
+
 ### 🌐 Verbesserte Server-Synchronisation
 - **Automatische Erkennung**: Verbinden Sie sich mit Dedicated Servern und rufen Sie deren komplette Mod-Liste ab
 - **Intelligenter Download**: Automatischer Download fehlender Mods direkt von der Mod-Quelle

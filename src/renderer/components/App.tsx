@@ -346,6 +346,14 @@ const App: React.FC = () => {
         >
           {t('nav.storage')}
         </div>
+        
+        {getCurrentTab() === 'modbrowser' && (
+          <div style={{ marginLeft: 'auto', display: 'flex', gap: '5px', alignItems: 'center', paddingRight: '15px' }}>
+            <button className="btn btn-secondary" style={{ padding: '2px 8px', fontSize: '14px', background: 'var(--surface)' }} onClick={() => window.dispatchEvent(new CustomEvent('webview-go-back'))}>&larr;</button>
+            <button className="btn btn-secondary" style={{ padding: '2px 8px', fontSize: '14px', background: 'var(--surface)' }} onClick={() => window.dispatchEvent(new CustomEvent('webview-go-forward'))}>&rarr;</button>
+            <button className="btn btn-secondary" style={{ padding: '2px 8px', fontSize: '14px', background: 'var(--surface)' }} onClick={() => window.dispatchEvent(new CustomEvent('webview-reload'))}>&#x21bb;</button>
+          </div>
+        )}
       </div>
       <div className="content">
         <Routes>
@@ -367,7 +375,7 @@ const App: React.FC = () => {
       <footer className="footer">
         <div className="footer-content">
           <div className="copyright">
-            Farming Mod Manager © 2025 | <a href="#" onClick={() => ipcRenderer.invoke('open-external', 'https://github.com/NyboTV/FS25_ModManager')}>GitHub</a>
+            Farming Mod Manager © 2026 | <a href="#" onClick={() => ipcRenderer.invoke('open-external', 'https://github.com/NyboTV/FS25_ModManager')}>GitHub</a>
           </div>
           <div className="version">
             Version {settings.currentVersion}

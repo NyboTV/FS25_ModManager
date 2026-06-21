@@ -245,9 +245,10 @@ export class ProfileManager {
     ipcMain.handle('load-profile-mods', async (_, profileId) => {
       logger.debug(`Handler: load-profile-mods aufgerufen für Profil ${profileId}`);
       try {
-        const profilesPath = path.join(this.appDataPath, 'profiles');
-        const profileDirPath = path.join(profilesPath, profileId);
-        const profileModsPath = path.join(profileDirPath, 'mods');
+        const profile = await this.getProfile(profileId);
+        if (!profile) return [];
+        
+        const profileModsPath = profile.modFolderPath || path.join(this.appDataPath, 'profiles', profileId, 'mods');
         
         if (!fs.existsSync(profileModsPath)) {
           logger.warn(`Mods-Ordner existiert nicht: ${profileModsPath}`);
@@ -298,7 +299,7 @@ export class ProfileManager {
       }
       const profileData = JSON.parse(fs.readFileSync(profilePath, 'utf8'));
       // --- Mods-Liste beim Laden immer mit Ordner abgleichen ---
-      const modsDir = path.join(this.appDataPath, 'profiles', profileId, 'mods');
+      const modsDir = profileData.modFolderPath || path.join(this.appDataPath, 'profiles', profileId, 'mods');
       if (fs.existsSync(modsDir)) {
         const modFiles = fs.readdirSync(modsDir).filter(f => f.endsWith('.zip') || f.endsWith('.ms2'));
         // Filtere alle Mods aus der JSON raus, deren Datei nicht mehr existiert

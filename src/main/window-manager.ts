@@ -46,7 +46,8 @@ export class WindowManager {
       icon: path.join(__dirname, '../image/logo.png'), // Icon für die Anwendung
       webPreferences: {
         nodeIntegration: true,
-        contextIsolation: false
+        contextIsolation: false,
+        webviewTag: true
       },
       backgroundColor: '#f4f5f0' // Hintergrundfarbe passend zum Design
     });

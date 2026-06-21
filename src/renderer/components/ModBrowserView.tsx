@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Settings, Profile } from '../../common/types';
 import { useTranslation } from '../i18n';
 
-const { ipcRenderer } = window.require('electron');
+const { ipcRenderer, shell } = window.require('electron');
 
 interface ModBrowserViewProps {
   settings: Settings;
@@ -11,39 +11,18 @@ interface ModBrowserViewProps {
 const ModBrowserView: React.FC<ModBrowserViewProps> = ({ settings }) => {
   const t = useTranslation(settings.language);
   
-  const [mods, setMods] = useState<any[]>([]);
-  const [page, setPage] = useState(0);
-  const [hasNext, setHasNext] = useState(true);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [selectedProfileId, setSelectedProfileId] = useState<string>('');
   
-  const [selectedModId, setSelectedModId] = useState<string | null>(null);
-  const [modDetail, setModDetail] = useState<any | null>(null);
-  const [loadingDetail, setLoadingDetail] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [category, setCategory] = useState('All');
-  
+  // Download Intercept State
+  const [downloadPending, setDownloadPending] = useState<{ url: string, modId: string } | null>(null);
   const [isDownloading, setIsDownloading] = useState(false);
+  
+  const webviewRef = useRef<any>(null);
 
   useEffect(() => {
     loadProfiles();
   }, []);
-
-  useEffect(() => {
-    // Reset to page 0 when search or category changes
-    if (page !== 0) {
-      setPage(0);
-    } else {
-      fetchPage(0, searchQuery, category);
-    }
-  }, [searchQuery, category]);
-
-  useEffect(() => {
-    fetchPage(page, searchQuery, category);
-  }, [page]);
 
   const loadProfiles = async () => {
     try {
@@ -57,255 +36,203 @@ const ModBrowserView: React.FC<ModBrowserViewProps> = ({ settings }) => {
     }
   };
 
-  const fetchPage = async (pageNumber: number, search: string = '', cat: string = 'All') => {
-    setLoading(true);
-    setError(null);
-    try {
-      const result = await ipcRenderer.invoke('fetch-modhub-page', pageNumber, search, cat);
-      if (result.success) {
-        setMods(result.mods);
-        setHasNext(result.hasNext);
-      } else {
-        setError(result.error || 'Unknown error');
-      }
-    } catch (err) {
-      setError(String(err));
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    const webview = webviewRef.current;
+    if (!webview) return;
 
-  const handleModClick = async (modId: string) => {
-    setSelectedModId(modId);
-    setModDetail(null);
-    setLoadingDetail(true);
-    try {
-      const result = await ipcRenderer.invoke('fetch-modhub-detail', modId);
-      if (result.success) {
-        setModDetail(result.mod);
-      } else {
-        alert("Fehler beim Laden der Details: " + result.error);
-        setSelectedModId(null);
+    const handleWillNavigate = (event: any) => {
+      const url = event.url;
+      // Download abfangen
+      const isDownloadUrl = (url.includes('action=download') && url.includes('mod_id=')) || url.match(/\/storage\/[0-9]+\/.*\.zip/i);
+      
+      if (isDownloadUrl) {
+        event.preventDefault();
+        webview.stop(); // Stoppe die Navigation im Webview
+        
+        let modId = '';
+        const modIdMatch1 = url.match(/mod_id=([0-9]+)/);
+        const modIdMatch2 = url.match(/\/storage\/0*([0-9]+)\//);
+        
+        if (modIdMatch1) modId = modIdMatch1[1];
+        else if (modIdMatch2) modId = modIdMatch2[1];
+        
+        if (modId) {
+          setDownloadPending({ url, modId });
+        }
+      } else if (!url.includes('farming-simulator.com') && !url.includes('giants-software.com')) {
+        // Externe Links blockieren und im echten Browser öffnen
+        event.preventDefault();
+        webview.stop();
+        shell.openExternal(url);
       }
-    } catch (err) {
-      alert("Fehler: " + err);
-      setSelectedModId(null);
-    } finally {
-      setLoadingDetail(false);
-    }
-  };
+    };
 
-  const handleDownload = async () => {
-    if (!selectedProfileId || !modDetail) return;
+    const handleNewWindow = (event: any) => {
+      // Wenn das Webview versucht, ein neues Fenster zu öffnen (target="_blank")
+      event.preventDefault();
+      const url = event.url;
+      
+      const isDownloadUrl = (url.includes('action=download') && url.includes('mod_id=')) || url.match(/\/storage\/[0-9]+\/.*\.zip/i);
+      
+      if (isDownloadUrl) {
+        let modId = '';
+        const modIdMatch1 = url.match(/mod_id=([0-9]+)/);
+        const modIdMatch2 = url.match(/\/storage\/0*([0-9]+)\//);
+        
+        if (modIdMatch1) modId = modIdMatch1[1];
+        else if (modIdMatch2) modId = modIdMatch2[1];
+        
+        if (modId) {
+          setDownloadPending({ url, modId });
+        }
+      } else if (!url.includes('farming-simulator.com') && !url.includes('giants-software.com')) {
+        shell.openExternal(url);
+      }
+    };
+
+    const handleDomReady = () => {
+      // Custom CSS injizieren für Dark Mode und passendes Design
+      const customCSS = `
+        body, html, .white-bg { background-color: #1e1e2e !important; color: #cdd6f4 !important; }
+        .main-header, .header, .footer, .tabs { background-color: #11111b !important; border-color: #313244 !important; }
+        .mod-item, .mod-item__content, .box-mods-item-info { background-color: #181825 !important; border: 1px solid #313244 !important; border-radius: 8px !important; overflow: hidden !important; }
+        .mod-item__content h4, .title-label, h1, h2, h3, h4, h5, h6 { color: #cba6f7 !important; }
+        p, span, div { color: #bac2de !important; }
+        .button, .button-buy { background-color: #89b4fa !important; color: #11111b !important; border: none !important; border-radius: 6px !important; font-weight: bold !important; }
+        a { color: #89b4fa !important; }
+        .table-row { border-bottom: 1px solid #313244 !important; }
+        .table-cell b { color: #cdd6f4 !important; }
+        .pagination li a { background-color: #181825 !important; color: #cdd6f4 !important; border: 1px solid #313244 !important; border-radius: 4px !important; }
+        .pagination li.current a { background-color: #89b4fa !important; color: #11111b !important; }
+        input, select { background-color: #11111b !important; color: #cdd6f4 !important; border: 1px solid #313244 !important; border-radius: 4px !important; }
+        /* Verstecke nervige Elemente wie Ads oder den Header-Login */
+        .header__top, .header, .main-header, .ad-banner, .social-box, .partners { display: none !important; }
+      `;
+      webview.insertCSS(customCSS);
+    };
+
+    const handleGoBack = () => webview.goBack();
+    const handleGoForward = () => webview.goForward();
+    const handleReload = () => webview.reload();
+
+    webview.addEventListener('will-navigate', handleWillNavigate);
+    webview.addEventListener('new-window', handleNewWindow);
+    webview.addEventListener('dom-ready', handleDomReady);
+
+    window.addEventListener('webview-go-back', handleGoBack);
+    window.addEventListener('webview-go-forward', handleGoForward);
+    window.addEventListener('webview-reload', handleReload);
+
+    return () => {
+      webview.removeEventListener('will-navigate', handleWillNavigate);
+      webview.removeEventListener('new-window', handleNewWindow);
+      webview.removeEventListener('dom-ready', handleDomReady);
+      window.removeEventListener('webview-go-back', handleGoBack);
+      window.removeEventListener('webview-go-forward', handleGoForward);
+      window.removeEventListener('webview-reload', handleReload);
+    };
+  }, []);
+
+  const handleDownloadConfirm = async () => {
+    if (!selectedProfileId || !downloadPending) return;
     setIsDownloading(true);
     
-    // Wir nutzen das existierende download-modhub-mod (braucht fileName. Wir erfinden einen temporären, 
-    // modhub-service.ts findet den echten Namen über Content-Disposition raus)
-    const tempFileName = modDetail.title.replace(/[^a-zA-Z0-9]/g, '_') + '.zip';
+    const tempFileName = `mod_${downloadPending.modId}.zip`;
     
-    ipcRenderer.send('download-modhub-mod', selectedProfileId, tempFileName, modDetail.id, modDetail);
+    ipcRenderer.send('download-modhub-mod', selectedProfileId, tempFileName, downloadPending.modId, {
+       title: `Mod ${downloadPending.modId}`,
+       version: '1.0.0.0',
+       url: downloadPending.url
+    });
     
-    // Das Modal kann offen bleiben, App.tsx Toast zeigt Download-Fortschritt
     setIsDownloading(false);
-    setSelectedModId(null);
+    setDownloadPending(null);
   };
 
+  const startUrl = settings.language === 'de'
+    ? 'https://www.farming-simulator.com/mods.php?lang=de&country=de&title=fs2025&page=0'
+    : 'https://www.farming-simulator.com/mods.php?lang=en&country=us&title=fs2025&page=0';
+
   return (
-    <div className="modbrowser-view" style={{ padding: '20px', height: '100%', overflowY: 'auto' }}>
-      <div className="card" style={{ marginBottom: '20px' }}>
-        <h2 style={{ margin: '0 0 10px 0' }}>ModHub Browser</h2>
-        <p style={{ margin: '0 0 15px 0', color: 'var(--text-secondary)' }}>
-          Suche und installiere Mods direkt aus dem offiziellen ModHub.
-        </p>
-        
-        <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
-          <input 
-            type="text" 
-            placeholder="Mod suchen..." 
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-            style={{ flex: 1, padding: '10px', borderRadius: '4px', border: '1px solid var(--border-color)', background: 'var(--bg-primary)', color: 'var(--text-primary)' }}
-          />
-          <select 
-            value={category} 
-            onChange={e => setCategory(e.target.value)}
-            style={{ padding: '10px', borderRadius: '4px', border: '1px solid var(--border-color)', background: 'var(--bg-primary)', color: 'var(--text-primary)' }}
-          >
-            <option value="All">Alle Kategorien</option>
-            <option value="map">Karten</option>
-            <option value="tractor">Traktoren</option>
-            <option value="harvester">Erntemaschinen</option>
-            <option value="trailer">Anhänger</option>
-            <option value="implement">Geräte</option>
-            <option value="object">Objekte</option>
-            <option value="script">Skripte</option>
-          </select>
-        </div>
-      </div>
+    <div className="modbrowser-view" style={{ 
+      display: 'flex', 
+      flexDirection: 'column',
+      height: 'calc(100vh - 165px)',
+      margin: '-24px',
+      width: 'calc(100% + 48px)',
+      borderRadius: '0 0 8px 8px',
+      overflow: 'hidden'
+    }}>
+      
+      {/* Webview Component */}
+      <webview
+        ref={webviewRef}
+        src={startUrl}
+        style={{ flex: 1, border: 'none', background: '#fff' }}
+        allowpopups={true}
+      />
 
-      {error && (
-        <div style={{ padding: '15px', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', borderRadius: '8px', marginBottom: '20px' }}>
-          Fehler beim Laden: {error}
-        </div>
-      )}
-
-      {loading ? (
-        <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-secondary)' }}>
-          Lade Mods...
-        </div>
-      ) : (
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', 
-          gap: '20px' 
-        }}>
-          {mods.map(mod => (
-            <div 
-              key={mod.id} 
-              className="mod-card"
-              onClick={() => handleModClick(mod.id)}
-              style={{
-                background: 'var(--bg-secondary)',
-                borderRadius: '8px',
-                overflow: 'hidden',
-                cursor: 'pointer',
-                border: '1px solid var(--border-color)',
-                transition: 'transform 0.2s, box-shadow 0.2s',
-                display: 'flex',
-                flexDirection: 'column'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.boxShadow = '0 8px 16px rgba(0,0,0,0.3)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'none';
-                e.currentTarget.style.boxShadow = 'none';
-              }}
-            >
-              <div style={{ 
-                height: '150px', 
-                background: '#111', 
-                backgroundImage: mod.imageUrl ? `url(${mod.imageUrl})` : 'none',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                position: 'relative'
-              }}>
-                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '5px 10px', background: 'rgba(0,0,0,0.7)', display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}>
-                  <span>{mod.rating}</span>
-                  <span style={{ color: 'var(--primary-color)' }}>{mod.category}</span>
-                </div>
-              </div>
-              <div style={{ padding: '12px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                <h3 style={{ margin: '0 0 8px 0', fontSize: '1rem', lineHeight: '1.2' }}>{mod.title}</h3>
-                <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: 'auto' }}>Von: {mod.author}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Pagination at bottom */}
-      {!loading && !error && (
-        <div style={{ display: 'flex', gap: '15px', alignItems: 'center', justifyContent: 'center', marginTop: '20px' }}>
-          <button 
-            className="btn btn-secondary" 
-            onClick={() => setPage(p => Math.max(0, p - 1))}
-            disabled={page === 0}
-          >
-            Zurück
-          </button>
-          <span>Seite {page + 1}</span>
-          <button 
-            className="btn btn-secondary" 
-            onClick={() => setPage(p => p + 1)}
-            disabled={!hasNext}
-          >
-            Nächste
-          </button>
-        </div>
-      )}
-
-      {/* Detail Modal Overlay */}
-      {selectedModId && (
+      {/* Download Intercept Modal */}
+      {downloadPending && (
         <div style={{
           position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          background: 'rgba(0,0,0,0.8)', zIndex: 1000,
+          background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', zIndex: 1000,
           display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px'
-        }} onClick={() => setSelectedModId(null)}>
+        }} onClick={() => setDownloadPending(null)}>
           <div style={{
-            background: 'var(--bg-primary)',
+            background: '#1e1e2e', // Klarer dunkler Hintergrund
             borderRadius: '12px',
             width: '100%',
-            maxWidth: '800px',
-            maxHeight: '90vh',
-            overflowY: 'auto',
-            border: '1px solid var(--border-color)',
-            boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
+            maxWidth: '500px',
+            padding: '25px',
+            border: '2px solid #89b4fa', // Heller Rahmen zur Abgrenzung
+            boxShadow: '0 20px 50px rgba(0,0,0,0.9)', // Starker Schatten
             position: 'relative',
-            display: 'flex',
-            flexDirection: 'column'
+            color: '#cdd6f4'
           }} onClick={e => e.stopPropagation()}>
             
             <button 
-              onClick={() => setSelectedModId(null)}
-              style={{ position: 'absolute', top: '15px', right: '15px', background: 'rgba(0,0,0,0.5)', border: 'none', color: '#fff', width: '30px', height: '30px', borderRadius: '50%', cursor: 'pointer', zIndex: 10 }}
+              onClick={() => setDownloadPending(null)}
+              style={{ position: 'absolute', top: '15px', right: '15px', background: '#313244', border: '1px solid #45475a', color: '#cdd6f4', width: '30px', height: '30px', borderRadius: '50%', cursor: 'pointer', zIndex: 10, display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold' }}
             >
-              ✕
+              ×
             </button>
 
-            {loadingDetail ? (
-              <div style={{ padding: '50px', textAlign: 'center' }}>Lade Details...</div>
-            ) : modDetail ? (
-              <>
-                <div style={{ 
-                  width: '100%', 
-                  height: '300px', 
-                  backgroundImage: `url(${modDetail.imageUrl})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center'
-                }} />
-                
-                <div style={{ padding: '25px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                  <div>
-                    <h2 style={{ margin: '0 0 5px 0' }}>{modDetail.title || mods.find(m => m.id === selectedModId)?.title}</h2>
-                    <div style={{ display: 'flex', gap: '15px', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-                      <span>Autor: {modDetail.author}</span>
-                      <span>Version: {modDetail.version}</span>
-                      <span>Größe: {modDetail.size}</span>
-                      <span>Kategorie: {modDetail.category}</span>
-                    </div>
-                  </div>
+            <h2 style={{ margin: '0 0 15px 0', color: '#cba6f7' }}>Mod Download</h2>
+            <p style={{ color: '#bac2de', marginBottom: '20px' }}>
+              Du lädst den Mod (ID: <strong style={{color: '#f9e2af'}}>{downloadPending.modId}</strong>) herunter. In welches Profil soll er installiert werden?
+            </p>
 
-                  <div style={{ lineHeight: '1.6', color: '#ccc' }}>
-                    {modDetail.description.map((p: string, i: number) => <p key={i}>{p}</p>)}
-                  </div>
+            <div style={{ background: '#11111b', padding: '15px', borderRadius: '8px', marginBottom: '20px', border: '1px solid #313244' }}>
+              <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: '#bac2de' }}>Ziel-Profil:</label>
+              <select 
+                value={selectedProfileId} 
+                onChange={e => setSelectedProfileId(e.target.value)}
+                style={{ width: '100%', padding: '10px', borderRadius: '4px', background: '#181825', color: '#cdd6f4', border: '1px solid #45475a', outline: 'none' }}
+              >
+                {profiles.map(p => (
+                  <option key={p.id} value={p.id}>{p.name}</option>
+                ))}
+              </select>
+            </div>
 
-                  <div style={{ background: 'var(--bg-secondary)', padding: '15px', borderRadius: '8px', marginTop: '10px', display: 'flex', gap: '15px', alignItems: 'center' }}>
-                    <div style={{ flex: 1 }}>
-                      <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Ziel-Profil für Installation:</label>
-                      <select 
-                        value={selectedProfileId} 
-                        onChange={e => setSelectedProfileId(e.target.value)}
-                        style={{ width: '100%', padding: '8px', borderRadius: '4px', background: 'var(--bg-primary)', color: '#fff', border: '1px solid var(--border-color)' }}
-                      >
-                        {profiles.map(p => (
-                          <option key={p.id} value={p.id}>{p.name}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <button 
-                      className="btn btn-success" 
-                      style={{ padding: '10px 20px', height: 'fit-content', alignSelf: 'flex-end' }}
-                      onClick={handleDownload}
-                      disabled={isDownloading || !selectedProfileId}
-                    >
-                      {isDownloading ? 'Wird heruntergeladen...' : 'Mod Herunterladen'}
-                    </button>
-                  </div>
-                </div>
-              </>
-            ) : null}
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+              <button 
+                className="btn btn-secondary" 
+                onClick={() => setDownloadPending(null)}
+                style={{ background: '#313244', border: 'none', color: '#cdd6f4', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer' }}
+              >
+                Abbrechen
+              </button>
+              <button 
+                className="btn btn-success" 
+                onClick={handleDownloadConfirm}
+                disabled={isDownloading || !selectedProfileId}
+                style={{ background: '#a6e3a1', border: 'none', color: '#11111b', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', opacity: (isDownloading || !selectedProfileId) ? 0.5 : 1 }}
+              >
+                {isDownloading ? 'Starte Download...' : 'Herunterladen & Installieren'}
+              </button>
+            </div>
           </div>
         </div>
       )}
