@@ -8,6 +8,7 @@ import ModInfoPopup from './ModInfoPopup';
 import LogAnalyzerView from './LogAnalyzerView';
 import StorageCleanerView from './StorageCleanerView';
 import InGameUpdatesPopup from './InGameUpdatesPopup';
+import ModBrowserView from './ModBrowserView';
 import SplashScreen from './SplashScreen';
 import { Settings, UpdateInfo, SyncProgress, ModInfo } from '../../common/types';
 import { useTranslation } from '../i18n';
@@ -49,8 +50,8 @@ const App: React.FC = () => {
     status: 'downloading'
   });
 
-  const [mappingProgress, setMappingProgress] = useState<{current: number, total: number, modName: string, status: string} | null>(null);
-  const [modUpdateProgress, setModUpdateProgress] = useState<{modId: string, fileName: string, status: string, percent: number} | null>(null);
+  const [mappingProgress, setMappingProgress] = useState<{current: number, total: number, modName: string, status: string, profileName?: string} | null>(null);
+  const [modUpdateProgress, setModUpdateProgress] = useState<{modId: string, fileName: string, status: string, percent: number, profileName?: string} | null>(null);
 
   const [showModInfo, setShowModInfo] = useState(false);
   const [selectedMod, setSelectedMod] = useState<ModInfo | null>(null);
@@ -263,6 +264,7 @@ const App: React.FC = () => {
     const path = location.pathname;
     if (path.startsWith('/settings')) return 'settings';
     if (path.startsWith('/profiles')) return 'profiles';
+    if (path.startsWith('/modbrowser')) return 'modbrowser';
     if (path.startsWith('/logs')) return 'logs';
     if (path.startsWith('/profile-settings')) return 'profile-settings';
     if (path.startsWith('/storage')) return 'storage';
@@ -321,6 +323,12 @@ const App: React.FC = () => {
           {t('nav.profiles')}
         </div>
         <div 
+          className={`tab ${getCurrentTab() === 'modbrowser' ? 'active' : ''}`}
+          onClick={() => navigate('/modbrowser')}
+        >
+          ModHub
+        </div>
+        <div 
           className={`tab ${getCurrentTab() === 'settings' ? 'active' : ''}`}
           onClick={() => navigate('/settings')}
         >
@@ -350,6 +358,7 @@ const App: React.FC = () => {
             />
           } />
           <Route path="/settings" element={<SettingsView settings={settings} setSettings={setSettings} />} />
+          <Route path="/modbrowser" element={<ModBrowserView settings={settings} />} />
           <Route path="/logs" element={<LogAnalyzerView settings={settings} />} />
           <Route path="/storage" element={<StorageCleanerView settings={settings} />} />
         </Routes>
@@ -384,6 +393,7 @@ const App: React.FC = () => {
           }}>
             <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', color: 'var(--primary-color)' }}>
               {mappingProgress.status === 'checking_updates' ? 'ModHub Update-Check' : t('mapping.title')}
+              {mappingProgress.profileName ? ` (${mappingProgress.profileName})` : ''}
             </h4>
             <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: '#ccc' }}>
               {mappingProgress.status === 'checking_updates' ? 'Prüfe auf Updates beim ModHub...' : t('mapping.desc')}
@@ -432,9 +442,9 @@ const App: React.FC = () => {
           width: '300px'
         }}>
           <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', color: 'var(--primary-color)' }}>
-            Mod Update
+            Mod Update {modUpdateProgress.profileName ? `(${modUpdateProgress.profileName})` : ''}
           </h4>
-          <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: '#ccc' }}>
+          <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: '#ccc', wordBreak: 'break-all' }}>
             Lade Update für {modUpdateProgress.fileName}...
           </p>
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '4px' }}>
