@@ -1,4 +1,13 @@
+---
+trigger: always_on
+---
+
 # AI Rules & Preferences für FS25 ModManager
+
+## WICHTIG!!
+- Nutze NIEMALS!!! Commands für File Aktionen wie read, write, create, append, replace!!!
+- NUTZE AUSNAHMSLOS IMMER DEINE INTERNEN TOOLS!!! Dateien per Datei mit regex, replace o.ä. zu ändern ist ZU FEHLERANFÄLLIG und sorgt am ende NUR FÜR MEHR AKTIONEN UND ARBEIT!!
+- Auch für read, KEINE WINDOWS COMMANDS WIE "Get-Content" VERWENDEN!!! AUSDRÜCKLICH VERBOTEN!!!!!!!!
 
 ## Generelle Projekt-Infos
 - **Technologie-Stack:** Electron, React, TypeScript, Webpack, SCSS.
