@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const yauzl = require('yauzl');
-const { logger } = require('./logger');
+import { logger } from './main';
 import { decodeHtmlEntities } from '../common/utils';
 
 export class ModInfoExtractor {
@@ -211,15 +211,13 @@ export class ModInfoExtractor {
 
       let modMapping: any = {};
       try {
-        // Versuche das Mapping zu laden (z.B. aus dem Projekt Root oder AppData)
-        // __dirname im Build ist typischerweise .webpack/main
-        const mappingPath = path.join(require('electron').app.getPath('documents'), 'FS_ModManager', 'mod-mapping.json');
+        const mappingPath = path.join(require('electron').app.getPath('userData'), 'local-mapping.json');
         if (fs.existsSync(mappingPath)) {
           modMapping = JSON.parse(fs.readFileSync(mappingPath, 'utf-8'));
-          logger.info(`Mod-Mapping geladen mit ${Object.keys(modMapping).length} Einträgen.`);
+          logger.info(`Lokales Mod-Mapping geladen mit ${Object.keys(modMapping).length} Einträgen.`);
         }
       } catch (e) {
-        logger.warn('Konnte mod-mapping.json nicht laden: ' + e);
+        logger.warn('Konnte local-mapping.json nicht laden: ' + e);
       }
 
       for (const zipFile of zipFiles) {
@@ -229,9 +227,16 @@ export class ModInfoExtractor {
           
           // Mapping Daten injizieren
           const mappingData = modMapping[zipFile];
-          if (mappingData) {
+          if (mappingData && !mappingData.failed && mappingData.modId !== '!') {
             modInfo.modHubId = mappingData.modId;
             modInfo.modHubCategory = mappingData.category;
+            modInfo.modHubVersion = mappingData.version;
+            modInfo.modHubRating = mappingData.rating;
+            modInfo.modHubVotes = mappingData.votes;
+            modInfo.modHubSize = mappingData.size;
+            modInfo.modHubReleased = mappingData.released;
+            modInfo.modHubPlatform = mappingData.platform;
+            modInfo.modHubManufacturer = mappingData.manufacturer;
             modInfo.tags = [mappingData.category]; // Füge Kategorie als Tag hinzu
           }
 

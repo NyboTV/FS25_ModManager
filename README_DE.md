@@ -247,3 +247,12 @@ Falls Sie Probleme haben oder VerbesserungsvorschlÃ¤ge haben, kÃ¶nnen Sie:
 - Screenshots oder detaillierte Beschreibungen des Problems hinzufÃ¼gen
 
 **Wenn Sie dieses Projekt nÃ¼tzlich finden, geben Sie ihm gerne einen Stern â­ auf GitHub!**
+
+## ?? Bekannte Einschränkungen (Limitations)
+
+Bitte beachte folgende Einschränkungen der App, die durch externe Plattformen oder APIs bedingt sind:
+
+1. **ModHub Updates:** Die Erkennung, ob ein Mod veraltet ist, basiert rein auf der Überprüfung der Versionsnummern (ausgelesen aus der ModHub HTML-Seite im Vergleich zu deiner lokalen Datei). Da GIANTS keine API mit Datei-Hashes bereitstellt, sind exakte Datei-Inhaltsprüfungen nicht möglich. Stimmt die Version überein, gilt der Mod als "aktuell" – auch wenn der Inhalt abweicht.
+2. **ModHub Mapping:** Die Zuordnung lokaler Mods zum ModHub erfolgt über einen intelligenten Abgleich des Dateinamens mit den ModHub-Seiten. Mods, deren Dateiname nach dem Download stark verändert wurde, oder Mods von inoffiziellen Drittanbieter-Seiten können nicht immer zuverlässig erkannt werden.
+3. **Dedicated Server Sync (FastDL):** Bei der Nutzung reiner FastDL-Dienste (ohne die GIANTS Web-Interface HTML-Struktur) muss zwingend eine `dedicated-server-stats.xml` URL im Profil hinterlegt werden, um die korrekten Mod-Versionen vom Server zu ermitteln.
+

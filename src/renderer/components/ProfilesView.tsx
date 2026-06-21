@@ -25,6 +25,8 @@ const ProfilesView: React.FC<ProfilesViewProps> = ({
   const [urlInput, setUrlInput] = useState('');
   const [isDownloading, setIsDownloading] = useState(false);
   const [categoryFilters, setCategoryFilters] = useState<{[profileId: string]: string}>({});
+  const [searchQueries, setSearchQueries] = useState<{[profileId: string]: string}>({});
+  const [sortOrders, setSortOrders] = useState<{[profileId: string]: string}>({});
   const [syncUrlType, setSyncUrlType] = useState<'checking' | 'giants' | 'fastdl' | null>(null);
   
 
@@ -35,6 +37,12 @@ const ProfilesView: React.FC<ProfilesViewProps> = ({
   useEffect(() => {
     loadProfiles();
   }, [modListReloadKey]);
+
+  useEffect(() => {
+    if (selectedProfileId) {
+      ipcRenderer.send('start-modhub-mapping', selectedProfileId);
+    }
+  }, [selectedProfileId]);
 
   const loadProfiles = async () => {
     try {
@@ -466,13 +474,25 @@ const ProfilesView: React.FC<ProfilesViewProps> = ({
                 >
                   📁 {t('profiles.openFolder') || 'Ordner öffnen'}
                 </button>
-                <button 
-                  className="btn btn-primary btn-sm"
-                  onClick={() => handleAddMods(selectedProfile)}
-                  title="Mods hinzufügen (Datei)"
-                >
-                  ➕ {t('profiles.addFile') || 'Datei'}
-                </button>
+                <div className="profile-actions" style={{ display: 'flex', gap: '5px' }}>
+                  <button 
+                    className="btn btn-secondary btn-sm"
+                    onClick={() => {
+                      const { ipcRenderer } = window.require('electron');
+                      ipcRenderer.send('force-modhub-updates', selectedProfile.id);
+                    }}
+                    title="Prüft alle Mods mit Mod-ID auf Updates"
+                  >
+                    🔄 Updates Prüfen
+                  </button>
+                  <button 
+                    className="btn btn-success btn-sm"
+                    onClick={() => handleAddMods(selectedProfile)}
+                    title="Mods hinzufügen (Datei)"
+                  >
+                    ➕ {t('profiles.addFile') || 'Datei'}
+                  </button>
+                </div>
                 <button 
                   className="btn btn-info btn-sm"
                   onClick={() => setShowUrlInput(selectedProfile.id === showUrlInput ? null : selectedProfile.id)}
@@ -505,12 +525,41 @@ const ProfilesView: React.FC<ProfilesViewProps> = ({
             
             {(() => {
               const { activeMaps, missingDeps } = checkConflicts(selectedProfile);
-              const categories = Array.from(new Set(selectedProfile.mods.map(m => m.modDescData?.category || 'Unknown').filter(c => c !== 'Unknown'))).sort();
+              const categories = Array.from(new Set(selectedProfile.mods.map(m => m.modHubCategory || m.modDescData?.category || 'Unknown').filter(c => c !== 'Unknown'))).sort();
               const tags = Array.from(new Set(selectedProfile.mods.flatMap(m => m.tags || []))).sort();
               const currentCategory = categoryFilters[selectedProfile.id] || 'All';
-              const filteredMods = currentCategory === 'All' 
-                ? selectedProfile.mods 
-                : selectedProfile.mods.filter(m => (m.modDescData?.category || 'Unknown') === currentCategory || (m.tags || []).includes(currentCategory));
+              const currentSearch = (searchQueries[selectedProfile.id] || '').toLowerCase();
+              const currentSort = sortOrders[selectedProfile.id] || 'nameAsc';
+
+              let filteredMods = selectedProfile.mods;
+
+              // 1. Kategoriefilter
+              if (currentCategory !== 'All') {
+                filteredMods = filteredMods.filter(m => (m.modHubCategory || m.modDescData?.category || 'Unknown') === currentCategory || (m.tags || []).includes(currentCategory));
+              }
+
+              // 2. Suchfilter
+              if (currentSearch) {
+                filteredMods = filteredMods.filter(m => {
+                  const title = getModTitle(m).toLowerCase();
+                  const filename = m.fileName.toLowerCase();
+                  const author = (m.modDescData?.author || m.author || '').toLowerCase();
+                  return title.includes(currentSearch) || filename.includes(currentSearch) || author.includes(currentSearch);
+                });
+              }
+
+              // 3. Sortierung
+              filteredMods = [...filteredMods].sort((a, b) => {
+                if (currentSort === 'activeFirst') {
+                  if (a.isActive && !b.isActive) return -1;
+                  if (!a.isActive && b.isActive) return 1;
+                  return getModTitle(a).localeCompare(getModTitle(b));
+                } else if (currentSort === 'nameDesc') {
+                  return getModTitle(b).localeCompare(getModTitle(a));
+                } else { // nameAsc
+                  return getModTitle(a).localeCompare(getModTitle(b));
+                }
+              });
                 
               return (
                 <>
@@ -530,18 +579,29 @@ const ProfilesView: React.FC<ProfilesViewProps> = ({
                     </div>
                   )}
 
-                  {categories.length > 0 && (
-                    <div className="category-filter" style={{ marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <span>Filter:</span>
+                  <div className="filter-sort-bar" style={{ marginBottom: '15px', display: 'flex', flexWrap: 'wrap', gap: '15px', alignItems: 'center', background: 'rgba(0,0,0,0.1)', padding: '10px', borderRadius: '4px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, minWidth: '200px' }}>
+                      <span>🔍</span>
+                      <input 
+                        type="text" 
+                        placeholder={t('mods.search') || 'Mods durchsuchen...'} 
+                        value={currentSearch}
+                        onChange={(e) => setSearchQueries(prev => ({ ...prev, [selectedProfile.id]: e.target.value }))}
+                        style={{ flex: 1, padding: '6px 10px', borderRadius: '4px', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)' }}
+                      />
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span>📂</span>
                       <select 
                         value={currentCategory}
                         onChange={(e) => setCategoryFilters(prev => ({ ...prev, [selectedProfile.id]: e.target.value }))}
                         style={{ padding: '6px', borderRadius: '4px', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)' }}
                       >
-                        <option value="All">{t("profiles.allMods") || "All Mods"} ({selectedProfile.mods.length})</option>
+                        <option value="All">{t("profiles.allMods") || "Alle Kategorien"} ({selectedProfile.mods.length})</option>
                         {categories.length > 0 && <optgroup label={t("profiles.categories") || "Categories"}>
                           {categories.map(cat => (
-                            <option key={`cat_${cat}`} value={cat}>{cat} ({selectedProfile.mods.filter(m => m.modDescData?.category === cat).length})</option>
+                            <option key={`cat_${cat}`} value={cat}>{cat} ({selectedProfile.mods.filter(m => (m.modHubCategory || m.modDescData?.category) === cat).length})</option>
                           ))}
                         </optgroup>}
                         {tags.length > 0 && <optgroup label={t("profiles.customTags") || "Custom Tags"}>
@@ -557,7 +617,7 @@ const ProfilesView: React.FC<ProfilesViewProps> = ({
                           onClick={() => {
                             const newProfile = { ...selectedProfile };
                             newProfile.mods.forEach(m => {
-                              if ((m.modDescData?.category || 'Unknown') === currentCategory || (m.tags || []).includes(currentCategory)) {
+                              if ((m.modHubCategory || m.modDescData?.category || 'Unknown') === currentCategory || (m.tags || []).includes(currentCategory)) {
                                 m.isActive = !m.isActive;
                               }
                             });
@@ -568,7 +628,20 @@ const ProfilesView: React.FC<ProfilesViewProps> = ({
                         </button>
                       )}
                     </div>
-                  )}
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span>↕️</span>
+                      <select 
+                        value={currentSort}
+                        onChange={(e) => setSortOrders(prev => ({ ...prev, [selectedProfile.id]: e.target.value }))}
+                        style={{ padding: '6px', borderRadius: '4px', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)' }}
+                      >
+                        <option value="nameAsc">{t('mods.sortNameAsc') || 'Name (A-Z)'}</option>
+                        <option value="nameDesc">{t('mods.sortNameDesc') || 'Name (Z-A)'}</option>
+                        <option value="activeFirst">{t('mods.sortActiveFirst') || 'Aktive zuerst'}</option>
+                      </select>
+                    </div>
+                  </div>
 
                   {filteredMods.length > 0 ? (
                     <div className="mods-list">
@@ -576,10 +649,25 @@ const ProfilesView: React.FC<ProfilesViewProps> = ({
                         <div key={mod.fileName} className={`mod-item ${mod.isActive ? 'active' : 'inactive'}`}>
 
                           <div className="mod-info">
-                            <div className="mod-name">
-                              {getModTitle(mod)}
+                            <div className="mod-name" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              <span>{getModTitle(mod)}</span>
+                              {((mod.modHubId && mod.modHubId !== '!') || (mod.modHub && mod.modHub !== 'no')) && (
+                                <span title="Im ModHub verfügbar" style={{ 
+                                  background: 'rgba(16, 185, 129, 0.2)', 
+                                  color: '#34d399', 
+                                  padding: '2px 6px', 
+                                  borderRadius: '4px', 
+                                  fontSize: '0.7rem',
+                                  fontWeight: 'bold',
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '4px'
+                                }}>
+                                  🌐 ModHub
+                                </span>
+                              )}
                               {mod.tags && mod.tags.length > 0 && (
-                                <div className="mod-tags" style={{ display: 'inline-flex', gap: '4px', marginLeft: '10px' }}>
+                                <div className="mod-tags" style={{ display: 'inline-flex', gap: '4px' }}>
                                   {mod.tags.map(t => (
                                     <span key={t} style={{ background: 'rgba(59, 130, 246, 0.2)', color: '#60a5fa', padding: '2px 6px', borderRadius: '12px', fontSize: '0.75rem' }}>#{t}</span>
                                   ))}

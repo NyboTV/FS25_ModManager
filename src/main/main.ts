@@ -11,6 +11,8 @@ import { ModSyncManager } from './mod-sync-manager';
 import { FileOperationsManager } from './file-operations-manager';
 import { GameLaunchManager } from './game-launch-manager';
 import { ModDescManager } from './mod-desc-manager';
+import { ModInfoExtractor } from './mod-info-extractor';
+import { modHubService } from './modhub-service';
 import { UpdateManager } from './update-manager';
 import { LogAnalyzer } from './log-analyzer';
 import { ModInfo, Profile, Settings } from '../common/types';
@@ -64,25 +66,9 @@ logger.info('FS25 Mod Manager wird gestartet');
 
 import axios from 'axios';
 
-// Funktion zum Herunterladen der aktuellen mod-mapping.json von GitHub
-async function updateModMapping(appDataPath: string) {
-  try {
-    const mappingUrl = 'https://raw.githubusercontent.com/NyboTV/FS25_ModManager/master/remote/mod-mapping.json';
-    const response = await axios.get(mappingUrl, { timeout: 10000 });
-    if (response.status === 200 && response.data) {
-      const mappingPath = path.join(appDataPath, 'mod-mapping.json');
-      fs.writeFileSync(mappingPath, JSON.stringify(response.data, null, 2));
-      logger.info('mod-mapping.json erfolgreich von GitHub aktualisiert.');
-    }
-  } catch (error) {
-    logger.warn('Fehler beim Aktualisieren der mod-mapping.json: ' + (error instanceof Error ? error.message : String(error)));
-  }
-}
-
 // Electronapp wird initialisiert und bereit
 app.on('ready', () => {
   logger.info('Elektron-App bereit, erstelle Hauptfenster');
-  updateModMapping(appDataPath);
   
   // Initialisiere alle Manager
   windowManager = new WindowManager(store);
@@ -126,6 +112,39 @@ app.on('ready', () => {
 
   ipcMain.handle('get-app-version', () => {
     return app.getVersion();
+  });
+
+  // Hinzugefügt: Lokales ModHub-Mapping starten
+  ipcMain.on('start-modhub-mapping', async (event, profileId) => {
+    try {
+      logger.info(`Starte lokales ModHub-Mapping für Profil ${profileId}`);
+      
+      const profilePath = path.join(app.getPath('documents'), 'FS_ModManager', 'profiles', profileId, 'mods');
+      const extractor = new ModInfoExtractor();
+      const mods = await extractor.extractAllModsInfo(profilePath);
+      
+      const webContents = windowManager.getMainWindow()?.webContents;
+      if (webContents) {
+        await modHubService.mapMods(mods, webContents);
+      }
+    } catch (error) {
+      logger.error('Fehler beim ModHub-Mapping: ' + (error instanceof Error ? error.message : String(error)));
+    }
+  });
+
+  ipcMain.on('force-modhub-updates', async (event, profileId) => {
+    try {
+      logger.info(`Starte manuelle Update-Prüfung über ModHub-IDs für Profil ${profileId}`);
+      if (mainWindow) {
+        const profile = await profileManager.getProfile(profileId);
+        if (profile && profile.mods) {
+          const modIds = profile.mods.map((m: any) => m.modHubId).filter((id: string | undefined) => id && id !== '!');
+          await modHubService.forceCheckUpdates(mainWindow.webContents, modIds);
+        }
+      }
+    } catch (error) {
+      logger.error('Fehler bei force-modhub-updates: ' + (error instanceof Error ? error.message : String(error)));
+    }
   });
 
   ipcMain.handle('fetch-server-stats', async (event, url: string) => {

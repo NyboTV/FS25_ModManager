@@ -376,7 +376,12 @@ const StartPage: React.FC<StartPageProps> = ({ settings, modListReloadKey }) => 
                               {liveServerStats[selectedProfile.id].loading ? (
                                 <span style={{ color: '#ccc', fontSize: '0.9rem' }}>{t("start.connectingToServer") || "Connecting to server..."}</span>
                               ) : liveServerStats[selectedProfile.id].error ? (
-                                <span style={{ color: '#f87171', fontSize: '0.9rem' }}>{t("start.serverOfflineLabel") || "Server offline or unreachable."}</span>
+                                <span style={{ color: '#f87171', fontSize: '0.9rem' }}>{t("start.serverOfflineLabel") || "Server-Webinterface ist offline oder nicht erreichbar."}</span>
+                              ) : liveServerStats[selectedProfile.id].stats?.serverName === 'Unknown' ? (
+                                <div style={{ fontSize: '0.95rem', color: '#fca5a5', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                  <span>🔴</span>
+                                  <span>Das Spiel auf dem Server ist aktuell gestoppt (Offline).</span>
+                                </div>
                               ) : (
                                 <div style={{ fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '5px' }}>
                                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -410,29 +415,45 @@ const StartPage: React.FC<StartPageProps> = ({ settings, modListReloadKey }) => 
                       {!selectedProfile.serverSyncUrl && (
                         <div className="info-card">
                           <h3>{t("start.modHubUpdatesTitle") || "🔍 ModHub Updates"}</h3>
-                          <p style={{ fontSize: '0.9rem', color: '#ccc', marginBottom: '10px' }}>
-                            Prüfe deine aktiven Singleplayer-Mods auf offizielle GIANTS ModHub Updates.
-                          </p>
-                          <button 
-                            className="btn btn-secondary btn-sm"
-                            onClick={() => handleCheckModHubUpdates(selectedProfile)}
-                            disabled={isCheckingModHub}
-                          >
-                            {isCheckingModHub ? t('start.modHubChecking') : t('start.modHubUpdates')}
-                          </button>
-                          
-                          {modHubUpdates.length > 0 && (
-                            <div style={{ marginTop: '10px', padding: '10px', background: 'rgba(251, 191, 36, 0.1)', borderLeft: '4px solid #fbbf24', borderRadius: '4px' }}>
-                              <h4 style={{ margin: '0 0 5px 0', color: '#fbbf24' }}>⚠️ {modHubUpdates.length} Updates gefunden!</h4>
-                              <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '0.9rem' }}>
-                                {modHubUpdates.map((u: any) => (
-                                  <li key={u.name} style={{ margin: '3px 0' }}>
-                                    <a href="#" style={{ color: '#60a5fa', textDecoration: 'none' }} onClick={(e) => { e.preventDefault(); window.require('electron').shell.openExternal(u.url); }}>{u.name}</a> (v{u.latestVersion})
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
+                          {(() => {
+                             const updatableMods = selectedProfile.mods.filter(m => {
+                               // Wir checken nur aktive Mods
+                               if (!m.isActive) return false;
+                               if (m.modHubVersion && m.version) {
+                                 return m.version !== m.modHubVersion;
+                               }
+                               return false;
+                             });
+
+                             if (updatableMods.length === 0) {
+                               return (
+                                 <div style={{ color: '#4ade80', marginTop: '10px', fontSize: '0.95rem' }}>
+                                   ✅ Alle aktiven Mods sind auf dem neuesten ModHub-Stand!
+                                 </div>
+                               );
+                             }
+
+                             return (
+                               <div style={{ marginTop: '10px', padding: '10px', background: 'rgba(251, 191, 36, 0.1)', borderLeft: '4px solid #fbbf24', borderRadius: '4px' }}>
+                                 <h4 style={{ margin: '0 0 5px 0', color: '#fbbf24' }}>⚠️ {updatableMods.length} Updates verfügbar!</h4>
+                                 <p style={{ fontSize: '0.85rem', color: '#ccc', margin: '0 0 10px 0' }}>Die Versionen auf ModHub sind neuer als deine lokalen Mods.</p>
+                                 <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '0.9rem', maxHeight: '150px', overflowY: 'auto' }}>
+                                   {updatableMods.map((u) => {
+                                      const title = u.modDescData?.title?.['en'] || u.modDescData?.title?.['de'] || u.name;
+                                      const modUrl = u.modHubId ? `https://www.farming-simulator.com/mod.php?mod_id=${u.modHubId}` : '#';
+                                      return (
+                                        <li key={u.fileName} style={{ margin: '3px 0' }}>
+                                          <a href="#" style={{ color: '#60a5fa', textDecoration: 'none' }} onClick={(e) => { e.preventDefault(); if (u.modHubId) window.require('electron').shell.openExternal(modUrl); }}>{title}</a> 
+                                          <span style={{ color: '#94a3b8', fontSize: '0.8rem', marginLeft: '5px' }}>
+                                            (Lokal: v{u.version} ➔ ModHub: v{u.modHubVersion})
+                                          </span>
+                                        </li>
+                                      );
+                                   })}
+                                 </ul>
+                               </div>
+                             );
+                          })()}
                         </div>
                       )}
                     </>

@@ -29,6 +29,13 @@ export interface ModInfo {
   tags?: string[];
   modHubId?: string;
   modHubCategory?: string;
+  modHubVersion?: string;
+  modHubRating?: string;
+  modHubVotes?: string;
+  modHubSize?: string;
+  modHubReleased?: string;
+  modHubPlatform?: string;
+  modHubManufacturer?: string;
   modDescData?: ModDescData;
 }
 

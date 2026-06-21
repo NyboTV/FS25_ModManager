@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { logger } from './main';
 import { ModInfoExtractor } from './mod-info-extractor';
+import { modHubService } from './modhub-service';
 
 export class ProfileManager {
   private appDataPath: string;
@@ -16,6 +17,25 @@ export class ProfileManager {
       this.setupIpcHandlers();
       ProfileManager.ipcHandlersRegistered = true;
     }
+  }
+
+  private injectModHubData(profileData: any) {
+    if (!profileData || !profileData.mods) return profileData;
+    profileData.mods.forEach((mod: any) => {
+      const mappingData = modHubService.getMapping(mod.fileName);
+      if (mappingData && !mappingData.failed && mappingData.modId !== '!') {
+        mod.modHubId = mappingData.modId;
+        mod.modHubCategory = mappingData.category;
+        mod.modHubVersion = mappingData.version;
+        mod.modHubRating = mappingData.rating;
+        mod.modHubVotes = mappingData.votes;
+        mod.modHubSize = mappingData.size;
+        mod.modHubReleased = mappingData.released;
+        mod.modHubPlatform = mappingData.platform;
+        mod.modHubManufacturer = mappingData.manufacturer;
+      }
+    });
+    return profileData;
   }
 
   private setupIpcHandlers(): void {
@@ -48,7 +68,7 @@ export class ProfileManager {
                 logger.info(`Profil ${profileData.name} automatisch repariert: Pfad auf ${correctModFolderPath} gesetzt.`);
               }
               
-              return profileData;
+              return this.injectModHubData(profileData);
             }
             return null;
           })
@@ -296,14 +316,15 @@ export class ProfileManager {
               modHub: '',
               isActive: true,
               downloadUrl: '',
-              detailUrl: ''
+              detailUrl: '',
+              modDescData: {}
             });
           }
         }
       } else {
         profileData.mods = [];
       }
-      return profileData;
+      return this.injectModHubData(profileData);
     } catch (error) {
       logger.error(`Fehler beim Laden des Profils ${profileId}:`, error);
       return null;
@@ -364,7 +385,7 @@ export class ProfileManager {
           const profilePath = path.join(profilesPath, dir, 'profile.json');
           if (fs.existsSync(profilePath)) {
             const profileData = JSON.parse(fs.readFileSync(profilePath, 'utf8'));
-            return profileData;
+            return this.injectModHubData(profileData);
           }
           return null;
         })

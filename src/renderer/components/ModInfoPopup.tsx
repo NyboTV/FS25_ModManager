@@ -113,6 +113,12 @@ const ModInfoPopup: React.FC<ModInfoPopupProps> = ({
                   <span className="detail-label">{t('mods.status')}:</span>
                   <span className={`detail-value status ${mod.isActive ? 'active' : 'inactive'}`}>{mod.isActive ? t('mods.active') : t('mods.inactive')}</span>
                 </div>
+                {mod.modHubId && mod.modHubId !== '!' && (
+                  <div className="detail-item">
+                    <span className="detail-label">Mod ID:</span>
+                    <span className="detail-value">{mod.modHubId}</span>
+                  </div>
+                )}
                 {mod.modDescData?.multiplayerSupported !== undefined && (
                   <div className="detail-item">
                     <span className="detail-label">{t('mods.multiplayer')}:</span>
@@ -162,15 +168,27 @@ const ModInfoPopup: React.FC<ModInfoPopupProps> = ({
         </div>
 
         <div className="popup-footer" style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <button 
-            className="btn-secondary" 
-            onClick={() => {
-              const { shell } = window.require('electron');
-              shell.openExternal(`https://www.farming-simulator.com/mods.php?title=fs2025&searchMod=${encodeURIComponent(mod.name)}`);
-            }}
-          >
-            🔍 Auf ModHub suchen
-          </button>
+          {mod.modHubId && mod.modHubId !== '!' ? (
+            <button 
+              className="btn-secondary" 
+              onClick={() => {
+                const { shell } = window.require('electron');
+                shell.openExternal(`https://www.farming-simulator.com/mod.php?mod_id=${mod.modHubId}&title=fs2025`);
+              }}
+            >
+              🌐 Im ModHub öffnen
+            </button>
+          ) : (
+            <button 
+              className="btn-secondary" 
+              onClick={() => {
+                const { shell } = window.require('electron');
+                shell.openExternal(`https://www.farming-simulator.com/mods.php?title=fs2025&searchMod=${encodeURIComponent(mod.name)}`);
+              }}
+            >
+              🔍 Auf ModHub suchen
+            </button>
+          )}
           <button className="button primary" onClick={onClose}>
             {t('common.close')}
           </button>

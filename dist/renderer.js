@@ -41981,6 +41981,7 @@ const App = () => {
         currentFileProgress: 0,
         status: 'downloading'
     });
+    const [mappingProgress, setMappingProgress] = (0, react_1.useState)(null);
     const [showModInfo, setShowModInfo] = (0, react_1.useState)(false);
     const [selectedMod, setSelectedMod] = (0, react_1.useState)(null);
     const [updateInfo, setUpdateInfo] = (0, react_1.useState)(null);
@@ -42068,6 +42069,13 @@ const App = () => {
         };
         ipcRenderer.on('update-download-progress', handleUpdateProgress);
         ipcRenderer.on('update-downloaded', handleUpdateDownloaded);
+        const handleMappingProgress = (_, data) => setMappingProgress(data);
+        const handleMappingComplete = () => {
+            setMappingProgress(null);
+            setModListReloadKey(key => key + 1); // Reload to show updated ModHub IDs and versions
+        };
+        ipcRenderer.on('modhub-mapping-progress', handleMappingProgress);
+        ipcRenderer.on('modhub-mapping-complete', handleMappingComplete);
         return () => {
             ipcRenderer.removeListener('update-available', handleUpdateAvailable);
             ipcRenderer.removeListener('sync-progress', handleSyncProgress);
@@ -42075,6 +42083,8 @@ const App = () => {
             ipcRenderer.removeListener('sync-error', handleSyncError);
             ipcRenderer.removeListener('update-download-progress', handleUpdateProgress);
             ipcRenderer.removeListener('update-downloaded', handleUpdateDownloaded);
+            ipcRenderer.removeListener('modhub-mapping-progress', handleMappingProgress);
+            ipcRenderer.removeListener('modhub-mapping-complete', handleMappingComplete);
         };
     }, [showSyncProgress, autoLaunchOnSyncComplete]); // Removed 'settings' to prevent infinite loop
     // Ref für AutoLaunch & SyncProgress, um in der useEffect Closure immer den aktuellen Wert zu haben
@@ -42208,7 +42218,28 @@ const App = () => {
                     "Version ",
                     settings.currentVersion)),
             react_1.default.createElement("div", { className: "legal" }, "Farming Simulator ist eine eingetragene Marke von GIANTS Software GmbH. Diese Anwendung steht in keiner Verbindung zu GIANTS Software.")),
-        "      ",
+        mappingProgress && (react_1.default.createElement("div", { className: "mapping-toast", style: {
+                position: 'fixed',
+                bottom: '20px',
+                right: '20px',
+                backgroundColor: 'rgba(20, 20, 25, 0.95)',
+                border: '1px solid var(--border-color)',
+                borderRadius: '8px',
+                padding: '15px',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+                zIndex: 9999,
+                width: '300px'
+            } },
+            react_1.default.createElement("h4", { style: { margin: '0 0 8px 0', fontSize: '14px', color: 'var(--primary-color)' } }, mappingProgress.status === 'checking_updates' ? 'ModHub Update-Check' : t('mapping.title')),
+            react_1.default.createElement("p", { style: { margin: '0 0 10px 0', fontSize: '13px', color: '#ccc' } }, mappingProgress.status === 'checking_updates' ? 'Prüfe auf Updates beim ModHub...' : t('mapping.desc')),
+            react_1.default.createElement("div", { style: { display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '4px' } },
+                react_1.default.createElement("span", { style: { textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', maxWidth: '200px' } }, mappingProgress.modName),
+                react_1.default.createElement("span", null,
+                    mappingProgress.current,
+                    " / ",
+                    mappingProgress.total)),
+            react_1.default.createElement("div", { className: "progress-bar", style: { height: '6px', backgroundColor: 'var(--surface)', borderRadius: '3px', overflow: 'hidden' } },
+                react_1.default.createElement("div", { className: "progress-fill", style: { width: `${mappingProgress.total > 0 ? (mappingProgress.current / mappingProgress.total) * 100 : 100}%`, height: '100%', backgroundColor: 'var(--primary-color)' } })))),
         react_1.default.createElement(SyncProgressPopup_1.default, { isOpen: showSyncProgress, progress: syncProgress, onCancel: handleCancelSync, onSkipCurrentMod: handleSkipCurrentMod, onProvideLocalMod: handleProvideLocalMod, autoLaunch: autoLaunchOnSyncComplete, onAutoLaunchChange: setAutoLaunchOnSyncComplete, language: settings.language }),
         react_1.default.createElement(ModInfoPopup_1.default, { mod: selectedMod, isOpen: showModInfo, onClose: () => setShowModInfo(false), language: settings.language }),
         showUpdateDialog && updateInfo && (react_1.default.createElement("div", { className: "popup-overlay" },
@@ -42580,6 +42611,9 @@ const ModInfoPopup = ({ mod, isOpen, onClose, language }) => {
                                     t('mods.status'),
                                     ":"),
                                 react_1.default.createElement("span", { className: `detail-value status ${mod.isActive ? 'active' : 'inactive'}` }, mod.isActive ? t('mods.active') : t('mods.inactive'))),
+                            mod.modHubId && mod.modHubId !== '!' && (react_1.default.createElement("div", { className: "detail-item" },
+                                react_1.default.createElement("span", { className: "detail-label" }, "Mod ID:"),
+                                react_1.default.createElement("span", { className: "detail-value" }, mod.modHubId))),
                             mod.modDescData?.multiplayerSupported !== undefined && (react_1.default.createElement("div", { className: "detail-item" },
                                 react_1.default.createElement("span", { className: "detail-label" },
                                     t('mods.multiplayer'),
@@ -42616,10 +42650,13 @@ const ModInfoPopup = ({ mod, isOpen, onClose, language }) => {
                             react_1.default.createElement("h3", null, t('mods.description')),
                             react_1.default.createElement("div", { className: "mod-description" }, getLocalizedDescription()))))),
             react_1.default.createElement("div", { className: "popup-footer", style: { display: 'flex', justifyContent: 'space-between' } },
-                react_1.default.createElement("button", { className: "btn-secondary", onClick: () => {
+                mod.modHubId && mod.modHubId !== '!' ? (react_1.default.createElement("button", { className: "btn-secondary", onClick: () => {
+                        const { shell } = window.require('electron');
+                        shell.openExternal(`https://www.farming-simulator.com/mod.php?mod_id=${mod.modHubId}&title=fs2025`);
+                    } }, "\uD83C\uDF10 Im ModHub \u00F6ffnen")) : (react_1.default.createElement("button", { className: "btn-secondary", onClick: () => {
                         const { shell } = window.require('electron');
                         shell.openExternal(`https://www.farming-simulator.com/mods.php?title=fs2025&searchMod=${encodeURIComponent(mod.name)}`);
-                    } }, "\uD83D\uDD0D Auf ModHub suchen"),
+                    } }, "\uD83D\uDD0D Auf ModHub suchen")),
                 react_1.default.createElement("button", { className: "button primary", onClick: onClose }, t('common.close'))))));
 };
 exports["default"] = ModInfoPopup;
@@ -42681,12 +42718,19 @@ const ProfilesView = ({ settings, onShowModInfo, modListReloadKey }) => {
     const [urlInput, setUrlInput] = (0, react_1.useState)('');
     const [isDownloading, setIsDownloading] = (0, react_1.useState)(false);
     const [categoryFilters, setCategoryFilters] = (0, react_1.useState)({});
+    const [searchQueries, setSearchQueries] = (0, react_1.useState)({});
+    const [sortOrders, setSortOrders] = (0, react_1.useState)({});
     const [syncUrlType, setSyncUrlType] = (0, react_1.useState)(null);
     // Übersetzungsfunktion
     const t = (0, i18n_1.useTranslation)(settings.language);
     (0, react_1.useEffect)(() => {
         loadProfiles();
     }, [modListReloadKey]);
+    (0, react_1.useEffect)(() => {
+        if (selectedProfileId) {
+            ipcRenderer.send('start-modhub-mapping', selectedProfileId);
+        }
+    }, [selectedProfileId]);
     const loadProfiles = async () => {
         try {
             const loadedProfiles = await ipcRenderer.invoke('load-profiles');
@@ -43028,9 +43072,14 @@ const ProfilesView = ({ settings, onShowModInfo, modListReloadKey }) => {
                         react_1.default.createElement("button", { className: "btn btn-secondary btn-sm", onClick: () => handleOpenModFolder(selectedProfile), title: "Mod-Ordner \u00F6ffnen" },
                             "\uD83D\uDCC1 ",
                             t('profiles.openFolder') || 'Ordner öffnen'),
-                        react_1.default.createElement("button", { className: "btn btn-primary btn-sm", onClick: () => handleAddMods(selectedProfile), title: "Mods hinzuf\u00FCgen (Datei)" },
-                            "\u2795 ",
-                            t('profiles.addFile') || 'Datei'),
+                        react_1.default.createElement("div", { className: "profile-actions", style: { display: 'flex', gap: '5px' } },
+                            react_1.default.createElement("button", { className: "btn btn-secondary btn-sm", onClick: () => {
+                                    const { ipcRenderer } = window.require('electron');
+                                    ipcRenderer.send('force-modhub-updates', selectedProfile.id);
+                                }, title: "Pr\u00FCft alle Mods mit Mod-ID auf Updates" }, "\uD83D\uDD04 Updates Pr\u00FCfen"),
+                            react_1.default.createElement("button", { className: "btn btn-success btn-sm", onClick: () => handleAddMods(selectedProfile), title: "Mods hinzuf\u00FCgen (Datei)" },
+                                "\u2795 ",
+                                t('profiles.addFile') || 'Datei')),
                         react_1.default.createElement("button", { className: "btn btn-info btn-sm", onClick: () => setShowUrlInput(selectedProfile.id === showUrlInput ? null : selectedProfile.id), title: "Mod hinzuf\u00FCgen (URL)" },
                             "\uD83C\uDF10 ",
                             t('profiles.addUrl') || 'URL'))),
@@ -43039,12 +43088,41 @@ const ProfilesView = ({ settings, onShowModInfo, modListReloadKey }) => {
                     react_1.default.createElement("button", { className: "btn btn-success", onClick: () => handleAddModFromUrl(selectedProfile.id), disabled: isDownloading || !urlInput }, isDownloading ? (t('profiles.downloading') || 'Lädt herunter...') : (t('profiles.add') || 'Hinzufügen')))),
                 (() => {
                     const { activeMaps, missingDeps } = checkConflicts(selectedProfile);
-                    const categories = Array.from(new Set(selectedProfile.mods.map(m => m.modDescData?.category || 'Unknown').filter(c => c !== 'Unknown'))).sort();
+                    const categories = Array.from(new Set(selectedProfile.mods.map(m => m.modHubCategory || m.modDescData?.category || 'Unknown').filter(c => c !== 'Unknown'))).sort();
                     const tags = Array.from(new Set(selectedProfile.mods.flatMap(m => m.tags || []))).sort();
                     const currentCategory = categoryFilters[selectedProfile.id] || 'All';
-                    const filteredMods = currentCategory === 'All'
-                        ? selectedProfile.mods
-                        : selectedProfile.mods.filter(m => (m.modDescData?.category || 'Unknown') === currentCategory || (m.tags || []).includes(currentCategory));
+                    const currentSearch = (searchQueries[selectedProfile.id] || '').toLowerCase();
+                    const currentSort = sortOrders[selectedProfile.id] || 'nameAsc';
+                    let filteredMods = selectedProfile.mods;
+                    // 1. Kategoriefilter
+                    if (currentCategory !== 'All') {
+                        filteredMods = filteredMods.filter(m => (m.modHubCategory || m.modDescData?.category || 'Unknown') === currentCategory || (m.tags || []).includes(currentCategory));
+                    }
+                    // 2. Suchfilter
+                    if (currentSearch) {
+                        filteredMods = filteredMods.filter(m => {
+                            const title = getModTitle(m).toLowerCase();
+                            const filename = m.fileName.toLowerCase();
+                            const author = (m.modDescData?.author || m.author || '').toLowerCase();
+                            return title.includes(currentSearch) || filename.includes(currentSearch) || author.includes(currentSearch);
+                        });
+                    }
+                    // 3. Sortierung
+                    filteredMods = [...filteredMods].sort((a, b) => {
+                        if (currentSort === 'activeFirst') {
+                            if (a.isActive && !b.isActive)
+                                return -1;
+                            if (!a.isActive && b.isActive)
+                                return 1;
+                            return getModTitle(a).localeCompare(getModTitle(b));
+                        }
+                        else if (currentSort === 'nameDesc') {
+                            return getModTitle(b).localeCompare(getModTitle(a));
+                        }
+                        else { // nameAsc
+                            return getModTitle(a).localeCompare(getModTitle(b));
+                        }
+                    });
                     return (react_1.default.createElement(react_1.default.Fragment, null,
                         (activeMaps.length > 1 || missingDeps.length > 0) && (react_1.default.createElement("div", { className: "conflict-warnings", style: { background: 'rgba(239, 68, 68, 0.1)', borderLeft: '4px solid #ef4444', padding: '10px', margin: '10px 0', borderRadius: '4px' } },
                             react_1.default.createElement("h4", { style: { color: '#ef4444', marginTop: 0, marginBottom: '8px' } }, t("profiles.conflictWarning") || "⚠️ Mod Conflicts Detected!"),
@@ -43053,42 +43131,63 @@ const ProfilesView = ({ settings, onShowModInfo, modListReloadKey }) => {
                                 activeMaps.length,
                                 " Karten (Maps) gleichzeitig aktiviert. Der Farming Simulator unterst\u00FCtzt nur 1 aktive Karte. Dies f\u00FChrt zu Abst\u00FCrzen!")),
                             missingDeps.length > 0 && (react_1.default.createElement("ul", { style: { margin: '4px 0', paddingLeft: '20px', color: '#fca5a5' } }, missingDeps.map((dep, i) => react_1.default.createElement("li", { key: i }, dep)))))),
-                        categories.length > 0 && (react_1.default.createElement("div", { className: "category-filter", style: { marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '10px' } },
-                            react_1.default.createElement("span", null, "Filter:"),
-                            react_1.default.createElement("select", { value: currentCategory, onChange: (e) => setCategoryFilters(prev => ({ ...prev, [selectedProfile.id]: e.target.value })), style: { padding: '6px', borderRadius: '4px', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)' } },
-                                react_1.default.createElement("option", { value: "All" },
-                                    t("profiles.allMods") || "All Mods",
-                                    " (",
-                                    selectedProfile.mods.length,
-                                    ")"),
-                                categories.length > 0 && react_1.default.createElement("optgroup", { label: t("profiles.categories") || "Categories" }, categories.map(cat => (react_1.default.createElement("option", { key: `cat_${cat}`, value: cat },
-                                    cat,
-                                    " (",
-                                    selectedProfile.mods.filter(m => m.modDescData?.category === cat).length,
-                                    ")")))),
-                                tags.length > 0 && react_1.default.createElement("optgroup", { label: t("profiles.customTags") || "Custom Tags" }, tags.map(tag => (react_1.default.createElement("option", { key: `tag_${tag}`, value: tag },
-                                    "#",
-                                    tag,
-                                    " (",
-                                    selectedProfile.mods.filter(m => (m.tags || []).includes(tag)).length,
-                                    ")"))))),
-                            currentCategory !== 'All' && (react_1.default.createElement("button", { className: "btn btn-sm btn-secondary", onClick: () => {
-                                    const newProfile = { ...selectedProfile };
-                                    newProfile.mods.forEach(m => {
-                                        if ((m.modDescData?.category || 'Unknown') === currentCategory || (m.tags || []).includes(currentCategory)) {
-                                            m.isActive = !m.isActive;
-                                        }
-                                    });
-                                    ipcRenderer.invoke('save-profile', newProfile).then(loadProfiles);
-                                } },
-                                t('profiles.toggleAllIn') || 'Alle in umschalten',
-                                " ",
-                                currentCategory)))),
+                        react_1.default.createElement("div", { className: "filter-sort-bar", style: { marginBottom: '15px', display: 'flex', flexWrap: 'wrap', gap: '15px', alignItems: 'center', background: 'rgba(0,0,0,0.1)', padding: '10px', borderRadius: '4px' } },
+                            react_1.default.createElement("div", { style: { display: 'flex', alignItems: 'center', gap: '8px', flex: 1, minWidth: '200px' } },
+                                react_1.default.createElement("span", null, "\uD83D\uDD0D"),
+                                react_1.default.createElement("input", { type: "text", placeholder: t('mods.search') || 'Mods durchsuchen...', value: currentSearch, onChange: (e) => setSearchQueries(prev => ({ ...prev, [selectedProfile.id]: e.target.value })), style: { flex: 1, padding: '6px 10px', borderRadius: '4px', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)' } })),
+                            react_1.default.createElement("div", { style: { display: 'flex', alignItems: 'center', gap: '8px' } },
+                                react_1.default.createElement("span", null, "\uD83D\uDCC2"),
+                                react_1.default.createElement("select", { value: currentCategory, onChange: (e) => setCategoryFilters(prev => ({ ...prev, [selectedProfile.id]: e.target.value })), style: { padding: '6px', borderRadius: '4px', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)' } },
+                                    react_1.default.createElement("option", { value: "All" },
+                                        t("profiles.allMods") || "Alle Kategorien",
+                                        " (",
+                                        selectedProfile.mods.length,
+                                        ")"),
+                                    categories.length > 0 && react_1.default.createElement("optgroup", { label: t("profiles.categories") || "Categories" }, categories.map(cat => (react_1.default.createElement("option", { key: `cat_${cat}`, value: cat },
+                                        cat,
+                                        " (",
+                                        selectedProfile.mods.filter(m => (m.modHubCategory || m.modDescData?.category) === cat).length,
+                                        ")")))),
+                                    tags.length > 0 && react_1.default.createElement("optgroup", { label: t("profiles.customTags") || "Custom Tags" }, tags.map(tag => (react_1.default.createElement("option", { key: `tag_${tag}`, value: tag },
+                                        "#",
+                                        tag,
+                                        " (",
+                                        selectedProfile.mods.filter(m => (m.tags || []).includes(tag)).length,
+                                        ")"))))),
+                                currentCategory !== 'All' && (react_1.default.createElement("button", { className: "btn btn-sm btn-secondary", onClick: () => {
+                                        const newProfile = { ...selectedProfile };
+                                        newProfile.mods.forEach(m => {
+                                            if ((m.modHubCategory || m.modDescData?.category || 'Unknown') === currentCategory || (m.tags || []).includes(currentCategory)) {
+                                                m.isActive = !m.isActive;
+                                            }
+                                        });
+                                        ipcRenderer.invoke('save-profile', newProfile).then(loadProfiles);
+                                    } },
+                                    t('profiles.toggleAllIn') || 'Alle in umschalten',
+                                    " ",
+                                    currentCategory))),
+                            react_1.default.createElement("div", { style: { display: 'flex', alignItems: 'center', gap: '8px' } },
+                                react_1.default.createElement("span", null, "\u2195\uFE0F"),
+                                react_1.default.createElement("select", { value: currentSort, onChange: (e) => setSortOrders(prev => ({ ...prev, [selectedProfile.id]: e.target.value })), style: { padding: '6px', borderRadius: '4px', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)' } },
+                                    react_1.default.createElement("option", { value: "nameAsc" }, t('mods.sortNameAsc') || 'Name (A-Z)'),
+                                    react_1.default.createElement("option", { value: "nameDesc" }, t('mods.sortNameDesc') || 'Name (Z-A)'),
+                                    react_1.default.createElement("option", { value: "activeFirst" }, t('mods.sortActiveFirst') || 'Aktive zuerst')))),
                         filteredMods.length > 0 ? (react_1.default.createElement("div", { className: "mods-list" }, filteredMods.map((mod) => (react_1.default.createElement("div", { key: mod.fileName, className: `mod-item ${mod.isActive ? 'active' : 'inactive'}` },
                             react_1.default.createElement("div", { className: "mod-info" },
-                                react_1.default.createElement("div", { className: "mod-name" },
-                                    getModTitle(mod),
-                                    mod.tags && mod.tags.length > 0 && (react_1.default.createElement("div", { className: "mod-tags", style: { display: 'inline-flex', gap: '4px', marginLeft: '10px' } }, mod.tags.map(t => (react_1.default.createElement("span", { key: t, style: { background: 'rgba(59, 130, 246, 0.2)', color: '#60a5fa', padding: '2px 6px', borderRadius: '12px', fontSize: '0.75rem' } },
+                                react_1.default.createElement("div", { className: "mod-name", style: { display: 'flex', alignItems: 'center', gap: '8px' } },
+                                    react_1.default.createElement("span", null, getModTitle(mod)),
+                                    ((mod.modHubId && mod.modHubId !== '!') || (mod.modHub && mod.modHub !== 'no')) && (react_1.default.createElement("span", { title: "Im ModHub verf\u00FCgbar", style: {
+                                            background: 'rgba(16, 185, 129, 0.2)',
+                                            color: '#34d399',
+                                            padding: '2px 6px',
+                                            borderRadius: '4px',
+                                            fontSize: '0.7rem',
+                                            fontWeight: 'bold',
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '4px'
+                                        } }, "\uD83C\uDF10 ModHub")),
+                                    mod.tags && mod.tags.length > 0 && (react_1.default.createElement("div", { className: "mod-tags", style: { display: 'inline-flex', gap: '4px' } }, mod.tags.map(t => (react_1.default.createElement("span", { key: t, style: { background: 'rgba(59, 130, 246, 0.2)', color: '#60a5fa', padding: '2px 6px', borderRadius: '12px', fontSize: '0.75rem' } },
                                         "#",
                                         t))))))),
                             react_1.default.createElement("div", { className: "mod-actions" },
@@ -43774,7 +43873,9 @@ const StartPage = ({ settings, modListReloadKey }) => {
                                         : (t("start.allModsUpToDate") || '✅ Alle Mods aktuell'))))))),
                         selectedProfile.serverWebStatsUrl && liveServerStats[selectedProfile.id] && (react_1.default.createElement("div", { style: { marginTop: '15px', padding: '10px', background: 'rgba(59, 130, 246, 0.1)', borderLeft: '4px solid #3b82f6', borderRadius: '4px' } },
                             react_1.default.createElement("h4", { style: { margin: '0 0 10px 0', color: '#60a5fa' } }, t("start.liveServerStats") || "📡 Live Server Status"),
-                            liveServerStats[selectedProfile.id].loading ? (react_1.default.createElement("span", { style: { color: '#ccc', fontSize: '0.9rem' } }, t("start.connectingToServer") || "Connecting to server...")) : liveServerStats[selectedProfile.id].error ? (react_1.default.createElement("span", { style: { color: '#f87171', fontSize: '0.9rem' } }, t("start.serverOfflineLabel") || "Server offline or unreachable.")) : (react_1.default.createElement("div", { style: { fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '5px' } },
+                            liveServerStats[selectedProfile.id].loading ? (react_1.default.createElement("span", { style: { color: '#ccc', fontSize: '0.9rem' } }, t("start.connectingToServer") || "Connecting to server...")) : liveServerStats[selectedProfile.id].error ? (react_1.default.createElement("span", { style: { color: '#f87171', fontSize: '0.9rem' } }, t("start.serverOfflineLabel") || "Server-Webinterface ist offline oder nicht erreichbar.")) : liveServerStats[selectedProfile.id].stats?.serverName === 'Unknown' ? (react_1.default.createElement("div", { style: { fontSize: '0.95rem', color: '#fca5a5', display: 'flex', alignItems: 'center', gap: '8px' } },
+                                react_1.default.createElement("span", null, "\uD83D\uDD34"),
+                                react_1.default.createElement("span", null, "Das Spiel auf dem Server ist aktuell gestoppt (Offline)."))) : (react_1.default.createElement("div", { style: { fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '5px' } },
                                 react_1.default.createElement("div", { style: { display: 'flex', justifyContent: 'space-between' } },
                                     react_1.default.createElement("span", { style: { color: '#94a3b8' } }, t("start.server") || "Server:"),
                                     react_1.default.createElement("span", { style: { fontWeight: 'bold', color: '#f8fafc' } }, liveServerStats[selectedProfile.id].stats?.serverName)),
@@ -43794,18 +43895,39 @@ const StartPage = ({ settings, modListReloadKey }) => {
                                         " \u20AC")))))))),
                     !selectedProfile.serverSyncUrl && (react_1.default.createElement("div", { className: "info-card" },
                         react_1.default.createElement("h3", null, t("start.modHubUpdatesTitle") || "🔍 ModHub Updates"),
-                        react_1.default.createElement("p", { style: { fontSize: '0.9rem', color: '#ccc', marginBottom: '10px' } }, "Pr\u00FCfe deine aktiven Singleplayer-Mods auf offizielle GIANTS ModHub Updates."),
-                        react_1.default.createElement("button", { className: "btn btn-secondary btn-sm", onClick: () => handleCheckModHubUpdates(selectedProfile), disabled: isCheckingModHub }, isCheckingModHub ? t('start.modHubChecking') : t('start.modHubUpdates')),
-                        modHubUpdates.length > 0 && (react_1.default.createElement("div", { style: { marginTop: '10px', padding: '10px', background: 'rgba(251, 191, 36, 0.1)', borderLeft: '4px solid #fbbf24', borderRadius: '4px' } },
-                            react_1.default.createElement("h4", { style: { margin: '0 0 5px 0', color: '#fbbf24' } },
-                                "\u26A0\uFE0F ",
-                                modHubUpdates.length,
-                                " Updates gefunden!"),
-                            react_1.default.createElement("ul", { style: { margin: 0, paddingLeft: '20px', fontSize: '0.9rem' } }, modHubUpdates.map((u) => (react_1.default.createElement("li", { key: u.name, style: { margin: '3px 0' } },
-                                react_1.default.createElement("a", { href: "#", style: { color: '#60a5fa', textDecoration: 'none' }, onClick: (e) => { e.preventDefault(); window.require('electron').shell.openExternal(u.url); } }, u.name),
-                                " (v",
-                                u.latestVersion,
-                                ")"))))))))));
+                        (() => {
+                            const updatableMods = selectedProfile.mods.filter(m => {
+                                // Wir checken nur aktive Mods
+                                if (!m.isActive)
+                                    return false;
+                                if (m.modHubVersion && m.version) {
+                                    return m.version !== m.modHubVersion;
+                                }
+                                return false;
+                            });
+                            if (updatableMods.length === 0) {
+                                return (react_1.default.createElement("div", { style: { color: '#4ade80', marginTop: '10px', fontSize: '0.95rem' } }, "\u2705 Alle aktiven Mods sind auf dem neuesten ModHub-Stand!"));
+                            }
+                            return (react_1.default.createElement("div", { style: { marginTop: '10px', padding: '10px', background: 'rgba(251, 191, 36, 0.1)', borderLeft: '4px solid #fbbf24', borderRadius: '4px' } },
+                                react_1.default.createElement("h4", { style: { margin: '0 0 5px 0', color: '#fbbf24' } },
+                                    "\u26A0\uFE0F ",
+                                    updatableMods.length,
+                                    " Updates verf\u00FCgbar!"),
+                                react_1.default.createElement("p", { style: { fontSize: '0.85rem', color: '#ccc', margin: '0 0 10px 0' } }, "Die Versionen auf ModHub sind neuer als deine lokalen Mods."),
+                                react_1.default.createElement("ul", { style: { margin: 0, paddingLeft: '20px', fontSize: '0.9rem', maxHeight: '150px', overflowY: 'auto' } }, updatableMods.map((u) => {
+                                    const title = u.modDescData?.title?.['en'] || u.modDescData?.title?.['de'] || u.name;
+                                    const modUrl = u.modHubId ? `https://www.farming-simulator.com/mod.php?mod_id=${u.modHubId}` : '#';
+                                    return (react_1.default.createElement("li", { key: u.fileName, style: { margin: '3px 0' } },
+                                        react_1.default.createElement("a", { href: "#", style: { color: '#60a5fa', textDecoration: 'none' }, onClick: (e) => { e.preventDefault(); if (u.modHubId)
+                                                window.require('electron').shell.openExternal(modUrl); } }, title),
+                                        react_1.default.createElement("span", { style: { color: '#94a3b8', fontSize: '0.8rem', marginLeft: '5px' } },
+                                            "(Lokal: v",
+                                            u.version,
+                                            " \u2794 ModHub: v",
+                                            u.modHubVersion,
+                                            ")")));
+                                }))));
+                        })()))));
             })()))),
         react_1.default.createElement("div", { className: "launch-section" },
             message && (react_1.default.createElement("div", { className: "status-message success", style: {
@@ -44329,6 +44451,10 @@ const de = {
     'mods.unknown': 'Unbekannt',
     'mods.generalInfo': 'Allgemeine Informationen',
     'mods.name': 'Name',
+    'mods.search': 'Mods durchsuchen...',
+    'mods.sortNameAsc': 'Name (A-Z)',
+    'mods.sortNameDesc': 'Name (Z-A)',
+    'mods.sortActiveFirst': 'Aktive zuerst',
     'mods.status': 'Status',
     'mods.multiplayer': 'Multiplayer',
     'mods.supported': 'Unterstützt',
@@ -44340,6 +44466,10 @@ const de = {
     'mods.sourceServer': 'Server Sync',
     'mods.searchModHub': 'Auf ModHub suchen',
     'profiles.noProfiles': 'Keine Profile vorhanden',
+    'profiles.allMods': 'Alle Mods',
+    'profiles.categories': 'Kategorien',
+    'profiles.customTags': 'Eigene Tags',
+    'profiles.toggleAllIn': 'Alle umschalten in',
     'profiles.checkingUrl': 'Prüfe Server-URL...',
     'profiles.searchModHub': 'ModHub Aktualisierung prüfen',
     'start.modHubUpdates': 'ModHub Updates suchen',
@@ -44459,7 +44589,8 @@ const de = {
     'profiles.addUrl': 'URL',
     'profiles.downloading': 'Lädt herunter...',
     'profiles.add': 'Hinzufügen',
-    'profiles.toggleAllIn': 'Alle umschalten in',
+    'mapping.title': 'ModHub Zuordnung läuft',
+    'mapping.desc': 'Wir prüfen deine lokalen Mods auf verfügbare ModHub-Updates. Das kann beim ersten Mal etwas dauern.',
     'logs.title': '🛠️ Auto-Debugger (Log-Analyse)',
     'logs.errorNoModFolder': 'Kein Mod-Ordner in den Einstellungen konfiguriert.',
     'logs.errorNoLog': 'log.txt nicht gefunden in {folder}',
@@ -44639,6 +44770,10 @@ const en = {
     'mods.unknown': 'Unknown',
     'mods.generalInfo': 'General Information',
     'mods.name': 'Name',
+    'mods.search': 'Search mods...',
+    'mods.sortNameAsc': 'Name (A-Z)',
+    'mods.sortNameDesc': 'Name (Z-A)',
+    'mods.sortActiveFirst': 'Active first',
     'mods.status': 'Status',
     'mods.multiplayer': 'Multiplayer',
     'mods.supported': 'Supported',
@@ -44650,6 +44785,10 @@ const en = {
     'mods.sourceServer': 'Server Sync',
     'mods.searchModHub': 'Search on ModHub',
     'profiles.noProfiles': 'No profiles available',
+    'profiles.allMods': 'All Mods',
+    'profiles.categories': 'Categories',
+    'profiles.customTags': 'Custom Tags',
+    'profiles.toggleAllIn': 'Toggle all in',
     'profiles.checkingUrl': 'Checking Server URL...',
     'profiles.searchModHub': 'Check ModHub updates',
     'start.modHubUpdates': 'Check ModHub Updates',
@@ -44770,8 +44909,9 @@ const en = {
     'profiles.addUrl': 'URL',
     'profiles.downloading': 'Downloading...',
     'profiles.add': 'Add',
-    'profiles.toggleAllIn': 'Toggle all in',
-    'logs.title': '🛠️ Auto-Debugger (Log Analyzer)',
+    'mapping.title': 'ModHub mapping in progress',
+    'mapping.desc': 'We are checking your local mods for available ModHub updates. This might take a while on the first run.',
+    'logs.title': '🛠️ Auto-Debugger (Log Analysis)',
     'logs.errorNoModFolder': 'No Mod folder configured in settings.',
     'logs.errorNoLog': 'log.txt not found in {folder}',
     'logs.desc': 'The Auto-Debugger scans your current FS25 log.txt for errors and shows which mods are causing them.',

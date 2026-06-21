@@ -126,3 +126,12 @@ npm run package
 This project is licensed under the **ISC License**.
 
 **Farming Simulator** is a registered trademark of **GIANTS Software GmbH**.
+
+## ?? Known Limitations
+
+Please note the following app limitations, which are primarily due to external platform or API constraints:
+
+1. **ModHub Updates:** The detection of outdated mods relies strictly on comparing version numbers (extracted from the ModHub HTML page versus your local mod file). Because GIANTS does not provide a public API with file hashes, exact binary verifications are not possible. If the version numbers match, the script considers the mod "up-to-date", even if the internal files differ.
+2. **ModHub Mapping:** Matching local mods to their ModHub entries is done via intelligent filename scraping. Mods that have had their filenames heavily modified after download, or mods from unofficial third-party sites, might not be detected reliably.
+3. **Dedicated Server Sync (FastDL):** When using bare FastDL services (without the GIANTS Web Interface HTML structure), you must provide a `dedicated-server-stats.xml` URL in the profile settings so the app can correctly determine the expected mod versions from the server.
+

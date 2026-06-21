@@ -49,6 +49,8 @@ const App: React.FC = () => {
     status: 'downloading'
   });
 
+  const [mappingProgress, setMappingProgress] = useState<{current: number, total: number, modName: string, status: string} | null>(null);
+
   const [showModInfo, setShowModInfo] = useState(false);
   const [selectedMod, setSelectedMod] = useState<ModInfo | null>(null);
   const [updateInfo, setUpdateInfo] = useState<UpdateInfo | null>(null);
@@ -148,6 +150,15 @@ const App: React.FC = () => {
     ipcRenderer.on('update-download-progress', handleUpdateProgress);
     ipcRenderer.on('update-downloaded', handleUpdateDownloaded);
 
+    const handleMappingProgress = (_: any, data: any) => setMappingProgress(data);
+    const handleMappingComplete = () => {
+      setMappingProgress(null);
+      setModListReloadKey(key => key + 1); // Reload to show updated ModHub IDs and versions
+    };
+
+    ipcRenderer.on('modhub-mapping-progress', handleMappingProgress);
+    ipcRenderer.on('modhub-mapping-complete', handleMappingComplete);
+
     return () => {
       ipcRenderer.removeListener('update-available', handleUpdateAvailable);
       ipcRenderer.removeListener('sync-progress', handleSyncProgress);
@@ -155,6 +166,8 @@ const App: React.FC = () => {
       ipcRenderer.removeListener('sync-error', handleSyncError);
       ipcRenderer.removeListener('update-download-progress', handleUpdateProgress);
       ipcRenderer.removeListener('update-downloaded', handleUpdateDownloaded);
+      ipcRenderer.removeListener('modhub-mapping-progress', handleMappingProgress);
+      ipcRenderer.removeListener('modhub-mapping-complete', handleMappingComplete);
     };
   }, [showSyncProgress, autoLaunchOnSyncComplete]); // Removed 'settings' to prevent infinite loop
 
@@ -338,7 +351,38 @@ const App: React.FC = () => {
         <div className="legal">
           Farming Simulator ist eine eingetragene Marke von GIANTS Software GmbH. Diese Anwendung steht in keiner Verbindung zu GIANTS Software.
         </div>
-      </footer>      {/* Popups */}
+      </footer>      
+
+      {mappingProgress && (
+          <div className="mapping-toast" style={{
+            position: 'fixed',
+            bottom: '20px',
+            right: '20px',
+            backgroundColor: 'rgba(20, 20, 25, 0.95)',
+            border: '1px solid var(--border-color)',
+            borderRadius: '8px',
+            padding: '15px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+            zIndex: 9999,
+            width: '300px'
+          }}>
+            <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', color: 'var(--primary-color)' }}>
+              {mappingProgress.status === 'checking_updates' ? 'ModHub Update-Check' : t('mapping.title')}
+            </h4>
+            <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: '#ccc' }}>
+              {mappingProgress.status === 'checking_updates' ? 'Prüfe auf Updates beim ModHub...' : t('mapping.desc')}
+            </p>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '4px' }}>
+              <span style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', maxWidth: '200px' }}>{mappingProgress.modName}</span>
+              <span>{mappingProgress.current} / {mappingProgress.total}</span>
+            </div>
+            <div className="progress-bar" style={{ height: '6px', backgroundColor: 'var(--surface)', borderRadius: '3px', overflow: 'hidden' }}>
+              <div className="progress-fill" style={{ width: `${mappingProgress.total > 0 ? (mappingProgress.current / mappingProgress.total) * 100 : 100}%`, height: '100%', backgroundColor: 'var(--primary-color)' }} />
+            </div>
+          </div>
+        )}
+
+      {/* Popups */}
       <SyncProgressPopup
         isOpen={showSyncProgress}
         progress={syncProgress}
