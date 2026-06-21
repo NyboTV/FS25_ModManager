@@ -231,10 +231,12 @@ export class ModHubService {
           // Speichere das Mapping direkt ab!
           if (modDetail) {
             this.mapping[fileName] = {
-              modHubId: modId,
-              modHubVersion: modDetail.version || '1.0.0.0',
-              modHubTitle: modDetail.title,
-              modHubRating: modDetail.rating || ''
+              modId: modId,
+              version: modDetail.version || '1.0.0.0',
+              title: modDetail.title,
+              rating: modDetail.rating || '',
+              category: modDetail.category || 'Unknown',
+              author: modDetail.author || 'Unknown'
             };
             this.saveMapping();
           }
